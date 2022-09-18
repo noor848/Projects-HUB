@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:graduationproject1/Modules/viewPostScreen/viewpostscreen.dart';
 
 class Posts extends StatelessWidget {
   @override
@@ -43,7 +44,9 @@ class Posts extends StatelessWidget {
   }
   Widget getPosts(context){
       return InkWell(
-        
+        onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ViewPostScreen()));
+        },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Container(
