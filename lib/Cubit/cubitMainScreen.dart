@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduationproject1/Modules/mainPageScreens/homeScreen.dart';
+import 'package:graduationproject1/Modules/mainPageScreens/PostCreat.dart';
 import 'package:graduationproject1/Modules/mainPageScreens/posts.dart';
 import 'package:graduationproject1/Modules/mainPageScreens/profile.dart';
 import 'package:graduationproject1/shared/shared_prefrences.dart';
@@ -13,9 +13,16 @@ class CubitMainScreen extends Cubit<MainScreenState>{
   CubitMainScreen() : super(MainScreenIntialState());
   static CubitMainScreen get(context)=>BlocProvider.of(context);
 
-  List<Widget>PagesScreen=[HomeScreen(),Posts(),Profile()];
+  List<Widget>PagesScreen=[Posts(),PostCreate(),Profile()];
   int pageIndex=0;
   bool themeChange=false;
+  bool VisibleIcon=true;
+
+  void  ChangeEyePasswordIcon(){
+    VisibleIcon=!VisibleIcon;
+    print(VisibleIcon);
+    emit(ChangePsswordEyeICon());
+  }
   Widget changeMainPageScreens(int index){
     emit(ChangeHomePageChioce());
     return PagesScreen[index];

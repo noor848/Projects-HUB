@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduationproject1/Cubit/StateMainScreen.dart';
 import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
+import 'package:iconly/iconly.dart';
 import '../../Constants.dart';
 
 class MainScreen extends StatelessWidget {
@@ -13,10 +14,10 @@ class MainScreen extends StatelessWidget {
         builder: (BuildContext context, state)
         { CubitMainScreen cubic= CubitMainScreen.get(context);
        return Scaffold(
-          appBar: AppBar(title: const Text("SearchApp"),
+          appBar: AppBar(title: const Text("Projects Hub"),
           actions: [IconButton(onPressed: (){
             cubic.changeThem();
-          }, icon:const Icon(Icons.brightness_4,))],
+          }, icon:const Icon(Icons.brightness_4_outlined,))],
             leading: IconButton(onPressed:(){
 
             },icon:Icon(Icons.menu)),
@@ -29,9 +30,9 @@ class MainScreen extends StatelessWidget {
               cubic.changeScreenIndex(value);
             },
             items: const[
-              Icon(Icons.home),
-              Icon(Icons.now_wallpaper),
-              Icon(Icons.perm_identity)],
+              Icon(IconlyLight.home),
+              Icon(IconlyLight.plus),
+              Icon(IconlyLight.profile)],
             height: 60,
           ),
         );}
