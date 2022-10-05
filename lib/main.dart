@@ -1,5 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'Cubit/StateMainScreen.dart';
 import 'Cubit/cubitMainScreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   Bloc.observer = MyBlocObserver();
   await CacheHelper.init();
   bool?isDark;
@@ -32,9 +34,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: AnimatedSplashScreen(
-           splash:Expanded(
-             child: Image.asset('assets/images/logo.png',width: double.infinity,fit: BoxFit.cover,
-             ),
+           splash:Image.asset('assets/images/logo.png',width: double.infinity,fit: BoxFit.cover
+             ,
            ),
             nextScreen: SignIn(),
               backgroundColor: SecondaryColor,
@@ -110,6 +111,12 @@ class MyApp extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontFamily: 'SubHead'
               ),
+                headline5: TextStyle(
+                    color: Colors.black54,fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    fontFamily: 'SubHead'
+                ),
+
 
               )
             ),
@@ -142,7 +149,7 @@ class MyApp extends StatelessWidget {
                 backgroundColor: Color(0xff333739),
                 unselectedItemColor: Color(0xff333739),
               ),cardTheme: CardTheme(
-              color: Color(0xff333739),elevation: 20,
+              color: Color(0xff333739),elevation: 8,
               shadowColor: Colors.red,
              clipBehavior: Clip.antiAlias,
             ),
@@ -163,13 +170,25 @@ class MyApp extends StatelessWidget {
                     fontFamily: 'SubHead'
                 ),
                 subtitle1: TextStyle(
-                  color: Colors.grey,fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                    fontWeight: FontWeight.bold,
                   fontSize: 18,
                     fontFamily: 'SubHead'
                 ),
                 subtitle2: TextStyle(
                   color: Colors.grey,fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: 13,
+                    fontFamily: 'SubHead'
+                ),
+                headline2: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 60,
+                    fontFamily: 'SubHead'
+                ),
+
+                headline5: TextStyle(
+                    color: Colors.grey,fontWeight: FontWeight.bold,
+                    fontSize: 14,
                     fontFamily: 'SubHead'
                 ),
                 headline3: TextStyle(
@@ -177,6 +196,13 @@ class MyApp extends StatelessWidget {
                   fontSize: 30,
                     fontFamily: 'SubHead'
                 ),
+                headline4: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'SubHead'
+                ),
+
               ),
               iconTheme: const IconThemeData(
                   color: Colors.white

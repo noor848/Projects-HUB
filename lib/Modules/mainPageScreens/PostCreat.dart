@@ -1,13 +1,106 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject1/Components/TextField.dart';
-import 'package:graduationproject1/Components/button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../Cubit/StateMainScreen.dart';
+import '../../Cubit/cubitMainScreen.dart';
 
 class PostCreate extends StatelessWidget {
-  const PostCreate({Key? key}) : super(key: key);
+  final GlobalKey _menuKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return  BlocConsumer<CubitMainScreen,MainScreenState>(
+      builder: (BuildContext context, state) {
+        CubitMainScreen cubic= CubitMainScreen.get(context);
+        return Scaffold(
+          body:Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              scrollDirection:Axis.vertical ,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) => cubic.listOfWholePostCreat[index], itemCount:cubic.listOfWholePostCreat.length),
+                            PopupMenuButton(
+                              icon: Icon(Icons.add,size: 35,),
+                              offset: Offset(0, 0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)
+                                      .copyWith(topLeft: Radius.circular(0))),
+                              padding: EdgeInsets.all(0),
+                              elevation: 10,
+                              color: Colors.grey.shade100,
+                              position: PopupMenuPosition.under,
+                              key: _menuKey,
+
+                              itemBuilder: (_) => <PopupMenuItem<String>>[
+                                PopupMenuItem(
+                                    height: 30,
+                                    onTap: (){
+                                      cubic.addHeaderText(context);
+                                    },
+                                    child:const Text("Header 1",style:TextStyle(
+                                      fontFamily: 'SubHead',fontSize: 17,color: Colors.red,),textAlign: TextAlign.center,)),
+                                PopupMenuItem(
+                                    height: 30,
+                                    onTap: (){
+                                      cubic.addHeader2Text(context);
+                                    },
+                                    child:const Text("Header 2",style:TextStyle(
+                                      fontFamily: 'SubHead',fontSize: 17,color: Colors.red,),textAlign: TextAlign.center,)),
+                                PopupMenuItem(
+                                    height: 30,
+                                    onTap: (){
+                                      cubic.AddTextField(context);
+                                    },
+                                    child:const Text("Normal",style:TextStyle(
+                                      fontFamily: 'SubHead',fontSize: 17,color: Colors.red,),textAlign: TextAlign.center,)),
+                                PopupMenuItem(
+                                    height: 30,
+                                    onTap: (){
+                                      cubic.GetImage();
+                                    },
+                                    child:const Text("Image",style:TextStyle(
+                                      fontFamily: 'SubHead',fontSize: 17,color: Colors.red,),textAlign: TextAlign.center,)),
+
+                              ],
+                              onSelected: (_) {
+                                Navigator.pop(context);
+                              },),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              for(int i=0;i< cubic.objectImageText.length;i++)
+              {
+                print(cubic.textFieldController[i].text);
+              }
+            },
+            child: Icon(Icons.send),
+          ),
+        );},
+      listener: (BuildContext context, Object? state) {  },
+    );
+  }
+}
+
+
+
+/*Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 10),
       child: SingleChildScrollView(
         child: Center(
@@ -170,11 +263,8 @@ class PostCreate extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-
+    );*/
+/*
 Widget xx(){
   return   ListTile(
 
@@ -184,7 +274,7 @@ Widget xx(){
     subtitle: Text("I dont know what it does ",style: TextStyle(color: Colors.grey),),
   );
 }
-
+*/
 /*InputDecoration(
 prefixIcon: Icon(Icons.edit,color: Colors.grey[300],),
 hintText: "Title....",
@@ -193,38 +283,3 @@ enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, ),)
 
 */
 //
-
-
-/*
-*  Row(
-            children: [
-              Container(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100)
-                ),
-                child: const Image(image: NetworkImage("https://img.freepik.com/free-photo/woman-with-balloon-image-torn-paper-style_53876-128762.jpg?size=626&ext=jpg"),
-                  height: 50,
-                  width: 50,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 14,),
-              Text("Noor Braik",style: Theme.of(context).textTheme.subtitle1),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                style:  Theme.of(context).textTheme.subtitle2,
-                decoration:  InputDecoration(
-                  hintText: "What is in Your Mind ......",
-                  hintStyle: Theme.of(context).textTheme.subtitle2,
-                  border: InputBorder.none,
-
-                ),
-
-              ),
-            ),
-          ),*/

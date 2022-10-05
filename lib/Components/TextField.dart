@@ -16,7 +16,8 @@ Widget textField(context,{hintText,borderRadius,prefixIcon,suffix,Label,obscureT
           },
           icon:CubitMainScreen.get(context).VisibleIcon==true?Icon(suffix):Icon(Icons.visibility_off)):null ,
       label: Label,
-      hintStyle: TextStyle(fontFamily: 'SubHead',fontSize: 13),
+      hintStyle:Theme.of(context).textTheme.subtitle2,
+      //TextStyle(fontFamily: 'SubHead',fontSize: 13),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,),borderRadius: BorderRadius.circular(borderRadius),),
       focusedBorder:OutlineInputBorder(
         borderSide:  BorderSide(color: Colors.grey, width: 1),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduationproject1/Components/TextField.dart';
 import 'package:graduationproject1/Components/button.dart';
+import 'package:graduationproject1/Components/google_signIn.dart';
 import 'package:graduationproject1/Cubit/StateMainScreen.dart';
 import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
 import 'package:graduationproject1/Modules/MainScreen/MainScreen.dart';
@@ -17,7 +18,9 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CubitMainScreen,MainScreenState>(
       builder: (BuildContext context, state) =>Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+          ),
           body:
           Center(
             child: SingleChildScrollView(
@@ -30,7 +33,7 @@ class SignIn extends StatelessWidget {
                     Text("Sign In",style:TextStyle(fontFamily: 'HeadFont',fontSize: 50),),
                     SizedBox(height: 10,),
                     Text("Would you like to contribute your own projects to Projects Hub? Share your project with us your Ideas and Questions we will work with you !",
-                        style:TextStyle(fontFamily: 'SubHead',fontSize: 13,color: Colors.black),)
+                        style:Theme.of(context).textTheme.headline5,)
                    , Form(
                       key: null,
                       child: Column(
@@ -69,14 +72,19 @@ class SignIn extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text("Or", style:TextStyle(fontFamily: 'SubHead',fontSize: 20,color: Colors.black),),
+                            child: Text("Or", style:Theme.of(context).textTheme.headline5,),
                           ),
-                          SocialLoginButton(
-                            buttonType: SocialLoginButtonType.google,
-                            onPressed: () {},
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SocialLoginButton(
+                              height: 50,
+                              buttonType: SocialLoginButtonType.google,
+                              onPressed: () {
+                                GoogleSignInOutApi.login(context);
+                              },
 
+                            ),
                           ),
-
                           TextButton(onPressed: (){
                             Navigator.push(
                               context,

@@ -7,6 +7,8 @@ import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
 import 'package:graduationproject1/editProfile/editProfile.dart';
 import 'package:iconly/iconly.dart';
 
+import '../allUserPost/allUserPosts.dart';
+
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,15 +16,17 @@ class Profile extends StatelessWidget {
       builder: (BuildContext context, Object? state) =>
           Scaffold(
             appBar: AppBar(
-              actions: [Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  ProfileEdit()),
-                  );
-                }, icon: Icon(IconlyLight.edit)),
-              ),],
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>  ProfileEdit()),
+                    );
+                  }, icon: Icon(IconlyLight.edit,size:25,)),
+                ),
+              ],
               automaticallyImplyLeading: false,
             ),
             body: Padding(
@@ -56,86 +60,23 @@ class Profile extends StatelessWidget {
                   SizedBox(height: 10,),
                   Text("Noor Braik", style:Theme.of(context).textTheme.headline3,),
                   SizedBox(height: 10,),
-                  Text("Yee this is Me....",style:Theme.of(context).textTheme.subtitle2,),
-                  SizedBox(height: 15,),
-                /*  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
-
-                            ),
-
-                            child: Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    child: Text("Projects", textAlign: TextAlign.center,),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(10),
-
-                                    ),
-                                  ),
-                                  SizedBox(height:5,),
-                                  Container(
-                                    child: Text("23"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 200,
+                        child: Text("Yeeah This is Me....",style:Theme.of(context).textTheme.subtitle2,
+                        maxLines: 1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(width: 5,),
-                        Expanded(
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
-
-                            ),
-
-                            child: Padding(
-                              padding: const EdgeInsets.all(3.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    child: Text("Questions", textAlign: TextAlign.center,),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(10),
-
-                                    ),
-                                  ),
-                                  SizedBox(height:5,),
-                                  Container(
-                                    child: Text("23"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                        )
-
-                      ],
-                    ),
-                  ),*/
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15,),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(0.0),
                     child: Divider(
               color: Colors.grey,
                     ),
@@ -143,10 +84,21 @@ class Profile extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("Thumb-Nails ",textAlign: TextAlign.end,style: TextStyle(fontSize: 20,fontFamily: 'HeadFont'),),
+                        Text("Thumb-Nails ",textAlign: TextAlign.end,style: TextStyle(fontSize: 25,fontFamily: 'HeadFont'),),
+                        Spacer(),
+                        TextButton(onPressed: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>  UserPost()),
+                          );
+
+                        }, child: Text("Show All",style: TextStyle(
+                            fontFamily: 'SubHead',fontSize: 15
+                        ),)),
+                        SizedBox(width: 10,)
                       ],
                     ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 5,),
                   Row(
                     children: [
                       Expanded(

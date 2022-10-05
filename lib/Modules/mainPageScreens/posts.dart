@@ -32,14 +32,10 @@ class Posts extends StatelessWidget {
             )
           )),
          Expanded(
-           child: ListView.separated(
+           child: ListView.builder(
              physics: AlwaysScrollableScrollPhysics(),
                itemBuilder: (context, index)=>getPosts(context),
-               separatorBuilder:(context, index)=>Padding(
-                 padding: const EdgeInsets.only(left:20,right:20),
-                 child: SizedBox(height:1,child: Container(color: Colors.grey[300],)),
-               ), itemCount: 10),
-         )
+         ))
       ],
     );
 
