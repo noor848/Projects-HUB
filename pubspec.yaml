@@ -50,6 +50,7 @@ dependencies:
   cloud_firestore: ^3.5.0
   image_picker: ^0.8.5+3
   path_provider: ^2.0.11
+  buttons_tabbar: ^1.3.6
 
 
 dev_dependencies:
