@@ -2,15 +2,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduationproject1/Components/TextField.dart';
-import 'package:graduationproject1/Components/button.dart';
-import 'package:graduationproject1/Components/google_signIn.dart';
-import 'package:graduationproject1/Cubit/StateMainScreen.dart';
-import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
-import 'package:graduationproject1/Modules/MainScreen/MainScreen.dart';
-import 'package:graduationproject1/Modules/SignUp/signUp.dart';
 import 'package:iconly/iconly.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
+
+import '../../Components/TextField.dart';
+import '../../Components/button.dart';
+import '../../Components/google_signIn.dart';
+import '../../Cubit/StateMainScreen.dart';
+import '../../Cubit/cubitMainScreen.dart';
+import '../MainScreen/MainScreen.dart';
+import '../SignUp/signUp.dart';
 
 class SignIn extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();

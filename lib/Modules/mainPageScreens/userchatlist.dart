@@ -1,6 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduationproject1/Cubit/StateMainScreen.dart';
+import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
+import 'package:graduationproject1/Modules/sendmessagewindow/SendMessage.dart';
 import 'package:iconly/iconly.dart';
 
 class ChatList extends StatelessWidget {
@@ -8,9 +12,21 @@ class ChatList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(itemBuilder: (context, index) =>  Padding(
+    return  BlocConsumer<CubitMainScreen,MainScreenState>(
+        builder: (BuildContext context, state) =>
+        ListView.separated(
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) =>  Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
+        onTap: (){
+          CubitMainScreen.get(context).getMessages(receiverId:  "2");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>  SendMessage()),
+          );
+
+        },
         child: ClipPath(
           child: Container(
             decoration: const BoxDecoration(
@@ -51,6 +67,7 @@ class ChatList extends StatelessWidget {
           ),
         ),
       ),),
-    separatorBuilder: (context, index) => SizedBox(height: 0,), itemCount: 10);
+        separatorBuilder: (context, index) => SizedBox(height: 0,), itemCount: 10)
+      , listener: (BuildContext context, Object? state) {  });
   }
 }

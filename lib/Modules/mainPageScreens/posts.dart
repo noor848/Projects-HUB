@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:graduationproject1/Components/getPosts.dart';
-import 'package:graduationproject1/Modules/viewPostScreen/viewpostscreen.dart';
 import 'package:iconly/iconly.dart';
+
+import '../../Components/getPosts.dart';
 
 class Posts extends StatelessWidget {
   @override

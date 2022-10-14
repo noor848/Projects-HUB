@@ -2,12 +2,12 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduationproject1/Components/google_signIn.dart';
-import 'package:graduationproject1/Cubit/StateMainScreen.dart';
-import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
-import 'package:graduationproject1/Modules/SignInScreen/signIn.dart';
 import 'package:iconly/iconly.dart';
+import '../../Components/google_signIn.dart';
 import '../../Constants.dart';
+import '../../Cubit/StateMainScreen.dart';
+import '../../Cubit/cubitMainScreen.dart';
+import '../SignInScreen/signIn.dart';
 
 class MainScreen extends StatelessWidget {
   @override

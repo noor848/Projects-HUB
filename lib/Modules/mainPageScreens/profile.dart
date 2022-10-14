@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduationproject1/Components/getPosts.dart';
-import 'package:graduationproject1/Cubit/StateMainScreen.dart';
-import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
 import 'package:iconly/iconly.dart';
 
+import '../../Components/getPosts.dart';
+import '../../Cubit/StateMainScreen.dart';
+import '../../Cubit/cubitMainScreen.dart';
 import '../allUserPost/allUserPosts.dart';
 import '../editProfile/editProfile.dart';
 

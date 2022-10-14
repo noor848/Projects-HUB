@@ -1,8 +1,7 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
+
+import '../Cubit/cubitMainScreen.dart';
 
 Widget textField(context,{hintText,borderRadius,prefixIcon,suffix,Label,obscureText}){
   return TextFormField(

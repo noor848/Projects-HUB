@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject1/Modules/viewPostScreen/viewpostscreen.dart';
 import 'package:iconly/iconly.dart';
+
+import '../Modules/viewPostScreen/viewpostscreen.dart';
 
 Widget getPosts(context){
   return Padding(
@@ -66,7 +67,8 @@ Widget getPosts(context){
                         Padding(
                           padding: const EdgeInsets.only(right:10 ),
                           child: IconButton(constraints: BoxConstraints(),
-                              padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(IconlyLight.chat,color: Colors.blueGrey)),
+                              padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(
+                                  IconlyLight.chat,color: Colors.blueGrey)),
                         ),
                         const Text("205"),
                         const SizedBox(width: 20,),

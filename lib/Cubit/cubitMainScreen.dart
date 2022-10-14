@@ -3,16 +3,18 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'dart:core';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduationproject1/Modules/mainPageScreens/PostCreat.dart';
-import 'package:graduationproject1/Modules/mainPageScreens/posts.dart';
-import 'package:graduationproject1/Modules/mainPageScreens/profile.dart';
-import 'package:graduationproject1/shared/shared_prefrences.dart';
+import 'package:graduationproject1/Model/messageModel.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Modules/mainPageScreens/PostCreat.dart';
+import '../Modules/mainPageScreens/posts.dart';
+import '../Modules/mainPageScreens/profile.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
 import '../shared/postImageText.dart';
+import '../shared/shared_prefrences.dart';
 import 'StateMainScreen.dart';
 
 class CubitMainScreen extends Cubit<MainScreenState>{
@@ -126,15 +128,54 @@ class CubitMainScreen extends Cubit<MainScreenState>{
     listOfWholePostCreat.add(field);///list of whole elemnt in the post
     emit(TextHeaderFieldCreated());
   }
-
-
   Future<String> createImagePath(imagepath) async {
     File imagefile = File(imagepath); //convert Path to File
     Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
     return base64.encode(imagebytes); //convert bytes to base64 string
   }
 
+  void sendMessages({required RecieverId,required text}){
+      MessageModel model = MessageModel(
+        text: text,
+        receiverId: RecieverId,
+        senderId: "1234",
+        date:Timestamp.now()
+      );
+      ////my chat part
+    FirebaseFirestore.instance.collection("users").doc("1234").collection('chat')
+      .doc(RecieverId).collection("messages").add(model.toMap()).then((value){
+        emit(SocialSendMessageSuccess());
+    }).onError((error, stackTrace){
+      emit(SocialSendMessageError());
+    });
+      //receiver chat part
+      FirebaseFirestore.instance.collection("users").doc(RecieverId).collection('chat')
+          .doc("1234").collection("messages").add(model.toMap()).then((value){
+        emit(SocialSendMessageSuccess());
+      }).onError((error, stackTrace){
+        emit(SocialSendMessageError());
+      });
 
+      getMessages(receiverId: "2");
 
+  }
 
+  List<MessageModel>messages=[];
+  List<MessageModel>messagesLocal=[];
+  void getMessages({
+    required receiverId
+  }){
+    FirebaseFirestore.instance.collection("users").
+    doc("1234").collection("chat").
+    doc(receiverId)
+        .collection('messages').orderBy("date")
+    .snapshots().listen((event) {
+      messages=[];
+      event.docs.forEach((element) {
+        messages.add(MessageModel.FromJson(element.data()));
+      });
+      emit(SocailGetMessageSuccessSate());
+    });
+
+  }
 }

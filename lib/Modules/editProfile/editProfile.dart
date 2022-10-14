@@ -1,8 +1,8 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:graduationproject1/Components/TextField.dart';
 import 'package:iconly/iconly.dart';
+
+import '../../Components/TextField.dart';
 
 class ProfileEdit extends StatelessWidget {
   const ProfileEdit({Key? key}) : super(key: key);
