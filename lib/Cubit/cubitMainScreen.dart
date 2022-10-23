@@ -8,11 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduationproject1/Model/messageModel.dart';
+import 'package:graduationproject1/Service/DioHelper/Dio.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Modules/mainPageScreens/PostCreat.dart';
 import '../Modules/mainPageScreens/posts.dart';
 import '../Modules/mainPageScreens/profile.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
+import '../Remote/end_points.dart';
 import '../shared/postImageText.dart';
 import '../shared/shared_prefrences.dart';
 import 'StateMainScreen.dart';
@@ -177,5 +179,38 @@ class CubitMainScreen extends Cubit<MainScreenState>{
       emit(SocailGetMessageSuccessSate());
     });
 
+  }
+  void GetUserChatWith(){
+
+    FirebaseFirestore.instance.collection("users").get().then((value){
+
+
+      value.docs.forEach((element) {
+        print(element.id);
+      });
+    });
+
+  }
+  
+  void Login({
+    password,
+    email
+}){
+    DioHelpr.PostData(
+        Url:LOGIN,data:
+        {
+          'password':password,
+          'email':email
+        }
+    ).then((value) {
+
+      print("Connected");
+      emit(LoginSuccess());
+
+    }).catchError((onError){
+      print(onError.toString());
+    });
+    
+    
   }
 }

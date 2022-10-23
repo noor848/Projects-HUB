@@ -15,6 +15,9 @@ import '../SignUp/signUp.dart';
 
 class SignIn extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  final email = TextEditingController();
+  final password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitMainScreen,MainScreenState>(
@@ -41,11 +44,11 @@ class SignIn extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: textField(context,hintText: "Email",borderRadius:20.0,prefixIcon:Icons.email,obscureText: false),
+                            child: textField(context,hintText: "Email",borderRadius:20.0,prefixIcon:Icons.email,obscureText: false,controller: email),
                           ),
                           Padding(
                             padding: const EdgeInsetsDirectional.only(bottom:20),
-                            child: textField(context,hintText: "Password",borderRadius:20.0,obscureText: true,prefixIcon:IconlyLight.password,suffix:Icons.visibility_sharp),
+                            child: textField(context,hintText: "Password",borderRadius:20.0,obscureText: true,prefixIcon:IconlyLight.password,suffix:Icons.visibility_sharp,controller: password),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -53,15 +56,14 @@ class SignIn extends StatelessWidget {
                               width: double.infinity,
                               height: 50,
                               child:Button(context,() {
-                              /*  if (_formKey.currentState!=null)
-                                    if(_formKey.currentState!.validate()) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Processing Data')),
-                                  );
-                                }*/
-                                Navigator.push(
+                            CubitMainScreen.get(context).Login(
+                              password:password.text,
+                              email: email.text
+
+                            );
+                               /* Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) =>MainScreen()));
+                                    MaterialPageRoute(builder: (context) =>MainScreen()));*/
                               },
 
                                 fontWeight: FontWeight.w600,fontSize: 20.0,text: "Sign In",

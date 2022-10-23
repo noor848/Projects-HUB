@@ -1,11 +1,13 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduationproject1/Service/DioHelper/Dio.dart';
 import 'package:graduationproject1/shared/bloc_observer.dart';
 import 'package:graduationproject1/shared/shared_prefrences.dart';
 import 'Constants.dart';
@@ -16,6 +18,7 @@ import 'Modules/SignInScreen/signIn.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  ///DioHelpr.init();
   Bloc.observer = MyBlocObserver();
   await CacheHelper.init();
   bool?isDark;

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../Cubit/cubitMainScreen.dart';
 
-Widget textField(context,{hintText,borderRadius,prefixIcon,suffix,Label,obscureText}){
+Widget textField(context,{hintText,borderRadius,prefixIcon,suffix,Label,obscureText,controller}){
   return TextFormField(
+    controller:controller,
     obscureText:obscureText?CubitMainScreen.get(context).VisibleIcon==false?true:false:false,
     decoration: InputDecoration(
       prefixIcon: Icon(prefixIcon,color: Colors.grey[300],),
