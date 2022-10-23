@@ -13,3 +13,9 @@ class SocialSendMessageSuccess extends MainScreenState{}
 class SocialSendMessageError extends MainScreenState{}
 class SocailGetMessageSuccessSate extends MainScreenState{}
 class LoginSuccess extends MainScreenState{}
+class LoginFailed extends MainScreenState{}
+class TokenSet extends MainScreenState{}
+class SignedUpSuccess extends MainScreenState{}
+class SignedUpFailed extends MainScreenState{}
+class TransferTo64 extends MainScreenState{}
+class KeepValuesFieldUpdated extends MainScreenState{}

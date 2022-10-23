@@ -1,1 +1,1 @@
-const LOGIN='http://192.168.1.10:8001/api/V1.0/usres/login';
+const LOGIN='/api/V1.0/usres/login';

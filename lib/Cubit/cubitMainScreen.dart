@@ -59,8 +59,9 @@ class CubitMainScreen extends Cubit<MainScreenState>{
     final imageTemporarly=File(image.path);
     _image=imageTemporarly;
     if(_image!=null){
-      createImagePath(image.path).then((value) {
+      createImagePath64(image.path).then((value) {
         print(value.toString());
+
         objectImageText.add(ImagePost(value));
         ImagesList.add(Image.file(_image!,fit: BoxFit.cover,height: 200,width: 200,));
         listOfWholePostCreat.add(Padding(
@@ -74,6 +75,29 @@ class CubitMainScreen extends Cubit<MainScreenState>{
       });
     }
     emit(ImagePickerLoad());
+  }
+
+var imageSignUpPath;
+  File? imageSignUp;
+  Future SignUpImage()async{
+    final image= await ImagePicker().pickImage(source: ImageSource.gallery);
+    if(image==null) return;
+    final imageTemporarly=File(image.path);
+    imageSignUp=imageTemporarly;
+    if(imageSignUp!=null){
+      createImagePath64(image.path).then((value) {
+        imageSignUpPath=value;
+        emit(TransferTo64());
+      });
+    }
+    emit(ImagePickerLoad());
+  }
+
+
+  Future<String> createImagePath64(imagepath) async {
+    File imagefile = File(imagepath); //convert Path to File
+    Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
+    return base64.encode(imagebytes); //convert bytes to base64 string
   }
 
   void  ChangeEyePasswordIcon(){
@@ -100,7 +124,6 @@ class CubitMainScreen extends Cubit<MainScreenState>{
       emit(ThemChangeState());
     }
   }
-
   void addHeaderText(context){
     CreateTextFeildController();
     var field=TextField(controller:textFieldController[textFieldIndex++],
@@ -130,11 +153,7 @@ class CubitMainScreen extends Cubit<MainScreenState>{
     listOfWholePostCreat.add(field);///list of whole elemnt in the post
     emit(TextHeaderFieldCreated());
   }
-  Future<String> createImagePath(imagepath) async {
-    File imagefile = File(imagepath); //convert Path to File
-    Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
-    return base64.encode(imagebytes); //convert bytes to base64 string
-  }
+
 
   void sendMessages({required RecieverId,required text}){
       MessageModel model = MessageModel(
@@ -192,25 +211,76 @@ class CubitMainScreen extends Cubit<MainScreenState>{
 
   }
   
-  void Login({
-    password,
-    email
-}){
-    DioHelpr.PostData(
-        Url:LOGIN,data:
-        {
-          'password':password,
-          'email':email
-        }
+  void Login({password, email}) {
+ DioHelper.LogIn(
+     password: password.toString(),
+          email: email.toString(),
     ).then((value) {
-
-      print("Connected");
+      if(value=="User Not Found"){
+        emit(LoginFailed());
+        return;
+      }
+      print("Signed In !");
+      setToken(token:value.toString());
       emit(LoginSuccess());
-
-    }).catchError((onError){
-      print(onError.toString());
+    }).catchError((onError) {
+   emit(LoginFailed());
+   print(onError.toString());
     });
-    
-    
+
   }
+
+  String Token="";
+  void setToken({token}) {
+    Token = token;
+    print(Token);
+    emit(TokenSet());
+  }
+
+  void SignUp({FirstName,LastName,email, password}) {
+    DioHelper.SignUp(
+      password: password,
+      email: email,
+      image: imageSignUpPath,
+      FirstName: FirstName,
+      LastName: LastName
+    ).then((value) {
+      print("Signed Up Succefully!");
+      if(value.toString()=="User Already Exists"){
+        emit(SignedUpFailed());
+        print("User Already Exists");
+        return;
+      }
+      else {
+        ///setToken(token:value.toString());
+        imageSignUp = null;
+        emit(SignedUpSuccess());
+      }}).catchError((onError) {
+      emit(SignedUpFailed());
+      print(onError.toString());
+
+    });
+
+  }
+
+  var email,pass,firstname,lastname;
+
+  void SetValues({
+  email,pass,firstname,lastname
+}){
+    email=email;
+    pass=pass;
+    firstname=firstname;
+    lastname=lastname;
+    emit(KeepValuesFieldUpdated());
+
+  }
+
+
+
+
 }
+
+
+
+
