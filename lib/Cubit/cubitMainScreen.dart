@@ -241,7 +241,7 @@ var imageSignUpPath;
     DioHelper.SignUp(
       password: password,
       email: email,
-      image: imageSignUpPath,
+      image: "",//imageSignUpPath
       FirstName: FirstName,
       LastName: LastName
     ).then((value) {
