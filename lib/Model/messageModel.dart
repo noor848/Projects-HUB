@@ -14,7 +14,6 @@ class MessageModel{
      required this.date
        });
 
-
    MessageModel.FromJson(Map<String,dynamic>json){
      senderId=json['senderId'];
      receiverId=json['receiverId'];

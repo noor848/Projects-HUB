@@ -20,7 +20,7 @@ class ChatList extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: (){
-          CubitMainScreen.get(context).getMessages(receiverId:  "2");
+          CubitMainScreen.get(context).getMessages(receiverId:  "19f5f493-1c56-47e3-ad71-b4aed335de22");
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) =>  SendMessage()),

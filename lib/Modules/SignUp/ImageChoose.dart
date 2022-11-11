@@ -48,7 +48,7 @@ class ImagePicker extends StatelessWidget {
                   padding: const EdgeInsets.all(20.0),
                   child: IconButton(onPressed: (){
 
-                    CubitMainScreen.get(context).SignUpImage();
+                    //CubitMainScreen.get(context).SignUpImage();
                   },
                       icon: Icon(IconlyLight.camera
                         ,color: Colors.red,size:50,)),

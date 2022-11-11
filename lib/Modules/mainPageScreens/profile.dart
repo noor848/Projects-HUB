@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,9 +14,10 @@ import '../editProfile/editProfile.dart';
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CubitMainScreen,MainScreenState>(listener: (BuildContext context, state) {  },
-      builder: (BuildContext context, Object? state) =>
-          Scaffold(
+    return BlocConsumer<CubitMainScreen,MainScreenState>
+      (listener: (BuildContext context, state) {  },
+      builder: (BuildContext context, Object? state) {
+          return Scaffold(
             appBar: AppBar(
               actions: [
                 Padding(
@@ -49,16 +52,28 @@ class Profile extends StatelessWidget {
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadiusDirectional.circular(100),
                             ),
-                            child: Image.network("https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"),
+                            child:CubitMainScreen.get(context).userProfileValues.profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 200,
+                              width: 200,
+                              fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).userProfileValues.profilePicture.toString()!),
+                            height: 200,
+                              width: 200,
+                              fit: BoxFit.cover,
+                            ),
                           )
                       ),
-                      IconButton(onPressed: (){},
+                      IconButton(onPressed: (){
+                        CubitMainScreen.get(context).ProfileImageUpdate();
+                        print(CubitMainScreen.get(context).userProfileValues.id);
+                        CubitMainScreen.get(context).userProfileValues;
+
+
+                      },
                           icon: Icon(IconlyLight.camera
                             ,color: Colors.red,size:40,))
                     ],
                   ),
                   SizedBox(height: 10,),
-                  Text("Noor Braik", style:Theme.of(context).textTheme.headline3,),
+                  Text("${CubitMainScreen.get(context).userProfileValues.FirstName} ${CubitMainScreen.get(context).userProfileValues.LastName}", style:Theme.of(context).textTheme.headline3,),
                   SizedBox(height: 10,),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +81,7 @@ class Profile extends StatelessWidget {
                     children: [
                       Container(
                         width: 200,
-                        child: Text("Yeeah This is Me....",style:Theme.of(context).textTheme.subtitle2,
+                        child: Text("${CubitMainScreen.get(context).userProfileValues.bio ?? "Yeeah This is Me...."}",style:Theme.of(context).textTheme.subtitle2,
                         maxLines: 1,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
@@ -137,8 +152,7 @@ class Profile extends StatelessWidget {
           ),
         ),
       ),
-          ),
-
+          );}
     );
   }
 }

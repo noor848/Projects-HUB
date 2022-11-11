@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../Cubit/cubitMainScreen.dart';
 
-Widget textField(context,{hintText,borderRadius,prefixIcon,suffix,Label,obscureText,controller}){
+Widget textField(context,{hintText,borderRadius,prefixIcon,suffix,Label,obscureText,controller,value}){
   return TextFormField(
     validator: (value) {
       if (value == null || value.isEmpty) {
@@ -11,6 +11,7 @@ Widget textField(context,{hintText,borderRadius,prefixIcon,suffix,Label,obscureT
       }
       return null;
     },
+    initialValue: value,
     controller:controller,
     obscureText:obscureText?CubitMainScreen.get(context).VisibleIcon==false?true:false:false,
     decoration: InputDecoration(

@@ -12,7 +12,6 @@ class SendMessage extends StatelessWidget {
   final boxFeildController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    ///CubitMainScreen.get(context).getMessages(receiverId:  "2");
     return BlocConsumer<CubitMainScreen,MainScreenState>(builder: (BuildContext context, state) {
       print(CubitMainScreen.get(context).messages.length);
       return   Scaffold(
@@ -40,7 +39,7 @@ class SendMessage extends StatelessWidget {
                 child: ListView.separated(
                     itemBuilder:(context, index) {
                       var Message=CubitMainScreen.get(context).messages[index];
-                      if(Message.senderId=="1234"){
+                      if(Message.senderId==CubitMainScreen.get(context).userProfileValues.id){
                         return MyMessage(Message);
                       }
                       return HisMessage(Message);
@@ -78,7 +77,7 @@ class SendMessage extends StatelessWidget {
                     ),
                     MaterialButton(onPressed: (){
                       print(boxFeildController.text);
-                      CubitMainScreen.get(context).sendMessages(RecieverId: "2", text: boxFeildController.text,);
+                      CubitMainScreen.get(context).sendMessages(RecieverId: "19f5f493-1c56-47e3-ad71-b4aed335de22", text: boxFeildController.text,);
                     },
                       minWidth: 1,
                       child: Icon(IconlyLight.send, color:Theme.of(context).errorColor,),

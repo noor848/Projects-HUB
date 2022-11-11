@@ -19,3 +19,7 @@ class SignedUpSuccess extends MainScreenState{}
 class SignedUpFailed extends MainScreenState{}
 class TransferTo64 extends MainScreenState{}
 class KeepValuesFieldUpdated extends MainScreenState{}
+class GetUserProfile extends MainScreenState{}
+class UpdateImageProfile extends MainScreenState{}
+class UpdateBioText extends MainScreenState{}
+class UpdateUserFirasLstName extends MainScreenState{}

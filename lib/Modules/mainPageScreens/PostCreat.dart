@@ -29,7 +29,8 @@ class PostCreate extends StatelessWidget {
                               physics: NeverScrollableScrollPhysics(),
                               scrollDirection:Axis.vertical ,
                                 shrinkWrap: true,
-                                itemBuilder: (context, index) => cubic.listOfWholePostCreat[index], itemCount:cubic.listOfWholePostCreat.length),
+                                itemBuilder: (context, index) =>
+                                cubic.listOfWholePostCreat[index], itemCount:cubic.listOfWholePostCreat.length),
                             PopupMenuButton(
                               icon: Icon(Icons.add,size: 35,),
                               offset: Offset(0, 0),
