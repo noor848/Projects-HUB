@@ -19,7 +19,7 @@ class Profile extends StatelessWidget {
       builder: (BuildContext context, Object? state) {
           return Scaffold(
             appBar: AppBar(
-              actions: [
+              /*actions: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: IconButton(onPressed: (){
@@ -29,8 +29,8 @@ class Profile extends StatelessWidget {
                     );
                   }, icon: Icon(IconlyLight.edit,size:25,)),
                 ),
-              ],
-              automaticallyImplyLeading: false,
+              ],*/
+             // automaticallyImplyLeading: false,
             ),
             body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -40,6 +40,11 @@ class Profile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Text("Your Profile",style: TextStyle(
+                      fontSize: 40,
+                      fontFamily: 'HeadFont'
+                  ),),
+                  SizedBox(height: 30,),
                   Stack(
                     alignment: AlignmentDirectional.bottomEnd,
                     children: [

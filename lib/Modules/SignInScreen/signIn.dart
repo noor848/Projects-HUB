@@ -43,7 +43,7 @@ class SignIn extends StatelessWidget {
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               timeInSecForIosWeb: 2,
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.redAccent,
               textColor: Colors.white,
               fontSize: 16,
             );

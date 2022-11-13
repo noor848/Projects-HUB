@@ -23,3 +23,7 @@ class GetUserProfile extends MainScreenState{}
 class UpdateImageProfile extends MainScreenState{}
 class UpdateBioText extends MainScreenState{}
 class UpdateUserFirasLstName extends MainScreenState{}
+class updatepassword extends MainScreenState{}
+class DisableAndNotDiasbledPassword extends MainScreenState{}
+class BadRequestPassword extends MainScreenState{}
+class ErrorUpadatingPasssword extends MainScreenState{}

@@ -88,5 +88,18 @@ static Future<http.Response> GetUserProfile({path,data,idToken})async{
     return response;
   }
 
+  static Future<http.Response> PutUserPassword({oldPassword,NewPassword,idToken})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Password/$idToken");
+    var response = await http.Client().put(url,
+        body: json.encode({
+          "OldPassword":oldPassword,
+          "NewPassword":NewPassword
+        })
+        ,headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+        });
+    return response;
+  }
+
 
 }

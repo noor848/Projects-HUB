@@ -120,10 +120,14 @@ class MyApp extends StatelessWidget {
                     headline5: TextStyle(
                         color: Colors.black54,fontWeight: FontWeight.bold,
                         fontSize: 14,
+                        height: 1.3,
                         fontFamily: 'SubHead'
                     ),
 
 
+                  ),
+                  drawerTheme: DrawerThemeData(
+                      backgroundColor: Colors.white
                   )
               ),
               darkTheme: ThemeData(
@@ -213,6 +217,9 @@ class MyApp extends StatelessWidget {
                 iconTheme: const IconThemeData(
                     color: Colors.white
                 ),
+                drawerTheme: DrawerThemeData(
+                  backgroundColor: Color(0xff333739)
+                )
               ),
               themeMode: cubic.themeChange?ThemeMode.light:ThemeMode.dark
           );},

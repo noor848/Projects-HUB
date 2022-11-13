@@ -27,7 +27,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   static CubitMainScreen get(context) => BlocProvider.of(context);
   var listOfWholePostCreat = [];
-  List<Widget> PagesScreen = [Posts(), ChatList(), PostCreate(), Profile()];
+  List<Widget> PagesScreen = [Posts(), PostCreate(),ChatList()];
   int pageIndex = 0;
   bool themeChange = false;
   bool VisibleIcon = true;
@@ -79,8 +79,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     _image = imageTemporarly;
     if (_image != null) {
       createImagePath64(image.path).then((value) {
-        print(value.toString());
-
         objectImageText.add(ImagePost(value));
         ImagesList.add(Image.file(
           _image!,
@@ -305,7 +303,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       DioHelper.GetUserProfile(idToken: Token).then((value) {
         var user = json.decode(value.body);
         userProfileValues = UserProfileModel.fromJson(user);
-        print(userProfileValues.profilePicture);
+        print(userProfileValues.FirstName);
         emit(GetUserProfile());
       });
     }).catchError((onError) {
@@ -389,5 +387,44 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         emit(GetUserProfile());
       });
     });}
+
+
+  void UpdatePassword({NewPassword,OldPassword}){
+    DioHelper.PutUserPassword(idToken: Token,NewPassword: NewPassword,oldPassword:OldPassword).then((value) {
+      print(value.statusCode);
+      if(value.statusCode==401||value.statusCode==400){
+        emit(BadRequestPassword());
+      }
+      else {
+        emit(updatepassword());
+      }    }).onError((error, stackTrace){
+      emit(ErrorUpadatingPasssword());
+    });}
+
+  var NewPassword;
+  void setNewPassword({NewPassword}){
+
+    NewPassword=NewPassword;
+    emit(DisableAndNotDiasbledPassword());
+  }
+  var isSamePassword;
+  void Validate({confirmPassword}){
+
+    if(confirmPassword.toString()==NewPassword.toString()){
+      isSamePassword=true;
+      emit(DisableAndNotDiasbledPassword());
+
+    }
+    else{
+      isSamePassword=false;
+      emit(DisableAndNotDiasbledPassword());
+
+    }
+    print(isSamePassword);
+
+  }
+
+
+
 
 }
