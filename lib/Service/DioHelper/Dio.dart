@@ -41,7 +41,7 @@ class DioHelper {
     return response.body;
   }
 
-static Future<http.Response> GetUserProfile({path,data,idToken})async{
+  static Future<http.Response> GetUserProfile({path,data,idToken})async{
   var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/$idToken");
   var response = await http.Client().get(url ,headers: {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -50,7 +50,6 @@ static Future<http.Response> GetUserProfile({path,data,idToken})async{
   print(await json.decode(json.encode(response.body)));
   return response;
   }
-
   static Future<http.Response> PutUserImage({imagepath,idToken})async{
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/ProfilePicture/$idToken");
     var response = await http.Client().put(url,
@@ -87,7 +86,6 @@ static Future<http.Response> GetUserProfile({path,data,idToken})async{
         });
     return response;
   }
-
   static Future<http.Response> PutUserPassword({oldPassword,NewPassword,idToken})async{
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Password/$idToken");
     var response = await http.Client().put(url,
@@ -100,6 +98,13 @@ static Future<http.Response> GetUserProfile({path,data,idToken})async{
         });
     return response;
   }
-
+  static Future<http.Response> GetUserContacts({path,data,idToken})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts/$idToken");
+    var response = await http.Client().get(url ,headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      //'Charset': 'utf-8'
+    });
+    return response;
+  }
 
 }

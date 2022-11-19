@@ -20,6 +20,7 @@ import '../Modules/mainPageScreens/userchatlist.dart';
 import '../Remote/end_points.dart';
 import '../shared/postImageText.dart';
 import '../shared/shared_prefrences.dart';
+import 'ContactList.dart';
 import 'StateMainScreen.dart';
 
 class CubitMainScreen extends Cubit<MainScreenState> {
@@ -122,10 +123,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     });
   }
 
-
-
-
-
   Uint8List? ProfileImage;
 
   Future ProfileImageUpdate() async {
@@ -157,6 +154,10 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   void changeScreenIndex(int index) {
     pageIndex = index;
+    if(index==2){
+    getContactList();
+
+    }
     emit(ChangeBottomNavigationBarIndexState());
   }
 
@@ -254,14 +255,15 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     }).onError((error, stackTrace) {
       emit(SocialSendMessageError());
     });
+    getMessages(receiverId: RecieverId);
 
-    getMessages(receiverId: "19f5f493-1c56-47e3-ad71-b4aed335de22");
   }
 
   List<MessageModel> messages = [];
   List<MessageModel> messagesLocal = [];
 
   void getMessages({required receiverId}) {
+
     FirebaseFirestore.instance
         .collection("users")
         .doc(userProfileValues.id)
@@ -275,9 +277,11 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       event.docs.forEach((element) {
         messages.add(MessageModel.FromJson(element.data()));
       });
-      emit(SocailGetMessageSuccessSate());
+
     });
+    emit(SocailGetMessageSuccessSate());
   }
+
 
   void GetUserChatWith() {
     FirebaseFirestore.instance.collection("users").get().then((value) {
@@ -328,7 +332,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     });
     emit(TokenSet());
   }
-
   var imageSignUpPath;
   File? imageSignUp;
 
@@ -365,11 +368,10 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     lastname = lastname;
     emit(KeepValuesFieldUpdated());
   }
-
-
   void UpdateBio({bio}){
     DioHelper.PutUserBio(idToken: Token,bio: bio).then((value) {
       emit(UpdateBioText());
+
       DioHelper.GetUserProfile(idToken: Token).then((value) {
         var user = json.decode(value.body);
         userProfileValues = UserProfileModel.fromJson(user);
@@ -387,8 +389,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         emit(GetUserProfile());
       });
     });}
-
-
   void UpdatePassword({NewPassword,OldPassword}){
     DioHelper.PutUserPassword(idToken: Token,NewPassword: NewPassword,oldPassword:OldPassword).then((value) {
       print(value.statusCode);
@@ -424,7 +424,27 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   }
 
+  List<String> ContactList =[];
+  List<UserProfileModel> UserProfileValues =[];
+void getContactList(){
+  UserProfileValues =[];
+  ContactList =[];
+  DioHelper.GetUserContacts(idToken: Token).then((value) {
+    ContactList = List<String>.from(json.decode(value.body));
+    print(ContactList.length);
+    for(int i=0;i<ContactList.length;i++){
+      DioHelper.GetUserProfile(idToken:ContactList[i]).then((value) {
+        var user = json.decode(value.body);
+        UserProfileValues.add(UserProfileModel.fromJson(user));
+        print(UserProfileValues[i].FirstName);
+        emit(GetUserProfile());
+      });
+    }
+    emit(GetContactList());
+  });
 
+
+}
 
 
 }

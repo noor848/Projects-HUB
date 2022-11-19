@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,12 @@ import '../../Cubit/cubitMainScreen.dart';
 
 class SendMessage extends StatelessWidget {
   final boxFeildController = TextEditingController();
+  String profilePicture="";
+  String firstName="";
+  String lastName="";
+  String RcvId="";
+
+  SendMessage(this.profilePicture, this.firstName, this.lastName,this.RcvId, {Key? key});
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CubitMainScreen,MainScreenState>(builder: (BuildContext context, state) {
@@ -19,13 +27,23 @@ class SendMessage extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage("https://images.unsplash.com/photo-1664207251296-569bacae6f04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
+                child:   Container(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100)
+                  ),
+                  child:
+                  profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 50,
+                    width: 50,
+                    fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).userProfileValues.profilePicture.toString()!),
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               SizedBox(width: 10,),
-              Text("My Name",style: Theme.of(context).textTheme.subtitle1,),
+              Text("$firstName $lastName",style: Theme.of(context).textTheme.subtitle1,),
             ],
           ),
 
@@ -68,7 +86,7 @@ class SendMessage extends StatelessWidget {
                           style: Theme.of(context).textTheme.subtitle1,
                           decoration: InputDecoration(
                               border:InputBorder.none,
-                              hintText: "Type Message Here.......",
+                              hintText: "   Type Message Here.......",
                               hintStyle: Theme.of(context).textTheme.subtitle1
                           ),
                         ),
@@ -76,7 +94,7 @@ class SendMessage extends StatelessWidget {
                     ),
                     MaterialButton(onPressed: (){
                       print(boxFeildController.text);
-                      CubitMainScreen.get(context).sendMessages(RecieverId: "19f5f493-1c56-47e3-ad71-b4aed335de22", text: boxFeildController.text,);
+                      CubitMainScreen.get(context).sendMessages(RecieverId: RcvId, text: boxFeildController.text,);
                     },
                       minWidth: 1,
                       child: Icon(IconlyLight.send, color:Theme.of(context).errorColor,),
