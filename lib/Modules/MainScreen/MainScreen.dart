@@ -61,6 +61,7 @@ class MainScreen extends StatelessWidget {
                 Navigator.pop(context);
               },),*/
             IconButton(onPressed: (){
+              cubic.getContactList();
             cubic.changeThem();
           }, icon:const Icon(Icons.brightness_4_outlined,))],
             leading: IconButton(onPressed:(){
@@ -153,6 +154,7 @@ class MainScreen extends StatelessWidget {
             leading:  Icon(IconlyLight.logout,size:25,),
             title: const Text('Log Out'),
             onTap: () async {
+              CubitMainScreen.get(context).pageIndex=0;
     await GoogleSignInOutApi.logOut(context);
     Navigator.push(
     context,

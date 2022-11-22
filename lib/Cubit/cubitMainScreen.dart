@@ -13,6 +13,7 @@ import 'package:graduationproject1/Model/messageModel.dart';
 import 'package:graduationproject1/Service/DioHelper/Dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decode/jwt_decode.dart';
+import '../Model/contactModel.dart';
 import '../Modules/mainPageScreens/PostCreat.dart';
 import '../Modules/mainPageScreens/posts.dart';
 import '../Modules/mainPageScreens/profile.dart';
@@ -20,7 +21,6 @@ import '../Modules/mainPageScreens/userchatlist.dart';
 import '../Remote/end_points.dart';
 import '../shared/postImageText.dart';
 import '../shared/shared_prefrences.dart';
-import 'ContactList.dart';
 import 'StateMainScreen.dart';
 
 class CubitMainScreen extends Cubit<MainScreenState> {
@@ -156,7 +156,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     pageIndex = index;
     if(index==2){
     getContactList();
-
     }
     emit(ChangeBottomNavigationBarIndexState());
   }
@@ -223,9 +222,10 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     emit(TextHeaderFieldCreated());
   }
 
-  void sendMessages({required RecieverId, required text}) {
+  void sendMessages({required RecieverId,text,image}) {
     MessageModel model = MessageModel(
         text: text,
+        image: image,
         receiverId: RecieverId,
         senderId: userProfileValues.id,
         date: Timestamp.now());
@@ -262,7 +262,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   List<MessageModel> messages = [];
   List<MessageModel> messagesLocal = [];
 
-  void getMessages({required receiverId}) {
+  void getMessages ({required receiverId}) async{
 
     FirebaseFirestore.instance
         .collection("users")
@@ -276,12 +276,29 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       messages = [];
       event.docs.forEach((element) {
         messages.add(MessageModel.FromJson(element.data()));
+
+        emit(SocailGetMessageSuccessSate());
       });
 
     });
     emit(SocailGetMessageSuccessSate());
   }
+  void getMessages1 ({required receiverId}) async{
 
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userProfileValues.id)
+        .collection("chat")
+        .doc(receiverId)
+        .collection('messages')
+        .orderBy("date").get().then((value){
+      messages = [];
+      value.docs.forEach((element) {
+        messages.add(MessageModel.FromJson(element.data()));
+        emit(SocialGetMessageSuccessSate2());
+      });});
+    emit(SocialGetMessageSuccessSate2());
+  }
 
   void GetUserChatWith() {
     FirebaseFirestore.instance.collection("users").get().then((value) {
@@ -424,16 +441,16 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   }
 
-  List<String> ContactList =[];
+  List ContactList =[];
   List<UserProfileModel> UserProfileValues =[];
 void getContactList(){
   UserProfileValues =[];
   ContactList =[];
   DioHelper.GetUserContacts(idToken: Token).then((value) {
-    ContactList = List<String>.from(json.decode(value.body));
-    print(ContactList.length);
+    ContactList = json.decode(value.body);
     for(int i=0;i<ContactList.length;i++){
-      DioHelper.GetUserProfile(idToken:ContactList[i]).then((value) {
+      var ContactItem= ContactModel.fromJson(ContactList[i]);
+      DioHelper.GetUserProfile(idToken:ContactItem.id).then((value) {
         var user = json.decode(value.body);
         UserProfileValues.add(UserProfileModel.fromJson(user));
         print(UserProfileValues[i].FirstName);
@@ -445,6 +462,21 @@ void getContactList(){
 
 
 }
+
+  Future GetImageChat({RecieverId}) async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    final imageTemporarly = File(image.path);
+    _image = imageTemporarly;
+    if (_image != null) {
+      createImagePath64(image.path).then((value) {
+        sendMessages(RecieverId:RecieverId,image:value,text:"");
+      });
+    }
+    emit(ImagePickerLoad());
+  }
+
+
 
 
 }

@@ -4,13 +4,15 @@ class MessageModel{
 
    String senderId="";
    String  receiverId="";
-   String text="";
+   String ?text="";
+   String ?image="";
    late Timestamp date;
 
    MessageModel({
      required this.receiverId,
      required this.senderId,
      required this.text,
+     required this.image,
      required this.date
        });
 
@@ -19,6 +21,7 @@ class MessageModel{
      receiverId=json['receiverId'];
      text=json['text'];
      date=json['date'];
+     image=json['image'];
 
    }
 
@@ -27,6 +30,7 @@ class MessageModel{
        "senderId":senderId,
        "receiverId":receiverId,
        "text":text,
+       "image":image,
        "date":Timestamp.now()
      };}
 }

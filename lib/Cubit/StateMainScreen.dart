@@ -28,3 +28,4 @@ class DisableAndNotDiasbledPassword extends MainScreenState{}
 class BadRequestPassword extends MainScreenState{}
 class ErrorUpadatingPasssword extends MainScreenState{}
 class GetContactList extends MainScreenState{}
+class SocialGetMessageSuccessSate2 extends MainScreenState{}

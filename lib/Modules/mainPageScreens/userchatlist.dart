@@ -1,6 +1,4 @@
-
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +14,9 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return  BlocConsumer<CubitMainScreen,MainScreenState>(
         builder: (BuildContext context, state) {
+          print(CubitMainScreen
+              .get(context)
+              .UserProfileValues.length);
           return Center(child: CubitMainScreen
               .get(context)
               .UserProfileValues.length!=0?ListView.separated(
@@ -44,10 +45,11 @@ class ChatList extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: (){
-          CubitMainScreen.get(context).getMessages(receiverId:contactInfo.id);
+        CubitMainScreen.get(context).getMessages(receiverId:contactInfo.id);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>  SendMessage(contactInfo.profilePicture,contactInfo.FirstName,contactInfo.LastName,contactInfo.id)),
+            MaterialPageRoute(builder: (context) {
+              return SendMessage(contactInfo.profilePicture,contactInfo.FirstName,contactInfo.LastName,contactInfo.id);}),
           );
         },
         child: ClipPath(
