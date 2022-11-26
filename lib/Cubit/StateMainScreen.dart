@@ -29,3 +29,8 @@ class BadRequestPassword extends MainScreenState{}
 class ErrorUpadatingPasssword extends MainScreenState{}
 class GetContactList extends MainScreenState{}
 class SocialGetMessageSuccessSate2 extends MainScreenState{}
+class CheckUrlValid extends MainScreenState{}
+class DeletContactSuccessfully extends MainScreenState{}
+class DeletContactFailed extends MainScreenState{}
+class DeleteFirebaseMyPartOfMessage extends MainScreenState{}
+class GetContactProfile extends MainScreenState{}

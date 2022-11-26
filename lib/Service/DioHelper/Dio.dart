@@ -40,7 +40,6 @@ class DioHelper {
    /// print(await json.decode(json.encode(response.body)));
     return response.body;
   }
-
   static Future<http.Response> GetUserProfile({path,data,idToken})async{
   var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/$idToken");
   var response = await http.Client().get(url ,headers: {
@@ -104,6 +103,30 @@ class DioHelper {
       'Content-Type': 'application/json;charset=UTF-8',
       //'Charset': 'utf-8'
     });
+    return response;
+  }
+  static Future<http.Response> DeleteContact({ContactId,Token}) async {
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts/$Token");
+    var response = await http.Client().delete(url, body:
+    json.encode(
+        {
+          "ContactId":ContactId
+        }
+    ), headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      //'Charset': 'utf-8'
+      ///'Authorization':Token
+    });
+    /// print(await json.decode(json.encode(response.body)));
+    return response;
+  }
+  static Future<http.Response> GetContactProfile({path,data,idToken})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/shortProfile/$idToken");
+    var response = await http.Client().get(url ,headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      //'Charset': 'utf-8'
+    });
+    print("ccc"+await json.decode(json.encode(response.body)));
     return response;
   }
 

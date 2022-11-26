@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:graduationproject1/Model/messageModel.dart';
 import 'package:iconly/iconly.dart';
 
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
+import '../shortProfile/shortProfile.dart';
 
 class SendMessage extends StatelessWidget {
   final boxFeildController = TextEditingController();
@@ -22,34 +24,47 @@ class SendMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CubitMainScreen,MainScreenState>(
       builder: (BuildContext context, state) {
-        print(this.RcvId);
       //CubitMainScreen.get(context).getMessages1(receiverId:RcvId);//message array
         return  Scaffold(
           appBar: AppBar(
             elevation: 1,
-            title: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:   Container(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50)
-                    ),
-                    child:
-                    profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 40,
-                      width: 40,
-                      fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).userProfileValues.profilePicture.toString()!),
-                      height: 40,
-                      width: 40,
-                      fit: BoxFit.cover,
+            title: InkWell(
+              onTap: (){
+                CubitMainScreen.get(context).getContactProfile(RcvId:RcvId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ContactProfile(
+                  )),
+                );
+              },
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:   Container(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50)
+                      ),
+                      child:
+                      profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 40,
+                        width: 40,
+                        fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).userProfileValues.profilePicture.toString()!),
+                        height: 40,
+                        width: 40,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 10,),
-                Text("$firstName $lastName",style: Theme.of(context).textTheme.subtitle1,),
-              ],
+                  SizedBox(width: 10,),
+                  Text("$firstName $lastName",style: Theme.of(context).textTheme.subtitle1,),
+                ],
+              ),
             ),
+            actions: [Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(onPressed: (){}, icon: Icon(Icons.error,color: Colors.grey[500],)),
+            )],
           ),
           body:  Padding(
               padding: const EdgeInsets.all(10.0),
@@ -173,7 +188,11 @@ class SendMessage extends StatelessWidget {
             vertical: 5,
             horizontal:10.0
         ),
-        child:model.text!.isEmpty? Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,):
+        child:model.text!.isEmpty?
+        Hero(
+            tag: "hello",
+            child: FullScreenWidget(child: Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,)),
+        ):
           Text("${model.text}",
           style: TextStyle(color: Colors.red,fontFamily:'SubHead',fontSize: 16),
         ),
@@ -193,7 +212,7 @@ class SendMessage extends StatelessWidget {
           vertical: 5,
           horizontal:10.0
       ),
-      child: model.text!.isEmpty? Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,):
+      child: model.text!.isEmpty? FullScreenWidget(child: Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,)):
       Text("${model.text}",
         style: TextStyle(color: Colors.white,fontFamily:'SubHead',fontSize: 16),
       ),

@@ -22,6 +22,7 @@ import '../Remote/end_points.dart';
 import '../shared/postImageText.dart';
 import '../shared/shared_prefrences.dart';
 import 'StateMainScreen.dart';
+import 'contactModel.dart';
 
 class CubitMainScreen extends Cubit<MainScreenState> {
   CubitMainScreen() : super(MainScreenIntialState());
@@ -283,22 +284,14 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     });
     emit(SocailGetMessageSuccessSate());
   }
-  void getMessages1 ({required receiverId}) async{
 
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(userProfileValues.id)
-        .collection("chat")
-        .doc(receiverId)
-        .collection('messages')
-        .orderBy("date").get().then((value){
-      messages = [];
-      value.docs.forEach((element) {
-        messages.add(MessageModel.FromJson(element.data()));
-        emit(SocialGetMessageSuccessSate2());
-      });});
-    emit(SocialGetMessageSuccessSate2());
+  bool checkvValidUrl(link){
+   bool checkUrl= Uri.parse(link).isAbsolute;
+  emit(CheckUrlValid());
+   return checkUrl;
   }
+
+
 
   void GetUserChatWith() {
     FirebaseFirestore.instance.collection("users").get().then((value) {
@@ -476,6 +469,47 @@ void getContactList(){
     emit(ImagePickerLoad());
   }
 
+
+  void DeleteContact({RcvId}){
+
+  DioHelper.DeleteContact(Token: Token,ContactId: RcvId).then((value) {
+
+    if(value.statusCode==200){
+      deleteFirebaseMyMessage(receiverId: RcvId);
+      deleteFirebaseMyMessage(receiverId: RcvId);
+      getContactList();
+      //emit(DeletContactSuccessfully());
+    }
+  }).onError((error, stackTrace){
+    emit(DeletContactFailed());
+
+  });
+
+  }
+
+  Future<void> deleteFirebaseMyMessage({required receiverId}) async{
+
+   FirebaseFirestore.instance
+        .collection("users")
+        .doc(userProfileValues.id)
+        .collection('chat').doc(receiverId).delete().then((value) {
+       emit(DeleteFirebaseMyPartOfMessage());
+     }).onError((error, stackTrace){
+       print("Not Deleted!");
+       emit(DeletContactFailed());
+     });
+  }
+
+  late Contactmodl Contactmode;
+  void getContactProfile({RcvId}){
+    DioHelper.GetContactProfile(idToken:RcvId,).then((value) {
+      var user = json.decode(value.body);
+      print(value.body);
+      Contactmode = Contactmodl.fromJson(user);
+     //print(Contactmode.Name);
+      emit(GetContactProfile());
+    });
+  }
 
 
 

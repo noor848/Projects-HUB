@@ -32,7 +32,8 @@ class SignIn extends StatelessWidget {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16,
-          );    Navigator.push(
+          );
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) =>  MainScreen()),
           );}
