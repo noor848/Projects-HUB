@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,10 +15,25 @@ import 'Constants.dart';
 import 'Cubit/StateMainScreen.dart';
 import 'Cubit/cubitMainScreen.dart';
 import 'Modules/SignInScreen/signIn.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+ WidgetsFlutterBinding.ensureInitialized();
+
+ if(kIsWeb){
+    await Firebase.initializeApp(
+      options: FirebaseOptions( apiKey: "AIzaSyAudSusTqJP9QF_B6GyYZ96r3wkXFfMmho",
+          authDomain: "projecth-3d059.firebaseapp.com",
+          projectId: "projecth-3d059",
+          storageBucket: "projecth-3d059.appspot.com",
+          messagingSenderId: "546075392066",
+          appId: "1:546075392066:web:3406a983bbadc54f8f55db",
+          measurementId: "G-1VNGZ997PK")
+    );
+
+ }else
+   {await Firebase.initializeApp();}
+
   ///DioHelpr.init();
   Bloc.observer = MyBlocObserver();
   await CacheHelper.init();
@@ -70,6 +86,13 @@ class MyApp extends StatelessWidget {
                       )
 
                   ),
+                  dialogTheme: DialogTheme(
+                    backgroundColor: Colors.white,
+                    elevation: 0.0,
+
+
+                  ),
+
                   cardTheme:const CardTheme(
                     color: Colors.white,elevation: 20,
                     shadowColor: Colors.grey,
@@ -123,6 +146,13 @@ class MyApp extends StatelessWidget {
                         height: 1.3,
                         fontFamily: 'SubHead'
                     ),
+                    labelMedium: TextStyle(
+                        color: Colors.black54,fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        height: 1.3,
+                        fontFamily: 'SubHead'
+                    ),
+
 
 
                   ),
@@ -135,6 +165,11 @@ class MyApp extends StatelessWidget {
                     fillColor: Colors.red),
                 scaffoldBackgroundColor: Color(0xff333739),
                 primarySwatch: Colors.red,
+                  dialogTheme: DialogTheme(
+                    backgroundColor: Color(0xff333739),
+                    elevation: 0.0,
+
+                  ),
                 appBarTheme: const AppBarTheme(
                     elevation: 0.0,
                     backgroundColor: Color(0xff333739),
@@ -210,6 +245,12 @@ class MyApp extends StatelessWidget {
                       color: Colors.grey,
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'SubHead'
+                  ),
+                  labelMedium: TextStyle(
+                      color: Colors.white,fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      height: 1.3,
                       fontFamily: 'SubHead'
                   ),
 

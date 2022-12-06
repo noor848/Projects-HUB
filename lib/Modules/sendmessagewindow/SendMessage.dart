@@ -24,13 +24,13 @@ class SendMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CubitMainScreen,MainScreenState>(
       builder: (BuildContext context, state) {
-      //CubitMainScreen.get(context).getMessages1(receiverId:RcvId);//message array
         return  Scaffold(
           appBar: AppBar(
             elevation: 1,
             title: InkWell(
               onTap: (){
                 CubitMainScreen.get(context).getContactProfile(RcvId:RcvId);
+                CubitMainScreen.get(context).checktheIamfollowing(UserId: RcvId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ContactProfile(
@@ -82,7 +82,8 @@ class SendMessage extends StatelessWidget {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CubitMainScreen.get(context).messages.length!=0 ?Expanded(
+                      CubitMainScreen.get(context).messages.length!=0 ?
+                      Expanded(
                         child: ListView.separated(
                             itemBuilder:(context, index) {
                               var Message=CubitMainScreen.get(context).messages[index];
@@ -101,8 +102,14 @@ class SendMessage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(Icons.hourglass_empty,size: 300,color: Colors.redAccent,),
-                                Text("No Message Yet :)")
+                                Padding(
+                                  padding:  EdgeInsets.zero,
+                                  child: Icon(
+                                    Icons.message_outlined,size: 300,color: Colors.redAccent[200],),
+                                ),
+                                Text("No Message Yet :)",style: TextStyle(
+                                  fontSize: 18,fontFamily: 'SubHead',
+                                ))
                               ],
                             ),
                           ),
@@ -166,7 +173,6 @@ class SendMessage extends StatelessWidget {
 
           )
       );
-
     },
     listener: (BuildContext context, Object? state) {
 

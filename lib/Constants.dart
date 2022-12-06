@@ -11,3 +11,4 @@ Color backgoroundColor=Color(0xFFFAFAFA);
 Color SecondaryColor=HexColor('FFEE3E38');
 Color HoverColor=Color(0xFF77d498);
 List<GlobalKey<FormState>> formKeys = [GlobalKey<FormState>(), GlobalKey<FormState>(), GlobalKey<FormState>()];
+String UserToken="";

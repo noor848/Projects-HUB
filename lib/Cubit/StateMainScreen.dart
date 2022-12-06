@@ -34,3 +34,12 @@ class DeletContactSuccessfully extends MainScreenState{}
 class DeletContactFailed extends MainScreenState{}
 class DeleteFirebaseMyPartOfMessage extends MainScreenState{}
 class GetContactProfile extends MainScreenState{}
+class AddContactSuccessfully extends MainScreenState{}
+class FollowedSuccessfully extends MainScreenState{}
+class GetFollowers extends MainScreenState{}
+class GetFollowings extends MainScreenState{}
+class UnfollowSuccess extends MainScreenState{}
+class ChecktheIamfollowing extends MainScreenState{}
+class FollowUnfollow extends MainScreenState{}
+
+

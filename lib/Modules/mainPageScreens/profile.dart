@@ -18,20 +18,7 @@ class Profile extends StatelessWidget {
       (listener: (BuildContext context, state) {  },
       builder: (BuildContext context, Object? state) {
           return Scaffold(
-            appBar: AppBar(
-              /*actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>  ProfileEdit()),
-                    );
-                  }, icon: Icon(IconlyLight.edit,size:25,)),
-                ),
-              ],*/
-             // automaticallyImplyLeading: false,
-            ),
+            appBar: AppBar(),
             body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -44,7 +31,7 @@ class Profile extends StatelessWidget {
                       fontSize: 40,
                       fontFamily: 'HeadFont'
                   ),),
-                  SizedBox(height: 30,),
+                  SizedBox(height: 20,),
                   Stack(
                     alignment: AlignmentDirectional.bottomEnd,
                     children: [
@@ -95,13 +82,37 @@ class Profile extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 15,),
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: Divider(
-              color: Colors.grey,
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                     Container(
+                       child: Column(
+                         children: [
+                           Container(
+                               padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                               child: Text("Following",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                           Text("${CubitMainScreen.get(context).userProfileValues.following}",style:Theme.of(context).textTheme.labelMedium,)
+                         ],
+                       ),
+                     ),
+                      SizedBox(width:8)
+                      , Container(
+                        child: Column(
+                          children: [
+                            Container(
+                                padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                                child: Text("Followers",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                            Text("${CubitMainScreen.get(context).userProfileValues.followers}",style:Theme.of(context).textTheme.labelMedium,)
+                          ],
+
+                        ),
+
+                      ),
+                    ],
                   ),
-                    Row(
+                  SizedBox(height: 14,),
+                  Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text("Thumb-Nails ",textAlign: TextAlign.end,style: TextStyle(fontSize: 25,fontFamily: 'HeadFont'),),
@@ -118,7 +129,6 @@ class Profile extends StatelessWidget {
                         SizedBox(width: 10,)
                       ],
                     ),
-                  SizedBox(height: 5,),
                   Row(
                     children: [
                       Expanded(

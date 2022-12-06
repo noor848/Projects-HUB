@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,11 +17,10 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return  BlocConsumer<CubitMainScreen,MainScreenState>(
         builder: (BuildContext context, state) {
-          print(CubitMainScreen
-              .get(context)
-              .UserProfileValues.length);
-          return Center(child: CubitMainScreen
-              .get(context)
+
+          return Center(
+              child:
+          CubitMainScreen.get(context)
               .UserProfileValues.length!=0?ListView.separated(
               physics: BouncingScrollPhysics(),
               itemBuilder: (context, index) =>
@@ -37,8 +38,22 @@ class ChatList extends StatelessWidget {
               Text("No Message Yet",style: TextStyle(fontSize: 15),)
             ],
           ));
-        }, listener: (BuildContext context, Object? state) {
+
+  }, listener: (BuildContext context, Object? state) {
           if(state is DeletContactSuccessfully){
+            Center(
+              child: TextButton(
+                child: const Text('Confirm Dialog'),
+                onPressed: () async {
+                  if (await confirm(context)) {
+                    return print('pressedOK');
+                  }
+                  return print('pressedCancel');
+                },
+              ),
+            );
+
+
             Fluttertoast.showToast(
               msg: "Deleted Successfully!",
               toastLength: Toast.LENGTH_SHORT,
@@ -48,13 +63,14 @@ class ChatList extends StatelessWidget {
               textColor: Colors.white,
               fontSize: 16,
             );
+
+
           }
 
     });
   }
 
   Widget Contacts(context,contactInfo){
-
     return  Padding(
       padding: const EdgeInsets.all(8.0),
       child:
@@ -62,8 +78,9 @@ class ChatList extends StatelessWidget {
         key: Key(contactInfo.id),
         direction: DismissDirection.endToStart,
         onDismissed: (direction){
-                CubitMainScreen.get(context).DeleteContact(RcvId:contactInfo.id);
+           CubitMainScreen.get(context).DeleteContact(RcvId:contactInfo.id);
         },
+
         background: Container(
           alignment: Alignment.centerRight,
           color:Colors.redAccent,
@@ -124,6 +141,28 @@ class ChatList extends StatelessWidget {
             ),
           ),
         ),
+        confirmDismiss: (DismissDirection direction) async {
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+
+               // title: const Text("Delete Confirmation"),
+                content: const Text("Are you sure you want to delete this item?"),
+                actions: <Widget>[
+                  MaterialButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text("Delete",style: TextStyle(color: Colors.red),)
+                  ),
+                  MaterialButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text("Cancel",style: TextStyle(color: Colors.red),),
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),);
 
 

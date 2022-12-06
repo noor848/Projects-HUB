@@ -134,6 +134,7 @@ class MainScreen extends StatelessWidget {
           leading:  Icon(IconlyLight.profile,size:25,),
           title: const Text('View Profile'),
           onTap: () {
+            CubitMainScreen.get(context).getProfile(UserId: null);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Profile()),

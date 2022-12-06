@@ -57,6 +57,8 @@ dependencies:
   fluttertoast: ^8.0.8
   jwt_decode: ^0.3.1
   full_screen_image_null_safe: ^2.0.0
+  confirm_dialog: ^1.0.1
+  firebase_core_web: ^1.6.6
 
 
 dev_dependencies:

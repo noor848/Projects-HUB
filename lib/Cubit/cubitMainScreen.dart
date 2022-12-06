@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduationproject1/Model/UserProfileModel.dart';
@@ -13,17 +13,15 @@ import 'package:graduationproject1/Model/messageModel.dart';
 import 'package:graduationproject1/Service/DioHelper/Dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decode/jwt_decode.dart';
+import '../Constants.dart';
 import '../Model/contactModel.dart';
 import '../Modules/mainPageScreens/PostCreat.dart';
 import '../Modules/mainPageScreens/posts.dart';
-import '../Modules/mainPageScreens/profile.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
-import '../Remote/end_points.dart';
 import '../shared/postImageText.dart';
 import '../shared/shared_prefrences.dart';
 import 'StateMainScreen.dart';
 import 'contactModel.dart';
-
 class CubitMainScreen extends Cubit<MainScreenState> {
   CubitMainScreen() : super(MainScreenIntialState());
 
@@ -39,12 +37,12 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   List textFieldCreate = [];
   List objectImageText = [];
 
+
   /////Generate TextFied
   void CreateTextFeildController() {
     textFieldController.add(new TextEditingController());
     emit(CreateController());
   }
-
   void AddTextField(context) {
     CreateTextFeildController();
     var field = TextField(
@@ -75,44 +73,79 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   var ImagesList = [];
 
   Future GetImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    final imageTemporarly = File(image.path);
-    _image = imageTemporarly;
-    if (_image != null) {
-      createImagePath64(image.path).then((value) {
-        objectImageText.add(ImagePost(value));
-        ImagesList.add(Image.file(
-          _image!,
-          fit: BoxFit.cover,
-          height: 200,
-          width: 200,
-        ));
-        listOfWholePostCreat.add(Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.file(
-                    _image!,
-                    fit: BoxFit.cover,
-                    height: 200,
-                    width: 200,
-                  )),
-            )));
-      });
+    if(kIsWeb){
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemporarly = File(image.path);
+      _image = imageTemporarly;
+      if (_image != null) {
+        createImagePath64(image.path).then((value) {
+          objectImageText.add(ImagePost(value));
+          ImagesList.add(Image.file(
+            _image!,
+            fit: BoxFit.cover,
+            height: 200,
+            width: 200,
+          ));
+          listOfWholePostCreat.add(Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      _image!,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: 200,
+                    )),
+              )));
+        });
+      }
+      emit(ImagePickerLoad());
+
+
+    } else {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemporarly = File(image.path);
+      _image = imageTemporarly;
+      if (_image != null) {
+        createImagePath64(image.path).then((value) {
+          objectImageText.add(ImagePost(value));
+          ImagesList.add(Image.file(
+            _image!,
+            fit: BoxFit.cover,
+            height: 200,
+            width: 200,
+          ));
+          listOfWholePostCreat.add(Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      _image!,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: 200,
+                    )),
+              )));
+        });
+      }
+      emit(ImagePickerLoad());
     }
-    emit(ImagePickerLoad());
+
+
+
   }
 
   void UpdateUserImage({imagePath})  {
-    //print(base64Encode(imagePath).toString());
     DioHelper.PutUserImage(
       idToken: userProfileValues.id,
       imagepath: base64Encode(imagePath).toString(),
     ).then((value) {
       emit(UpdateImageProfile());
-      DioHelper.GetUserProfile(idToken: Token).then((value) {
+      DioHelper.GetUserProfile(idToken: null).then((value) {
         var user = json.decode(value.body);
         userProfileValues = UserProfileModel.fromJson(user);
         emit(GetUserProfile());
@@ -125,13 +158,11 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   }
 
   Uint8List? ProfileImage;
-
   Future ProfileImageUpdate() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
     final imageTemporarly = File(image.path);
     ProfileImage = imageTemporarly.readAsBytesSync();
-   // print(ProfileImage);
     UpdateUserImage(imagePath: ProfileImage);
     emit(ImagePickerLoad());
   }
@@ -300,7 +331,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       });
     });
   }
-
   void Login({password, email}) {
     DioHelper.LogIn(
       password: password.toString(),
@@ -314,10 +344,9 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       print("Signed In !");
       setToken(token: value.toString());
       emit(LoginSuccess());
-      DioHelper.GetUserProfile(idToken: Token).then((value) {
+      DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
         var user = json.decode(value.body);
         userProfileValues = UserProfileModel.fromJson(user);
-        print(userProfileValues.FirstName);
         emit(GetUserProfile());
       });
     }).catchError((onError) {
@@ -326,25 +355,25 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     });
   }
 
-  String Token = "";
+  String loggedInUserId = "";
   late UserProfileModel userProfileValues;
-  void setToken({token}) {
+  void setToken({token}){
+
     Map<String, dynamic> payload = Jwt.parseJwt(token);
-    print(payload[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]);
-    Token = payload[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-    DioHelper.GetUserProfile(idToken: Token).then((value) {
+    loggedInUserId = payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
+    UserToken=token;
+
+    DioHelper.GetUserProfile(idToken:null).then((value) {
       var user = json.decode(value.body);
       userProfileValues = UserProfileModel.fromJson(user);
-      print(userProfileValues);
       emit(GetUserProfile());
     });
     emit(TokenSet());
   }
+
   var imageSignUpPath;
   File? imageSignUp;
-
   void SignUp({FirstName, LastName, email, password}) {
     DioHelper.SignUp(
             password: password,
@@ -369,8 +398,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     });
   }
 
-  var email, pass, firstname, lastname;
-
   void SetValues({email, pass, firstname, lastname}) {
     email = email;
     pass = pass;
@@ -379,30 +406,29 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     emit(KeepValuesFieldUpdated());
   }
   void UpdateBio({bio}){
-    DioHelper.PutUserBio(idToken: Token,bio: bio).then((value) {
+    DioHelper.PutUserBio(idToken: loggedInUserId,bio: bio).then((value) {
       emit(UpdateBioText());
 
-      DioHelper.GetUserProfile(idToken: Token).then((value) {
+      DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
         var user = json.decode(value.body);
         userProfileValues = UserProfileModel.fromJson(user);
-        print(userProfileValues.profilePicture);
         emit(GetUserProfile());
       });
 
     });}
   void UpdateUseName({FirstName,LastName}){
-    DioHelper.PutUserName(idToken: Token,FirstName: FirstName,lastName:LastName).then((value) {
+    DioHelper.PutUserName(idToken: loggedInUserId,FirstName: FirstName,lastName:LastName).then((value) {
       emit(UpdateUserFirasLstName());
-      DioHelper.GetUserProfile(idToken: Token).then((value) {
+      DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
         var user = json.decode(value.body);
         userProfileValues = UserProfileModel.fromJson(user);
         emit(GetUserProfile());
       });
     });}
   void UpdatePassword({NewPassword,OldPassword}){
-    DioHelper.PutUserPassword(idToken: Token,NewPassword: NewPassword,oldPassword:OldPassword).then((value) {
+    DioHelper.PutUserPassword(idToken: loggedInUserId,NewPassword: NewPassword,oldPassword:OldPassword).then((value) {
       print(value.statusCode);
-      if(value.statusCode==401||value.statusCode==400){
+      if(value.statusCode==401||value.statusCode==400||value.statusCode==404){
         emit(BadRequestPassword());
       }
       else {
@@ -423,15 +449,12 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     if(confirmPassword.toString()==NewPassword.toString()){
       isSamePassword=true;
       emit(DisableAndNotDiasbledPassword());
-
     }
     else{
       isSamePassword=false;
       emit(DisableAndNotDiasbledPassword());
-
     }
     print(isSamePassword);
-
   }
 
   List ContactList =[];
@@ -439,14 +462,13 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 void getContactList(){
   UserProfileValues =[];
   ContactList =[];
-  DioHelper.GetUserContacts(idToken: Token).then((value) {
+  DioHelper.GetUserContacts(idToken: loggedInUserId).then((value) {
     ContactList = json.decode(value.body);
     for(int i=0;i<ContactList.length;i++){
       var ContactItem= ContactModel.fromJson(ContactList[i]);
       DioHelper.GetUserProfile(idToken:ContactItem.id).then((value) {
         var user = json.decode(value.body);
         UserProfileValues.add(UserProfileModel.fromJson(user));
-        print(UserProfileValues[i].FirstName);
         emit(GetUserProfile());
       });
     }
@@ -455,8 +477,9 @@ void getContactList(){
 
 
 }
+Future GetImageChat({RecieverId}) async {
+  if(kIsWeb){
 
-  Future GetImageChat({RecieverId}) async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
     final imageTemporarly = File(image.path);
@@ -467,50 +490,133 @@ void getContactList(){
       });
     }
     emit(ImagePickerLoad());
-  }
+  }else{
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    final imageTemporarly = File(image.path);
+    _image = imageTemporarly;
+    if (_image != null) {
+      createImagePath64(image.path).then((value) {
+        sendMessages(RecieverId:RecieverId,image:value,text:"");
+      });
+    }
+    emit(ImagePickerLoad());
+  }}
+void DeleteContact({RcvId}){
 
+  DioHelper.DeleteContact(Token: loggedInUserId,ContactId: RcvId).then((value) {
 
-  void DeleteContact({RcvId}){
-
-  DioHelper.DeleteContact(Token: Token,ContactId: RcvId).then((value) {
-
-    if(value.statusCode==200){
-      deleteFirebaseMyMessage(receiverId: RcvId);
       deleteFirebaseMyMessage(receiverId: RcvId);
       getContactList();
-      //emit(DeletContactSuccessfully());
-    }
+      emit(DeletContactSuccessfully());
+
   }).onError((error, stackTrace){
     emit(DeletContactFailed());
 
   });
 
   }
+ void deleteFirebaseMyMessage({required receiverId}){
 
-  Future<void> deleteFirebaseMyMessage({required receiverId}) async{
+   var x=FirebaseFirestore.instance.collection("users")
+       .doc(userProfileValues.id)
+       .collection('chat')
+       .doc(receiverId);
 
-   FirebaseFirestore.instance
-        .collection("users")
-        .doc(userProfileValues.id)
-        .collection('chat').doc(receiverId).delete().then((value) {
-       emit(DeleteFirebaseMyPartOfMessage());
-     }).onError((error, stackTrace){
-       print("Not Deleted!");
-       emit(DeletContactFailed());
-     });
+   x.delete().then((value) {
+     emit(DeleteFirebaseMyPartOfMessage());
+   });
+
   }
-
   late Contactmodl Contactmode;
   void getContactProfile({RcvId}){
     DioHelper.GetContactProfile(idToken:RcvId,).then((value) {
       var user = json.decode(value.body);
-      print(value.body);
       Contactmode = Contactmodl.fromJson(user);
-     //print(Contactmode.Name);
+     print(Contactmode.Name);
       emit(GetContactProfile());
     });
   }
 
+  void AddContact({contactId}) {
+    DioHelper.AddContact(ContactId: contactId, idToken: loggedInUserId).then((value) {
+      emit(AddContactSuccessfully());
+    }).catchError((onError) {
+
+    });
+  }
+
+  void FollowUser({UserId}){
+    DioHelper.FollowUser(UserId: UserId).then((value){
+      checktheIamfollowing(UserId: UserId);
+      emit(FollowedSuccessfully());
+    }).catchError((onError) {});
+  }
+
+  void getFollowers({UserId}){
+    DioHelper.GetFollowers(UserId: UserId).then((value){
+      emit(GetFollowers());
+    }).catchError((onError) {});
+  }
+
+  void uNFollowUser({UserId}){
+    DioHelper.UnFollowUser(UserId: UserId).then((value){
+      emit(UnfollowSuccess());
+    }).catchError((onError) {});
+  }
+
+  void getFollowings({UserId}){
+    DioHelper.GetFollowing(UserId: UserId).then((value){
+    //  print(value.body);
+      emit(GetFollowings());
+    }).catchError((onError) {});
+  }
 
 
+
+
+
+
+bool checkTheIamfollowings=false;
+  void checktheIamfollowing({UserId}){
+    DioHelper.GetFollowing(UserId: null).then((value){
+     List following =json.decode(value.body);
+     print(following);
+        if(following.contains(UserId)){
+          checkTheIamfollowings = true;
+        }
+        else{
+          checkTheIamfollowings = false;
+          uNFollowUser(UserId:UserId);
+        }
+    }).catchError((onError) {});
+   print(checkTheIamfollowings);
+    emit(ChecktheIamfollowing());
+  }
+
+  void followUNfollow({UserId}){
+    if(checkTheIamfollowings==true){
+      checkTheIamfollowings=false;
+      uNFollowUser(UserId:UserId);
+      emit(FollowUnfollow());
+
+    }else{
+      checkTheIamfollowings=true;
+      FollowUser(UserId: UserId);
+      getProfile(UserId: null);
+      emit(FollowUnfollow());
+    }
+    checktheIamfollowing(UserId: UserId);
+    getProfile(UserId: null);
+    emit(FollowUnfollow());
+  }
+
+  void getProfile({UserId}){
+    DioHelper.GetUserProfile(idToken: UserId).then((value) {
+      var user = json.decode(value.body);
+      userProfileValues = UserProfileModel.fromJson(user);
+      emit(GetUserProfile());
+    });
+
+  }
 }

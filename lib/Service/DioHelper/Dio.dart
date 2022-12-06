@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
+import '../../Constants.dart';
 import '../../Model/UserProfileModel.dart';
 
 class DioHelper {
@@ -41,40 +43,43 @@ class DioHelper {
     return response.body;
   }
   static Future<http.Response> GetUserProfile({path,data,idToken})async{
-  var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/$idToken");
+  var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/profile/${idToken==null?"":idToken}");
   var response = await http.Client().get(url ,headers: {
     'Content-Type': 'application/json;charset=UTF-8',
+    'Authorization':'Bearer $UserToken',
     //'Charset': 'utf-8'
   });
-  print(await json.decode(json.encode(response.body)));
+  //print(await json.decode(json.encode(response.body))+"Hi");
   return response;
   }
   static Future<http.Response> PutUserImage({imagepath,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/ProfilePicture/$idToken");
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/ProfilePicture");
     var response = await http.Client().put(url,
         body: json.encode({
           "encodedProfilePicture":imagepath.toString()
         })
         ,headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-    });
-    print(await json.decode(json.encode(response.body)));
+          'Authorization':'Bearer $UserToken',
+        });
+   /// print(await json.decode(json.encode(response.body)));
     return response;
   }
   static Future<http.Response> PutUserBio({bio,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Bio/$idToken");
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Bio");
     var response = await http.Client().put(url,
         body: json.encode({
           "bio":bio.toString()
         })
         ,headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
         });
-    print(await json.decode(json.encode(response.body)));
+   // print(await json.decode(json.encode(response.body)));
     return response;
   }
   static Future<http.Response> PutUserName({FirstName,lastName,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/username/$idToken");
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/username");
     var response = await http.Client().put(url,
         body: json.encode({
           "FirstName":FirstName,
@@ -82,11 +87,12 @@ class DioHelper {
         })
         ,headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
         });
     return response;
   }
   static Future<http.Response> PutUserPassword({oldPassword,NewPassword,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Password/$idToken");
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Password");
     var response = await http.Client().put(url,
         body: json.encode({
           "OldPassword":oldPassword,
@@ -94,19 +100,22 @@ class DioHelper {
         })
         ,headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
         });
     return response;
   }
   static Future<http.Response> GetUserContacts({path,data,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts/$idToken");
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts");
     var response = await http.Client().get(url ,headers: {
       'Content-Type': 'application/json;charset=UTF-8',
-      //'Charset': 'utf-8'
+      'Authorization':'Bearer $UserToken',
     });
+
+   // print(response.body);
     return response;
   }
   static Future<http.Response> DeleteContact({ContactId,Token}) async {
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts/$Token");
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts/");
     var response = await http.Client().delete(url, body:
     json.encode(
         {
@@ -115,6 +124,7 @@ class DioHelper {
     ), headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       //'Charset': 'utf-8'
+      'Authorization':'Bearer $UserToken',
       ///'Authorization':Token
     });
     /// print(await json.decode(json.encode(response.body)));
@@ -129,5 +139,57 @@ class DioHelper {
     print("ccc"+await json.decode(json.encode(response.body)));
     return response;
   }
+  static Future<http.Response> AddContact({ContactId,idToken})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts");
+    var response = await http.Client().put(url,
+        body: json.encode({
+          "ContactId":ContactId,
+          'Authorization':'Bearer $UserToken',
+        })
+        ,headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+  static Future<http.Response> FollowUser({UserId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Follow/$UserId");
+    var response = await http.Client().put(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+  static Future<http.Response> UnFollowUser({UserId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Unfollow/$UserId");
+    var response = await http.Client().put(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+  static Future<http.Response> GetFollowers({UserId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Followers/${UserId==null?"":UserId}");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+  static Future<http.Response> GetFollowing({UserId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Following/${UserId==null?"":UserId}");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+
+    return response;
+  }
+
 
 }
+

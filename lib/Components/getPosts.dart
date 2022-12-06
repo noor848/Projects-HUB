@@ -35,7 +35,9 @@ Widget getPosts(context){
                       const SizedBox(width: 10,),
                       Text("Noor Braik",style: Theme.of(context).textTheme.caption,),
                       const SizedBox(width: 10,),
-                      const Text("OCT.30.2018",style: TextStyle(fontSize: 10,color: Colors.grey),)
+                      const Text("OCT.30.2018",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                      Spacer(),
+                      TextButton(onPressed: (){}, child: Text("+ Follow"))
                     ],
                   ),
                   Padding(
