@@ -59,6 +59,7 @@ dependencies:
   full_screen_image_null_safe: ^2.0.0
   confirm_dialog: ^1.0.1
   firebase_core_web: ^1.6.6
+  firebase_database: ^9.1.7
 
 
 dev_dependencies:

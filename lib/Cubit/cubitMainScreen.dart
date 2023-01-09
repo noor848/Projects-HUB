@@ -73,73 +73,72 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   var ImagesList = [];
 
   Future GetImage() async {
-    if(kIsWeb){
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-      final imageTemporarly = File(image.path);
-      _image = imageTemporarly;
-      if (_image != null) {
-        createImagePath64(image.path).then((value) {
-          objectImageText.add(ImagePost(value));
-          ImagesList.add(Image.file(
-            _image!,
-            fit: BoxFit.cover,
-            height: 200,
-            width: 200,
-          ));
-          listOfWholePostCreat.add(Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(
-                      _image!,
-                      fit: BoxFit.cover,
-                      height: 200,
-                      width: 200,
-                    )),
-              )));
-        });
-      }
-      emit(ImagePickerLoad());
+    if (kIsWeb) {
+    /*  final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
+      ProfileImage = await temp?.readAsBytes();
+      String x = base64.encode(ProfileImage!);
+      objectImageText.add(ImagePost(x));
+      final imageTemporarly = File(temp!.path);
+      ImagesList.add(Image.file(
+        imageTemporarly,
+        fit: BoxFit.cover,
+        height: 200,
+        width: 200,
+      ));
+      listOfWholePostCreat.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.file(
+                  imageTemporarly!,
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: 200,
+                )),
+          )));
 
-
-    } else {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-      final imageTemporarly = File(image.path);
-      _image = imageTemporarly;
-      if (_image != null) {
-        createImagePath64(image.path).then((value) {
-          objectImageText.add(ImagePost(value));
-          ImagesList.add(Image.file(
-            _image!,
-            fit: BoxFit.cover,
-            height: 200,
-            width: 200,
-          ));
-          listOfWholePostCreat.add(Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.file(
-                      _image!,
-                      fit: BoxFit.cover,
-                      height: 200,
-                      width: 200,
-                    )),
-              )));
-        });
-      }
-      emit(ImagePickerLoad());
+      emit(ImagePickerLoad());*/
     }
 
 
+    /////////////////
+    else{
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    final imageTemporarly = File(image.path);
+    _image = imageTemporarly;
+    if (_image != null) {
+      createImagePath64(image.path).then((value) {
+        objectImageText.add(ImagePost(value));
+        ImagesList.add(Image.file(
+          _image!,
+          fit: BoxFit.cover,
+          height: 200,
+          width: 200,
+        ));
+        listOfWholePostCreat.add(Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.file(
+                    _image!,
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: 200,
+                  )),
+            )));
+      });
 
+      emit(ImagePickerLoad());
+    }
   }
 
-  void UpdateUserImage({imagePath})  {
+
+  } ///---
+
+  Future<void> UpdateUserImage({imagePath})  async {
     DioHelper.PutUserImage(
       idToken: userProfileValues.id,
       imagepath: base64Encode(imagePath).toString(),
@@ -158,13 +157,43 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   }
 
   Uint8List? ProfileImage;
-  Future ProfileImageUpdate() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future ProfileImageUpdate() async {  ///------------------
+
+    if(kIsWeb){
+      final temp = (await ImagePicker().
+      getImage(source:ImageSource.camera,imageQuality:
+      80));
+      ProfileImage= await temp?.readAsBytes();
+      DioHelper.PutUserImage(
+        idToken: userProfileValues.id,
+        imagepath: base64.encode(ProfileImage!),
+      ).then((value) {
+        emit(UpdateImageProfile());
+        DioHelper.GetUserProfile(idToken: null).then((value) {
+          var user = json.decode(value.body);
+          userProfileValues = UserProfileModel.fromJson(user);
+          emit(GetUserProfile());
+        });
+
+      }).catchError((onError){
+        print(onError.toString());
+        emit(UpdateImageProfile());
+      });
+
+      emit(ImagePickerLoad());
+
+    }
+
+
+
+    else{
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
     final imageTemporarly = File(image.path);
     ProfileImage = imageTemporarly.readAsBytesSync();
     UpdateUserImage(imagePath: ProfileImage);
     emit(ImagePickerLoad());
+    }
   }
 
   Future<String> createImagePath64(imagepath) async {
@@ -263,11 +292,9 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         date: Timestamp.now());
     ////my chat part
     FirebaseFirestore.instance
-        .collection("users")
-        .doc(userProfileValues.id)
-        .collection('chat')
-        .doc(RecieverId)
-        .collection("messages")
+        .collection(userProfileValues.id)
+        .doc('chat')
+        .collection(RecieverId)
         .add(model.toMap())
         .then((value) {
       emit(SocialSendMessageSuccess());
@@ -276,11 +303,9 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     });
     //receiver chat part
     FirebaseFirestore.instance
-        .collection("users")
-        .doc(RecieverId)
-        .collection('chat')
-        .doc(userProfileValues.id)
-        .collection("messages")
+        .collection(RecieverId)
+        .doc('chat')
+        .collection(userProfileValues.id)
         .add(model.toMap())
         .then((value) {
       emit(SocialSendMessageSuccess());
@@ -288,6 +313,9 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       emit(SocialSendMessageError());
     });
     getMessages(receiverId: RecieverId);
+
+    AddContact(contactId: RecieverId);
+
 
   }
 
@@ -297,11 +325,9 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   void getMessages ({required receiverId}) async{
 
     FirebaseFirestore.instance
-        .collection("users")
-        .doc(userProfileValues.id)
-        .collection("chat")
-        .doc(receiverId)
-        .collection('messages')
+        .collection(userProfileValues.id)
+        .doc("chat")
+        .collection(receiverId)
         .orderBy("date")
         .snapshots()
         .listen((event) {
@@ -356,7 +382,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   }
 
   String loggedInUserId = "";
-  late UserProfileModel userProfileValues;
+  late UserProfileModel userProfileValues =UserProfileModel();
   void setToken({token}){
 
     Map<String, dynamic> payload = Jwt.parseJwt(token);
@@ -479,16 +505,11 @@ void getContactList(){
 }
 Future GetImageChat({RecieverId}) async {
   if(kIsWeb){
-
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    final imageTemporarly = File(image.path);
-    _image = imageTemporarly;
-    if (_image != null) {
-      createImagePath64(image.path).then((value) {
-        sendMessages(RecieverId:RecieverId,image:value,text:"");
-      });
-    }
+    final temp = (await ImagePicker().
+    getImage(source:ImageSource.camera,imageQuality:
+    80));
+    Uint8List? x= await temp?.readAsBytes();
+    sendMessages(RecieverId:RecieverId,image: base64.encode(x!),text:"");
     emit(ImagePickerLoad());
   }else{
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -516,19 +537,23 @@ void DeleteContact({RcvId}){
   });
 
   }
- void deleteFirebaseMyMessage({required receiverId}){
 
-   var x=FirebaseFirestore.instance.collection("users")
-       .doc(userProfileValues.id)
-       .collection('chat')
-       .doc(receiverId);
 
-   x.delete().then((value) {
-     emit(DeleteFirebaseMyPartOfMessage());
-   });
+  void deleteFirebaseMyMessage({required receiverId})async{
 
+   var collection = FirebaseFirestore.instance.collection(userProfileValues.id).doc('chat').collection(receiverId);
+   var snapshots = await collection.get();
+   for (var doc in snapshots.docs) {
+     print(doc.data());
+     await doc.reference.delete();
+   }
+   emit(DeleteFirebaseMyPartOfMessage());
   }
-  late Contactmodl Contactmode;
+
+
+  late Contactmodl Contactmode = Contactmodl();
+
+
   void getContactProfile({RcvId}){
     DioHelper.GetContactProfile(idToken:RcvId,).then((value) {
       var user = json.decode(value.body);
@@ -537,15 +562,11 @@ void DeleteContact({RcvId}){
       emit(GetContactProfile());
     });
   }
-
   void AddContact({contactId}) {
     DioHelper.AddContact(ContactId: contactId, idToken: loggedInUserId).then((value) {
       emit(AddContactSuccessfully());
-    }).catchError((onError) {
-
-    });
+    }).catchError((onError) {});
   }
-
   void FollowUser({UserId}){
     DioHelper.FollowUser(UserId: UserId).then((value){
       checktheIamfollowing(UserId: UserId);
@@ -571,10 +592,6 @@ void DeleteContact({RcvId}){
       emit(GetFollowings());
     }).catchError((onError) {});
   }
-
-
-
-
 
 
 bool checkTheIamfollowings=false;

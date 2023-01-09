@@ -12,7 +12,6 @@ import 'package:iconly/iconly.dart';
 
 class ChatList extends StatelessWidget {
   const ChatList({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return  BlocConsumer<CubitMainScreen,MainScreenState>(
@@ -52,8 +51,6 @@ class ChatList extends StatelessWidget {
                 },
               ),
             );
-
-
             Fluttertoast.showToast(
               msg: "Deleted Successfully!",
               toastLength: Toast.LENGTH_SHORT,
@@ -79,8 +76,8 @@ class ChatList extends StatelessWidget {
         direction: DismissDirection.endToStart,
         onDismissed: (direction){
            CubitMainScreen.get(context).DeleteContact(RcvId:contactInfo.id);
+           CubitMainScreen.get(context).deleteFirebaseMyMessage(receiverId: contactInfo.id);
         },
-
         background: Container(
           alignment: Alignment.centerRight,
           color:Colors.redAccent,
@@ -95,7 +92,7 @@ class ChatList extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) {
-                return SendMessage(contactInfo.profilePicture,contactInfo.FirstName,contactInfo.LastName,contactInfo.id);}),
+                return SendMessage(contactInfo.profilePicture.toString()!,contactInfo.FirstName,contactInfo.LastName,contactInfo.id);}),
             );
           },
           child: ClipPath(
@@ -121,9 +118,8 @@ class ChatList extends StatelessWidget {
                             borderRadius: BorderRadius.circular(100)
                         ),
                         child:
-                        contactInfo.profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 60,
-                          width: 60,
-                          fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).userProfileValues.profilePicture.toString()!),
+                        contactInfo.profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 60, width: 60,
+                          fit: BoxFit.fill,): Image.memory(base64Decode(contactInfo.profilePicture.toString()!),
                           height: 60,
                           width: 60,
                           fit: BoxFit.cover,

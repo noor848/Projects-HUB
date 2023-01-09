@@ -47,9 +47,9 @@ class SendMessage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50)
                       ),
                       child:
-                      profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 40,
+                      profilePicture.isEmpty?Image.asset('assets/images/profileImage.jpg', height: 40,
                         width: 40,
-                        fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).userProfileValues.profilePicture.toString()!),
+                        fit: BoxFit.fill,): Image.memory(base64Decode(profilePicture),
                         height: 40,
                         width: 40,
                         fit: BoxFit.cover,
@@ -71,11 +71,9 @@ class SendMessage extends StatelessWidget {
               child:
               StreamBuilder(
                 stream:  FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(CubitMainScreen.get(context).userProfileValues.id)
-                    .collection("chat")
-                    .doc(RcvId)
-                    .collection('messages')
+                    .collection(CubitMainScreen.get(context).userProfileValues.id)
+                    .doc("chat")
+                    .collection(RcvId)
                     .orderBy("date")
                     .snapshots(),
                 builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -154,7 +152,9 @@ class SendMessage extends StatelessWidget {
 
                               ),
                               MaterialButton(onPressed: (){
-                                CubitMainScreen.get(context).sendMessages(RecieverId: RcvId, text: boxFeildController.text,);
+                               CubitMainScreen.get(context).sendMessages(RecieverId: RcvId, text: boxFeildController.text,);
+                                //CubitMainScreen.get(context).deleteFirebaseMyMessage(receiverId: RcvId);
+
                                 //CubitMainScreen.get(context).GetImageChat(RecieverId: RcvId,);
                               },
                                 minWidth: 1,

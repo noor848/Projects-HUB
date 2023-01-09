@@ -14,8 +14,7 @@ import '../editProfile/editProfile.dart';
 import '../mainPageScreens/profile.dart';
 
 class MainScreen extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
-  GlobalKey _bottomNavigationKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,50 +22,14 @@ class MainScreen extends StatelessWidget {
         builder: (BuildContext context, state)
         { CubitMainScreen cubic= CubitMainScreen.get(context);
        return Scaffold(
-         key: _key,
+         key: _scaffoldKey,
           appBar: AppBar(title: const Text("Projects Hub"),
           actions: [
-         /*   PopupMenuButton(
-              icon: IconButton(
-                onPressed: (){
-                  if(_key.currentState!.isDrawerOpen){
-                    _key.currentState!.closeDrawer();
-                    //close drawer, if drawer is open
-                  }else{
-                    _key.currentState!.openDrawer();
-                    //open drawer, if drawer is closed
-                  }
-
-
-                },
-                  icon:
-                  Icon(IconlyBold.setting)),
-              elevation: 5,
-              color: Colors.grey.shade100,
-              position: PopupMenuPosition.under,
-              itemBuilder: (_) => <PopupMenuItem<String>>[
-                PopupMenuItem(
-                    onTap: ()async {
-                      await GoogleSignInOutApi.logOut(context);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignIn()));
-                    },
-                    child:Text("Logout",style: TextStyle(
-                          fontFamily: 'SubHead',fontSize: 18,color: Colors.red
-                      ),),
-                     ),
-              ],
-              onSelected: (_) {
-                Navigator.pop(context);
-              },),*/
             IconButton(onPressed: (){
               cubic.getContactList();
             cubic.changeThem();
           }, icon:const Icon(Icons.brightness_4_outlined,))],
-            leading: IconButton(onPressed:(){
 
-            },icon:Icon(Icons.menu)),
           ),
           body:cubic.PagesScreen[CubitMainScreen.get(context).pageIndex],
           bottomNavigationBar: CurvedNavigationBar(
@@ -84,7 +47,6 @@ class MainScreen extends StatelessWidget {
             height: 60,
           ),
 
-
         drawer: Drawer(
           width: 250,
         child: ListView(
@@ -92,10 +54,7 @@ class MainScreen extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
          DrawerHeader(
-          decoration: BoxDecoration(
-          color: Colors.red[500],
-            borderRadius: BorderRadius.circular(30)
-          ),
+          decoration: BoxDecoration(color: Colors.red[500]),
           child:  Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,7 +115,7 @@ class MainScreen extends StatelessWidget {
             title: const Text('Log Out'),
             onTap: () async {
               CubitMainScreen.get(context).pageIndex=0;
-    await GoogleSignInOutApi.logOut(context);
+  //  await GoogleSignInOutApi.logOut(context);
     Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => SignIn()));}
