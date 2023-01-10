@@ -207,7 +207,7 @@ class DioHelper {
       HttpHeaders.contentTypeHeader: 'application/json',
       'Authorization':'Bearer $UserToken',
     });
-    ///print(response.);
+    print(response.statusCode);
 
     return response;
   }

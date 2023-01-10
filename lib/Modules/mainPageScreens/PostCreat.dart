@@ -88,7 +88,7 @@ class PostCreate extends StatelessWidget {
                                       .copyWith(topLeft: Radius.circular(0))),
                               padding: EdgeInsets.all(0),
                               elevation: 10,
-                              color: Colors.grey.shade100,
+                              color: Theme.of(context).scaffoldBackgroundColor,
                               position: PopupMenuPosition.under,
                              /// key: _menuKey,
                               itemBuilder: (_) => <PopupMenuItem<String>>[
@@ -148,7 +148,7 @@ class PostCreate extends StatelessWidget {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 1, horizontal: 20),
+                                    vertical: 2, horizontal: 20),
                                 child: ElevatedButton(onPressed: () {
 
                                   int k=0;
@@ -174,6 +174,9 @@ class PostCreate extends StatelessWidget {
                                   }
                                   print(cubic.LastUpdatePostChnk);
                                ///   print(cubic.LastUpdatePostChnk);
+                                  if(cubic.isVisible) {
+                                    cubic.CoverImage = "";
+                                  }
                                   cubic.createPost(title:Title.text,coverPic: cubic.CoverImage,chunckList: cubic.LastUpdatePostChnk);
 
                                 }, child: Row(
@@ -195,7 +198,7 @@ class PostCreate extends StatelessWidget {
                                 )),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(vertical: 2,
                                     horizontal: 20),
                                 child: ElevatedButton(onPressed: () {
                                   cubic. ClearPostData();
@@ -219,7 +222,7 @@ class PostCreate extends StatelessWidget {
                                 )),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(vertical: 2,
                                     horizontal: 20),
                                 child: ElevatedButton(onPressed: () {
                                   cubic.Undo();
@@ -241,41 +244,37 @@ class PostCreate extends StatelessWidget {
                                   ],
                                 )),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 2,
+                                    horizontal: 20),
+                                child: ElevatedButton(onPressed: () {
+                                  cubic.Redo();
+                                }, child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.redo, color: Theme
+                                        .of(context)
+                                        .scaffoldBackgroundColor, size: 30,),
+                                    SizedBox(width: 15,),
+                                    Text("Redo", style: TextStyle(
+                                        color: Theme
+                                            .of(context)
+                                            .scaffoldBackgroundColor,
+                                        fontFamily: "SubHead",
+                                        fontSize: 16
+                                    ),),
+                                  ],
+                                )),
+                              ),
                             ],
                           ),
                         ),
                       ),
                     ));
-
                ShowBottomSheet.closed.then((value) => {
                 /// Navigator.pop(context)
                });
-
-              /*
-               int k=0;
-                for(int i=0;i< cubic.PostChnk.length;i++)
-                {
-                  var chunckType=PostChunks.fromJson(cubic.PostChnk[i]).chunkType;
-                  if( chunckType==1||chunckType==2||chunckType==3)
-                   {
-                     //print(body)
-                     cubic.LastUpdatePostChnk.add(
-                         {
-                       "chunkType": chunckType,
-                       "body": cubic.textFieldController[k++].text
-                     });
-                   }
-                  else{
-                    cubic.LastUpdatePostChnk.add(
-                        {
-                          "chunkType": 0,
-                          "body": PostChunks.fromJson(cubic.PostChnk[i]).body
-                        });
-                  }
-                }
-              print(cubic.LastUpdatePostChnk);
-              print(cubic.LastUpdatePostChnk);
-              cubic.createPost(title:Title.text,coverPic: cubic.CoverImage,chunckList: cubic.LastUpdatePostChnk);*/
             },
             child: Icon(Icons.send),
 

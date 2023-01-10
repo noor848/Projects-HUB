@@ -683,6 +683,7 @@ bool checkTheIamfollowings=false;
       chunkList: chunckList
     ).then((value) {
      print(value.body);
+     ClearPostData();
       var xx=CreatePost.FromJson( json.decode(value.body));
     emit(PostCreated());
    PostChnk=[];
@@ -699,7 +700,46 @@ bool checkTheIamfollowings=false;
     });
 
   }
+  List RedoList=[];
+  List RedoListObjects=[];
 
+  void Undo(){
+    ///print(listOfWholePostCreat.length);
+    ///print(listOfWholePostCreat);
+    if(PostChnk.isNotEmpty) {
+      RedoList.add(PostChnk.last);
+      RedoListObjects.add(listOfWholePostCreat.last);
+      listOfWholePostCreat.removeLast();
+      PostChnk.removeLast();
+
+    }
+    else {
+      if(!isVisible){ ////image shows
+      //  CoverImage="";
+        isVisible=true;   /////disappear
+      }
+    }
+    emit(TextFieldCreated());
+  }
+  void Redo(){
+    print(listOfWholePostCreat);
+    if(RedoList.isNotEmpty) {
+      listOfWholePostCreat.add(RedoListObjects.last);
+      RedoListObjects.remove(RedoListObjects.last);
+      PostChnk.add(RedoList.last);
+      RedoList.remove(RedoList.last);
+    }else{
+      if(isVisible && CoverImage!=""){ ///button and we have image
+       // CoverImage="";
+        isVisible=false;/// show the image
+      }else if (CoverImage!="" &&isVisible==false){
+        isVisible=false;/// show the image
+      }else{
+        isVisible=true;/// show the button
+      }
+    }
+    emit(TextFieldCreated());
+  }
   void ClearPostData(){
     PostChnk=[];
     textFieldController = [];
@@ -709,24 +749,11 @@ bool checkTheIamfollowings=false;
     isVisible=true;
     textFieldIndex =0;
     LastUpdatePostChnk=[];
+    RedoList=[];
+    CoverImage="";
+     RedoList=[];
+     RedoListObjects=[];
     emit(TextFieldCreated());
 
   }
-
-  void Undo(){
-    print(listOfWholePostCreat.length);
-    print(listOfWholePostCreat);
-    if(listOfWholePostCreat.isNotEmpty) {
-      listOfWholePostCreat.removeLast();
-    }
-    else {
-      if(!isVisible){
-        CoverImage="";
-        isVisible=true;
-      }
-    }
-    emit(TextFieldCreated());
-
-  }
-
 }
