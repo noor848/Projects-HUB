@@ -1,33 +1,80 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iconly/iconly.dart';
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
 
 class PostCreate extends StatelessWidget {
-  final GlobalKey _menuKey = GlobalKey();
+  ///final GlobalKey _menuKey = GlobalKey();
+    final Title = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return  BlocConsumer<CubitMainScreen,MainScreenState>(
       builder: (BuildContext context, state) {
         CubitMainScreen cubic= CubitMainScreen.get(context);
         return Scaffold(
-          body:Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+          body:Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
                     child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: TextField(
+                                controller: Title,
+                                style: TextStyle(fontSize: 50),
+                                maxLines: null,
+                                keyboardType: TextInputType.multiline,
+                                decoration: InputDecoration(
+                                  hintStyle: Theme.of(context).textTheme.headline2,
+                                  hintText: "Title",
+                                  enabledBorder: const UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: cubic.isVisible,
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                child: MaterialButton(onPressed: (){
+                                  cubic.ChangeVisibility();
+                                },child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(IconlyBroken.image,color: Colors.red,size: 60,),
+                                    SizedBox(width: 15,),
+                                    Text("Choose Cover Image",style: TextStyle(
+                                        color: Colors.grey,fontFamily: "SubHead",fontSize: 16
+                                    ),),
+                                  ],
+                                )),
+                              ),
+                            ),
+                            Visibility(
+                                visible: !cubic.isVisible,
+                                child:Image.memory(base64Decode(cubic.CoverImage),height: 200,width: double.infinity,fit: BoxFit.cover,)
+                            ),
                             ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
-                              scrollDirection:Axis.vertical ,
+                              scrollDirection:Axis.vertical,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) =>
                                 cubic.listOfWholePostCreat[index], itemCount:cubic.listOfWholePostCreat.length),
@@ -41,8 +88,7 @@ class PostCreate extends StatelessWidget {
                               elevation: 10,
                               color: Colors.grey.shade100,
                               position: PopupMenuPosition.under,
-                              key: _menuKey,
-
+                             /// key: _menuKey,
                               itemBuilder: (_) => <PopupMenuItem<String>>[
                                 PopupMenuItem(
                                     height: 30,
@@ -61,7 +107,7 @@ class PostCreate extends StatelessWidget {
                                 PopupMenuItem(
                                     height: 30,
                                     onTap: (){
-                                      cubic.AddTextField(context);
+                                      cubic.AddNormalTextField(context);
                                     },
                                     child:const Text("Normal",style:TextStyle(
                                       fontFamily: 'SubHead',fontSize: 17,color: Colors.red,),textAlign: TextAlign.center,)),
@@ -72,7 +118,6 @@ class PostCreate extends StatelessWidget {
                                     },
                                     child:const Text("Image",style:TextStyle(
                                       fontFamily: 'SubHead',fontSize: 17,color: Colors.red,),textAlign: TextAlign.center,)),
-
                               ],
                               onSelected: (_) {
                                 Navigator.pop(context);
@@ -81,20 +126,31 @@ class PostCreate extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-            ],
+              ],
+            ),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              for(int i=0;i< cubic.objectImageText.length;i++)
-              {
-                print(cubic.textFieldController[i].text);
-              }
+              cubic.createPost(title:Title.text,coverPic: cubic.CoverImage,chunckList: cubic.PostChnk);
             },
             child: Icon(Icons.send),
           ),
         );},
-      listener: (BuildContext context, Object? state) {  },
+      listener: (BuildContext context, Object? state) {
+
+        if(state is PostCreated){
+          Title.text="";
+          Fluttertoast.showToast(
+            msg: "Post Created !",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+        }
+      },
     );
   }
 }

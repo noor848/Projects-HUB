@@ -14,6 +14,7 @@ import 'package:graduationproject1/Service/DioHelper/Dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import '../Constants.dart';
+import '../Model/CreatePost.dart';
 import '../Model/contactModel.dart';
 import '../Modules/mainPageScreens/PostCreat.dart';
 import '../Modules/mainPageScreens/posts.dart';
@@ -22,6 +23,12 @@ import '../shared/postImageText.dart';
 import '../shared/shared_prefrences.dart';
 import 'StateMainScreen.dart';
 import 'contactModel.dart';
+enum ChunksTypeEnumeration{
+  Image,
+  Header1,
+  Header2,
+  Normal
+}
 class CubitMainScreen extends Cubit<MainScreenState> {
   CubitMainScreen() : super(MainScreenIntialState());
 
@@ -36,14 +43,58 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   List<TextEditingController> textFieldController = [];
   List textFieldCreate = [];
   List objectImageText = [];
+  bool isVisible=true;
+  String CoverImage="";
+  Uint8List? CoverImageunit;
 
+
+   Future<void> ChangeVisibility() async { ////// web need to be fixed
+     if (kIsWeb) {
+       /*  final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
+      ProfileImage = await temp?.readAsBytes();
+      String x = base64.encode(ProfileImage!);
+      objectImageText.add(ImagePost(x));
+      final imageTemporarly = File(temp!.path);
+      ImagesList.add(Image.file(
+        imageTemporarly,
+        fit: BoxFit.cover,
+        height: 200,
+        width: 200,
+      ));
+      listOfWholePostCreat.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.file(
+                  imageTemporarly!,
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: 200,
+                )),
+          )));
+
+      emit(ImagePickerLoad());*/
+     }
+     else{
+       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+       if (image == null) return;
+       isVisible=false;
+       final imageTemporarly = File(image.path);
+       CoverImageunit = imageTemporarly.readAsBytesSync();
+        CoverImage=base64Encode(CoverImageunit!);
+       emit(ImagePickerLoad());
+     }
+   }
 
   /////Generate TextFied
   void CreateTextFeildController() {
     textFieldController.add(new TextEditingController());
     emit(CreateController());
   }
-  void AddTextField(context) {
+
+  List PostChnk=[];
+  void AddNormalTextField(context) {
     CreateTextFeildController();
     var field = TextField(
       controller: textFieldController[textFieldIndex++],
@@ -62,10 +113,67 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     objectImageText.add(TextPost(
         value: textFieldController[textFieldIndex - 1].text, style: "normal"));
     textFieldCreate.add(field); //list of textFeild
-    listOfWholePostCreat.add(field);
-
-    ///list of whole elemnt in the post
+    listOfWholePostCreat.add(field);///list of whole element in the post
+    PostChnk.add(  {
+      "chunkType": 3,
+      "body": textFieldController[textFieldIndex - 1].text
+    } );
     emit(TextFieldCreated());
+  }
+
+ void addHeaderText(context) {
+    CreateTextFeildController();
+    var field = TextField(
+      controller: textFieldController[textFieldIndex++],
+      style: TextStyle(fontSize: 60),
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+        hintStyle: Theme.of(context).textTheme.headline2,
+        hintText: "Header1......",
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
+
+    objectImageText.add(TextPost(
+        value: textFieldController[textFieldIndex - 1].text, style: "h1"));
+    listOfWholePostCreat.add(field);
+    PostChnk.add({
+      "chunkType": 1,
+      "body": textFieldController[textFieldIndex - 1].text
+    } );
+    ///list of whole elemnt in the post
+    emit(TextHeaderFieldCreated());
+  }
+
+  void addHeader2Text(context) {
+    CreateTextFeildController();
+    var field = TextField(
+      controller: textFieldController[textFieldIndex++],
+      style: TextStyle(fontSize: 40),
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+        hintStyle: Theme.of(context).textTheme.headline4,
+        hintText: "Header2......",
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
+    objectImageText.add(TextPost(
+        value: textFieldController[textFieldIndex - 1].text, style: "h2"));
+    PostChnk.add({
+      "chunkType": 2,
+      "body": textFieldController[textFieldIndex - 1].text
+    } );    listOfWholePostCreat.add(field);///list of whole elemnt in the post
+    emit(TextHeaderFieldCreated());
   }
 
 /////imagePicker
@@ -100,44 +208,30 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
       emit(ImagePickerLoad());*/
     }
-
-
-    /////////////////
     else{
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    final imageTemporarly = File(image.path);
-    _image = imageTemporarly;
-    if (_image != null) {
-      createImagePath64(image.path).then((value) {
-        objectImageText.add(ImagePost(value));
-        ImagesList.add(Image.file(
-          _image!,
-          fit: BoxFit.cover,
-          height: 200,
-          width: 200,
-        ));
-        listOfWholePostCreat.add(Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.file(
-                    _image!,
-                    fit: BoxFit.cover,
-                    height: 200,
-                    width: 200,
-                  )),
-            )));
-      });
-
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      PostChnk.add({
+        "chunkType": 0,
+        "body": base64Encode(File(image.path).readAsBytesSync())
+      } );
+      listOfWholePostCreat.add(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.memory(
+                  base64Decode(base64Encode(File(image.path).readAsBytesSync())),
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: 200,
+                )),
+          )));
+      emit(TextFieldCreated());
       emit(ImagePickerLoad());
-    }
+
   }
-
-
-  } ///---
-
+  }
   Future<void> UpdateUserImage({imagePath})  async {
     DioHelper.PutUserImage(
       idToken: userProfileValues.id,
@@ -151,14 +245,11 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       });
 
     }).catchError((onError){
-      print(onError.toString());
       emit(UpdateImageProfile());
     });
   }
-
   Uint8List? ProfileImage;
-  Future ProfileImageUpdate() async {  ///------------------
-
+  Future ProfileImageUpdate() async {
     if(kIsWeb){
       final temp = (await ImagePicker().
       getImage(source:ImageSource.camera,imageQuality:
@@ -176,7 +267,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         });
 
       }).catchError((onError){
-        print(onError.toString());
         emit(UpdateImageProfile());
       });
 
@@ -204,7 +294,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   void ChangeEyePasswordIcon() {
     VisibleIcon = !VisibleIcon;
-    print(VisibleIcon);
     emit(ChangePsswordEyeICon());
   }
 
@@ -232,56 +321,24 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     }
   }
 
-  void addHeaderText(context) {
-    CreateTextFeildController();
-    var field = TextField(
-      controller: textFieldController[textFieldIndex++],
-      style: TextStyle(fontSize: 60),
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      decoration: InputDecoration(
-        hintStyle: Theme.of(context).textTheme.headline2,
-        hintText: "Header1......",
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
-        ),
-      ),
-    );
 
-    objectImageText.add(TextPost(
-        value: textFieldController[textFieldIndex - 1].text, style: "h1"));
-    listOfWholePostCreat.add(field);
 
-    ///list of whole elemnt in the post
-    emit(TextHeaderFieldCreated());
-  }
 
-  void addHeader2Text(context) {
-    CreateTextFeildController();
-    var field = TextField(
-      controller: textFieldController[textFieldIndex++],
-      style: TextStyle(fontSize: 40),
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      decoration: InputDecoration(
-        hintStyle: Theme.of(context).textTheme.headline4,
-        hintText: "Header2......",
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
-        ),
-      ),
-    );
-    objectImageText.add(TextPost(
-        value: textFieldController[textFieldIndex - 1].text, style: "h2"));
-    listOfWholePostCreat.add(field);
 
-    ///list of whole elemnt in the post
-    emit(TextHeaderFieldCreated());
-  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   void sendMessages({required RecieverId,text,image}) {
     MessageModel model = MessageModel(
@@ -353,7 +410,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   void GetUserChatWith() {
     FirebaseFirestore.instance.collection("users").get().then((value) {
       value.docs.forEach((element) {
-        print(element.id);
       });
     });
   }
@@ -363,11 +419,9 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       email: email.toString(),
     ).then((value) {
       if (value == "User Not Found") {
-        print("not foud insrif i3ml signup");
         emit(LoginFailed());
         return;
       }
-      print("Signed In !");
       setToken(token: value.toString());
       emit(LoginSuccess());
       DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
@@ -377,7 +431,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       });
     }).catchError((onError) {
       emit(LoginFailed());
-      print(onError.toString());
     });
   }
 
@@ -408,10 +461,8 @@ class CubitMainScreen extends Cubit<MainScreenState> {
             FirstName: FirstName,
             LastName: LastName)
         .then((value) {
-      print("Signed Up Succefully!");
       if (value.toString() == "User Already Exists") {
         emit(SignedUpFailed());
-        print("User Already Exists");
         return;
       } else {
         ///setToken(token:value.toString());
@@ -420,7 +471,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       }
     }).catchError((onError) {
       emit(SignedUpFailed());
-      print(onError.toString());
     });
   }
 
@@ -453,7 +503,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     });}
   void UpdatePassword({NewPassword,OldPassword}){
     DioHelper.PutUserPassword(idToken: loggedInUserId,NewPassword: NewPassword,oldPassword:OldPassword).then((value) {
-      print(value.statusCode);
       if(value.statusCode==401||value.statusCode==400||value.statusCode==404){
         emit(BadRequestPassword());
       }
@@ -480,7 +529,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       isSamePassword=false;
       emit(DisableAndNotDiasbledPassword());
     }
-    print(isSamePassword);
   }
 
   List ContactList =[];
@@ -544,7 +592,6 @@ void DeleteContact({RcvId}){
    var collection = FirebaseFirestore.instance.collection(userProfileValues.id).doc('chat').collection(receiverId);
    var snapshots = await collection.get();
    for (var doc in snapshots.docs) {
-     print(doc.data());
      await doc.reference.delete();
    }
    emit(DeleteFirebaseMyPartOfMessage());
@@ -558,7 +605,6 @@ void DeleteContact({RcvId}){
     DioHelper.GetContactProfile(idToken:RcvId,).then((value) {
       var user = json.decode(value.body);
       Contactmode = Contactmodl.fromJson(user);
-     print(Contactmode.Name);
       emit(GetContactProfile());
     });
   }
@@ -598,7 +644,6 @@ bool checkTheIamfollowings=false;
   void checktheIamfollowing({UserId}){
     DioHelper.GetFollowing(UserId: null).then((value){
      List following =json.decode(value.body);
-     print(following);
         if(following.contains(UserId)){
           checkTheIamfollowings = true;
         }
@@ -607,7 +652,6 @@ bool checkTheIamfollowings=false;
           uNFollowUser(UserId:UserId);
         }
     }).catchError((onError) {});
-   print(checkTheIamfollowings);
     emit(ChecktheIamfollowing());
   }
 
@@ -636,4 +680,29 @@ bool checkTheIamfollowings=false;
     });
 
   }
+
+  void createPost({
+  title,coverPic,chunckList
+}){
+    DioHelper.CreatePost(
+      title: title,
+      coverPicture: coverPic,
+      chunkList: chunckList
+    ).then((value) {
+    print(value.body);
+    emit(PostCreated());
+    PostChnk=[];
+   textFieldController = [];
+   textFieldCreate = [];
+    objectImageText = [];
+    listOfWholePostCreat = [];
+    isVisible=true;
+  textFieldIndex =0;
+  emit(TextFieldCreated());
+    }).onError((error, stackTrace){
+    print(error.toString());
+    });
+
+  }
+
 }

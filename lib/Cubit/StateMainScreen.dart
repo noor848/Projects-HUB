@@ -41,5 +41,6 @@ class GetFollowings extends MainScreenState{}
 class UnfollowSuccess extends MainScreenState{}
 class ChecktheIamfollowing extends MainScreenState{}
 class FollowUnfollow extends MainScreenState{}
+class PostCreated extends MainScreenState{}
 
 

@@ -190,6 +190,25 @@ class DioHelper {
     return response;
   }
 
+  static Future<http.Response> CreatePost({
 
+  title,coverPicture,chunkList
+
+})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post");
+    var response = await http.Client().post(url, body:
+    json.encode(
+        {
+          "title": title,
+          "coverPicture": coverPicture,
+          "postChunks": chunkList
+        }
+    ), headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      //'Charset': 'utf-8'
+      ///'Authorization':Token
+    });
+    return response;
+  }
 }
 

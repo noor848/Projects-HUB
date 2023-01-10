@@ -31,7 +31,6 @@ class SignUp extends StatelessWidget {
            textColor: Colors.white,
            fontSize: 16,
          );
-
         }
       else if(state is SignedUpFailed){
          Fluttertoast.showToast(
