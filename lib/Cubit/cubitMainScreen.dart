@@ -44,37 +44,32 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   List textFieldCreate = [];
   List objectImageText = [];
   bool isVisible=true;
+  bool bottomModal=true;
   String CoverImage="";
   Uint8List? CoverImageunit;
+  Uint8List? normalImageUnit;
+  String normalImage="";
 
+
+  void changebottomModalVisibility(){
+    if(bottomModal){
+      bottomModal=false;
+    }
+    else{
+      bottomModal=true;
+
+    }
+    emit(ChangeBottomModalSheetVisibility());
+  }
 
    Future<void> ChangeVisibility() async { ////// web need to be fixed
      if (kIsWeb) {
-       /*  final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
-      ProfileImage = await temp?.readAsBytes();
-      String x = base64.encode(ProfileImage!);
-      objectImageText.add(ImagePost(x));
-      final imageTemporarly = File(temp!.path);
-      ImagesList.add(Image.file(
-        imageTemporarly,
-        fit: BoxFit.cover,
-        height: 200,
-        width: 200,
-      ));
-      listOfWholePostCreat.add(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.file(
-                  imageTemporarly!,
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: 200,
-                )),
-          )));
-
-      emit(ImagePickerLoad());*/
+      final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
+      if (temp == null) return;
+      isVisible=false;
+      CoverImageunit = await temp?.readAsBytes();
+      CoverImage=base64Encode(CoverImageunit!);
+      emit(ImagePickerLoad());
      }
      else{
        final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -94,6 +89,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   }
 
   List PostChnk=[];
+  List LastUpdatePostChnk=[];
   void AddNormalTextField(context) {
     CreateTextFeildController();
     var field = TextField(
@@ -139,8 +135,9 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       ),
     );
 
-    objectImageText.add(TextPost(
-        value: textFieldController[textFieldIndex - 1].text, style: "h1"));
+   /// objectImageText.add(TextPost(
+        ///value: textFieldController[textFieldIndex - 1].text, style: "h1"));
+    print(textFieldController[textFieldIndex - 1].text);
     listOfWholePostCreat.add(field);
     PostChnk.add({
       "chunkType": 1,
@@ -182,31 +179,28 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   Future GetImage() async {
     if (kIsWeb) {
-    /*  final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
-      ProfileImage = await temp?.readAsBytes();
-      String x = base64.encode(ProfileImage!);
-      objectImageText.add(ImagePost(x));
-      final imageTemporarly = File(temp!.path);
-      ImagesList.add(Image.file(
-        imageTemporarly,
-        fit: BoxFit.cover,
-        height: 200,
-        width: 200,
-      ));
+
+      final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
+      if (temp == null) return;
+      normalImageUnit = await temp?.readAsBytes();
+      PostChnk.add({
+        "chunkType": 0,
+        "body": base64Encode(normalImageUnit!)
+      } );
       listOfWholePostCreat.add(Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.file(
-                  imageTemporarly!,
+                child: Image.memory(
+                  base64Decode(base64Encode(normalImageUnit!)),
                   fit: BoxFit.cover,
                   height: 200,
                   width: 200,
                 )),
           )));
-
-      emit(ImagePickerLoad());*/
+      emit(TextFieldCreated());
+      emit(ImagePickerLoad());
     }
     else{
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -232,6 +226,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   }
   }
+
   Future<void> UpdateUserImage({imagePath})  async {
     DioHelper.PutUserImage(
       idToken: userProfileValues.id,
@@ -285,7 +280,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     emit(ImagePickerLoad());
     }
   }
-
   Future<String> createImagePath64(imagepath) async {
     File imagefile = File(imagepath); //convert Path to File
     Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
@@ -422,6 +416,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         emit(LoginFailed());
         return;
       }
+      print(value.toString());
       setToken(token: value.toString());
       emit(LoginSuccess());
       DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
@@ -586,9 +581,7 @@ void DeleteContact({RcvId}){
 
   }
 
-
   void deleteFirebaseMyMessage({required receiverId})async{
-
    var collection = FirebaseFirestore.instance.collection(userProfileValues.id).doc('chat').collection(receiverId);
    var snapshots = await collection.get();
    for (var doc in snapshots.docs) {
@@ -598,9 +591,9 @@ void DeleteContact({RcvId}){
   }
 
 
+
+
   late Contactmodl Contactmode = Contactmodl();
-
-
   void getContactProfile({RcvId}){
     DioHelper.GetContactProfile(idToken:RcvId,).then((value) {
       var user = json.decode(value.body);
@@ -689,19 +682,50 @@ bool checkTheIamfollowings=false;
       coverPicture: coverPic,
       chunkList: chunckList
     ).then((value) {
-    print(value.body);
+     print(value.body);
+      var xx=CreatePost.FromJson( json.decode(value.body));
     emit(PostCreated());
-    PostChnk=[];
+   PostChnk=[];
    textFieldController = [];
    textFieldCreate = [];
     objectImageText = [];
     listOfWholePostCreat = [];
     isVisible=true;
   textFieldIndex =0;
+  LastUpdatePostChnk=[];
   emit(TextFieldCreated());
     }).onError((error, stackTrace){
     print(error.toString());
     });
+
+  }
+
+  void ClearPostData(){
+    PostChnk=[];
+    textFieldController = [];
+    textFieldCreate = [];
+    objectImageText = [];
+    listOfWholePostCreat = [];
+    isVisible=true;
+    textFieldIndex =0;
+    LastUpdatePostChnk=[];
+    emit(TextFieldCreated());
+
+  }
+
+  void Undo(){
+    print(listOfWholePostCreat.length);
+    print(listOfWholePostCreat);
+    if(listOfWholePostCreat.isNotEmpty) {
+      listOfWholePostCreat.removeLast();
+    }
+    else {
+      if(!isVisible){
+        CoverImage="";
+        isVisible=true;
+      }
+    }
+    emit(TextFieldCreated());
 
   }
 

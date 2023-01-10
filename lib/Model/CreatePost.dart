@@ -16,7 +16,7 @@ class CreatePost{
 
 
 class PostChunks{
-   late Enum chunkType;
+   late int chunkType;
   String body="";
 
    PostChunks(this.body, this.chunkType);

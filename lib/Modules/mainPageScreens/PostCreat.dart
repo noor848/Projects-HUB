@@ -7,10 +7,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconly/iconly.dart';
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
+import '../../Model/CreatePost.dart';
 
 class PostCreate extends StatelessWidget {
-  ///final GlobalKey _menuKey = GlobalKey();
-    final Title = TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final Title = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return  BlocConsumer<CubitMainScreen,MainScreenState>(
@@ -34,6 +35,7 @@ class PostCreate extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
                                 controller: Title,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 50),
                                 maxLines: null,
                                 keyboardType: TextInputType.multiline,
@@ -53,16 +55,16 @@ class PostCreate extends StatelessWidget {
                               child: Container(
                                 width: double.infinity,
                                 height: 50,
-                                child: MaterialButton(onPressed: (){
+                                child: ElevatedButton(onPressed: (){
                                   cubic.ChangeVisibility();
                                 },child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(IconlyBroken.image,color: Colors.red,size: 60,),
+                                    Icon(IconlyBroken.image_2,color:Theme.of(context).scaffoldBackgroundColor,size: 30,),
                                     SizedBox(width: 15,),
                                     Text("Choose Cover Image",style: TextStyle(
-                                        color: Colors.grey,fontFamily: "SubHead",fontSize: 16
+                                        color: Theme.of(context).scaffoldBackgroundColor,fontFamily: "SubHead",fontSize: 16
                                     ),),
                                   ],
                                 )),
@@ -129,15 +131,159 @@ class PostCreate extends StatelessWidget {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: Builder(builder: (BuildContext context)=>
+              FloatingActionButton(
             onPressed: () {
-              cubic.createPost(title:Title.text,coverPic: cubic.CoverImage,chunckList: cubic.PostChnk);
+               var ShowBottomSheet=
+               showBottomSheet(context:context,builder:
+               (context)=>Container(
+                      child: Container(
+                        color: Theme
+                            .of(context)
+                            .scaffoldBackgroundColor,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 30, bottom: 30),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 1, horizontal: 20),
+                                child: ElevatedButton(onPressed: () {
+
+                                  int k=0;
+                                  for(int i=0;i< cubic.PostChnk.length;i++)
+                                  {
+                                    var chunckType=PostChunks.fromJson(cubic.PostChnk[i]).chunkType;
+                                    if( chunckType==1||chunckType==2||chunckType==3)
+                                    {
+                                      //print(body)
+                                      cubic.LastUpdatePostChnk.add(
+                                          {
+                                            "chunkType": chunckType,
+                                            "body": cubic.textFieldController[k++].text
+                                          });
+                                    }
+                                    else{
+                                      cubic.LastUpdatePostChnk.add(
+                                          {
+                                            "chunkType": 0,
+                                            "body": PostChunks.fromJson(cubic.PostChnk[i]).body
+                                          });
+                                    }
+                                  }
+                                  print(cubic.LastUpdatePostChnk);
+                               ///   print(cubic.LastUpdatePostChnk);
+                                  cubic.createPost(title:Title.text,coverPic: cubic.CoverImage,chunckList: cubic.LastUpdatePostChnk);
+
+                                }, child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(IconlyBroken.send, color: Theme
+                                        .of(context)
+                                        .scaffoldBackgroundColor, size: 30,),
+                                    SizedBox(width: 15,),
+                                    Text("Submit", style: TextStyle(
+                                        color: Theme
+                                            .of(context)
+                                            .scaffoldBackgroundColor,
+                                        fontFamily: "SubHead",
+                                        fontSize: 16
+                                    ),),
+                                  ],
+                                )),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20),
+                                child: ElevatedButton(onPressed: () {
+                                  cubic. ClearPostData();
+                                  Title.text="";
+                                }, child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.delete, color: Theme
+                                        .of(context)
+                                        .scaffoldBackgroundColor, size: 30,),
+                                    SizedBox(width: 15,),
+                                    Text("Erase", style: TextStyle(
+                                        color: Theme
+                                            .of(context)
+                                            .scaffoldBackgroundColor,
+                                        fontFamily: "SubHead",
+                                        fontSize: 16
+                                    ),),
+                                  ],
+                                )),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20),
+                                child: ElevatedButton(onPressed: () {
+                                  cubic.Undo();
+                                }, child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.undo, color: Theme
+                                        .of(context)
+                                        .scaffoldBackgroundColor, size: 30,),
+                                    SizedBox(width: 15,),
+                                    Text("Undo", style: TextStyle(
+                                        color: Theme
+                                            .of(context)
+                                            .scaffoldBackgroundColor,
+                                        fontFamily: "SubHead",
+                                        fontSize: 16
+                                    ),),
+                                  ],
+                                )),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ));
+
+               ShowBottomSheet.closed.then((value) => {
+                /// Navigator.pop(context)
+               });
+
+              /*
+               int k=0;
+                for(int i=0;i< cubic.PostChnk.length;i++)
+                {
+                  var chunckType=PostChunks.fromJson(cubic.PostChnk[i]).chunkType;
+                  if( chunckType==1||chunckType==2||chunckType==3)
+                   {
+                     //print(body)
+                     cubic.LastUpdatePostChnk.add(
+                         {
+                       "chunkType": chunckType,
+                       "body": cubic.textFieldController[k++].text
+                     });
+                   }
+                  else{
+                    cubic.LastUpdatePostChnk.add(
+                        {
+                          "chunkType": 0,
+                          "body": PostChunks.fromJson(cubic.PostChnk[i]).body
+                        });
+                  }
+                }
+              print(cubic.LastUpdatePostChnk);
+              print(cubic.LastUpdatePostChnk);
+              cubic.createPost(title:Title.text,coverPic: cubic.CoverImage,chunckList: cubic.LastUpdatePostChnk);*/
             },
             child: Icon(Icons.send),
-          ),
-        );},
-      listener: (BuildContext context, Object? state) {
 
+          ),
+
+          ),
+);},
+      listener: (BuildContext context, Object? state) {
         if(state is PostCreated){
           Title.text="";
           Fluttertoast.showToast(
@@ -340,3 +486,5 @@ enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, ),)
 
 */
 //
+
+

@@ -146,6 +146,11 @@ class MyApp extends StatelessWidget {
                         height: 1.3,
                         fontFamily: 'SubHead'
                     ),
+                    headline2: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 50,
+                        fontFamily: 'SubHead'
+                    ),
                     labelMedium: TextStyle(
                         color: Colors.black54,fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -227,7 +232,7 @@ class MyApp extends StatelessWidget {
                   ),
                   headline2: TextStyle(
                       color: Colors.grey,
-                      fontSize: 60,
+                      fontSize: 50,
                       fontFamily: 'SubHead'
                   ),
 

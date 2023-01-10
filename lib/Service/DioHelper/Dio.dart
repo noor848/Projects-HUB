@@ -190,7 +190,7 @@ class DioHelper {
     return response;
   }
 
-  static Future<http.Response> CreatePost({
+  static Future<http.Response>  CreatePost({
 
   title,coverPicture,chunkList
 
@@ -204,10 +204,11 @@ class DioHelper {
           "postChunks": chunkList
         }
     ), headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      //'Charset': 'utf-8'
-      ///'Authorization':Token
+      HttpHeaders.contentTypeHeader: 'application/json',
+      'Authorization':'Bearer $UserToken',
     });
+    ///print(response.);
+
     return response;
   }
 }
