@@ -16,7 +16,6 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     return  BlocConsumer<CubitMainScreen,MainScreenState>(
         builder: (BuildContext context, state) {
-
           return Center(
               child:
           CubitMainScreen.get(context)

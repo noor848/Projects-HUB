@@ -43,5 +43,6 @@ class ChecktheIamfollowing extends MainScreenState{}
 class FollowUnfollow extends MainScreenState{}
 class PostCreated extends MainScreenState{}
 class ChangeBottomModalSheetVisibility extends MainScreenState{}
+class ViewDataPost extends MainScreenState{}
 
 

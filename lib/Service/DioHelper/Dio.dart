@@ -189,12 +189,7 @@ class DioHelper {
 
     return response;
   }
-
-  static Future<http.Response>  CreatePost({
-
-  title,coverPicture,chunkList
-
-})async{
+  static Future<http.Response>  CreatePost({title,coverPicture,chunkList})async{
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post");
     var response = await http.Client().post(url, body:
     json.encode(
@@ -211,5 +206,18 @@ class DioHelper {
 
     return response;
   }
+  static Future<http.Response> GetViewPost({PostId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/${PostId}");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+
+    return response;
+  }
+
+
+
 }
 

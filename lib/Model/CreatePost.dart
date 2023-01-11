@@ -1,9 +1,7 @@
 class CreatePost{
-
   String title="";
   String coverPicture="";
   late List<PostChunks>postChunks;
-
   CreatePost.FromJson(Map<String,dynamic>json){
     this.title=json['title'];
     this.coverPicture=json['coverPicture'];

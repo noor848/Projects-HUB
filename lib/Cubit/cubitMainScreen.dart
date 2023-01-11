@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:jwt_decode/jwt_decode.dart';
 import '../Constants.dart';
 import '../Model/CreatePost.dart';
 import '../Model/contactModel.dart';
+import '../Model/postView.dart';
 import '../Modules/mainPageScreens/PostCreat.dart';
 import '../Modules/mainPageScreens/posts.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
@@ -116,7 +118,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     } );
     emit(TextFieldCreated());
   }
-
  void addHeaderText(context) {
     CreateTextFeildController();
     var field = TextField(
@@ -137,7 +138,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
    /// objectImageText.add(TextPost(
         ///value: textFieldController[textFieldIndex - 1].text, style: "h1"));
-    print(textFieldController[textFieldIndex - 1].text);
+   /// print(textFieldController[textFieldIndex - 1].text);
     listOfWholePostCreat.add(field);
     PostChnk.add({
       "chunkType": 1,
@@ -146,7 +147,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     ///list of whole elemnt in the post
     emit(TextHeaderFieldCreated());
   }
-
   void addHeader2Text(context) {
     CreateTextFeildController();
     var field = TextField(
@@ -179,7 +179,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   Future GetImage() async {
     if (kIsWeb) {
-
       final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
       if (temp == null) return;
       normalImageUnit = await temp?.readAsBytes();
@@ -226,7 +225,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   }
   }
-
   Future<void> UpdateUserImage({imagePath})  async {
     DioHelper.PutUserImage(
       idToken: userProfileValues.id,
@@ -243,6 +241,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       emit(UpdateImageProfile());
     });
   }
+
   Uint8List? ProfileImage;
   Future ProfileImageUpdate() async {
     if(kIsWeb){
@@ -285,17 +284,14 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes
     return base64.encode(imagebytes); //convert bytes to base64 string
   }
-
   void ChangeEyePasswordIcon() {
     VisibleIcon = !VisibleIcon;
     emit(ChangePsswordEyeICon());
   }
-
   Widget changeMainPageScreens(int index) {
     emit(ChangeHomePageChioce());
     return PagesScreen[index];
   }
-
   void changeScreenIndex(int index) {
     pageIndex = index;
     if(index==2){
@@ -303,7 +299,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     }
     emit(ChangeBottomNavigationBarIndexState());
   }
-
   void changeThem({shared}) {
     if (shared != null) {
       themeChange = shared;
@@ -314,25 +309,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       emit(ThemChangeState());
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   void sendMessages({required RecieverId,text,image}) {
     MessageModel model = MessageModel(
@@ -416,7 +392,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         emit(LoginFailed());
         return;
       }
-      print(value.toString());
+    ///  print(value.toString());
       setToken(token: value.toString());
       emit(LoginSuccess());
       DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
@@ -682,18 +658,8 @@ bool checkTheIamfollowings=false;
       coverPicture: coverPic,
       chunkList: chunckList
     ).then((value) {
-     print(value.body);
      ClearPostData();
-      var xx=CreatePost.FromJson( json.decode(value.body));
-    emit(PostCreated());
-   PostChnk=[];
-   textFieldController = [];
-   textFieldCreate = [];
-    objectImageText = [];
-    listOfWholePostCreat = [];
-    isVisible=true;
-  textFieldIndex =0;
-  LastUpdatePostChnk=[];
+     emit(PostCreated());
   emit(TextFieldCreated());
     }).onError((error, stackTrace){
     print(error.toString());
@@ -704,14 +670,11 @@ bool checkTheIamfollowings=false;
   List RedoListObjects=[];
 
   void Undo(){
-    ///print(listOfWholePostCreat.length);
-    ///print(listOfWholePostCreat);
     if(PostChnk.isNotEmpty) {
       RedoList.add(PostChnk.last);
       RedoListObjects.add(listOfWholePostCreat.last);
       listOfWholePostCreat.removeLast();
       PostChnk.removeLast();
-
     }
     else {
       if(!isVisible){ ////image shows
@@ -719,10 +682,11 @@ bool checkTheIamfollowings=false;
         isVisible=true;   /////disappear
       }
     }
+   //// print(PostChnk);
     emit(TextFieldCreated());
   }
   void Redo(){
-    print(listOfWholePostCreat);
+    ////print(listOfWholePostCreat);
     if(RedoList.isNotEmpty) {
       listOfWholePostCreat.add(RedoListObjects.last);
       RedoListObjects.remove(RedoListObjects.last);
@@ -738,8 +702,13 @@ bool checkTheIamfollowings=false;
         isVisible=true;/// show the button
       }
     }
+    ///print(PostChnk);
     emit(TextFieldCreated());
   }
+
+
+
+
   void ClearPostData(){
     PostChnk=[];
     textFieldController = [];
@@ -754,6 +723,17 @@ bool checkTheIamfollowings=false;
      RedoList=[];
      RedoListObjects=[];
     emit(TextFieldCreated());
+
+  }
+
+  late PostView viewDataPost=new PostView();
+  void getViewPost({postId}){ /// loop according to the size then pass each id to it
+    DioHelper.GetViewPost(PostId: "63bf4168eb7ed1d0a59a6d5d").then((value){
+   // print(json.decode(json.encode(value.body)));
+     viewDataPost=PostView.fromJson(json.decode(value.body));
+  /// print(viewDataPost.postChunks[0].body);
+   emit(ViewDataPost());
+    }).catchError((onError){});
 
   }
 }

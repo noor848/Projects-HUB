@@ -1,34 +1,75 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../Cubit/StateMainScreen.dart';
+import '../../Cubit/cubitMainScreen.dart';
+import '../../Model/CreatePost.dart';
+import '../../Model/postView.dart';
 class ViewPostScreen extends StatelessWidget {
-  const ViewPostScreen({Key? key}) : super(key: key);
+  late PostView postViewData;
+ ViewPostScreen(this.postViewData, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title:const Text("View Post Screen")),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network("https://assets.entrepreneur.com/content/3x2/2000/1391122457-10-most-have-ingredients-successful-invention.jpg"),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("An invention is a unique or novel device,method,"
-                  "composition or process. The invention process is a process within an overall engineering and product development process. It may be an improvement upon a machine or product or a new process for creating an object or a result."
-                  " An invention that achieves a completely unique function or result may be a radical breakthrough. Such works are novel and "
-                  "not obvious to others skilled in the same field. An inventor may be taking a big step toward success or failure.Some inventions can be patented. The system of patents was established to encourage inventors by granting limited-term, limited monopoly on inventions determined to be sufficiently novel, non-obvious, and useful. A patent legally protects the intellectual property rights of the inventor and legally recognizes that a claimed invention is actually an invention. The rules and requirements for patenting an invention vary by country and the process of obtaining a patent is often expensive.",
-              maxLines: 15,
-                overflow: TextOverflow.ellipsis,
-              ),
-            )
-            
-          ],
-        ),
-      ),
-      
-      
+    return BlocConsumer<CubitMainScreen,MainScreenState>( builder: (BuildContext context, state){
+      return Scaffold(
+        appBar: AppBar(title:postViewData.title==""?Text(""):Text(postViewData.title)),
+        body: postViewData.coverPicture == ""?
+        Center(
+          child: CircularProgressIndicator(
+            color: Colors.red
+          ),
+        ):Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Image.memory(base64Decode(postViewData.coverPicture!)),
+                Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Text("Created at : ${postViewData.createdDate}",style: TextStyle(color: Colors.grey,fontSize:13,fontFamily: "SubHead"),),
+                ),
+                ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder:  (context, index)=>ChunckItems(postViewData.postChunks[index],context),itemCount: postViewData.postChunks.length)
+              ],
+            ),
+          ),
+        ),);
+
+    }, listener:  (BuildContext context, Object? state) {  }
     );
   }
+  Widget ChunckItems(chunckList,context){
+    if(chunckList.chunkType==1){
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Text("${chunckList.body}",style:TextStyle(fontSize: 60,fontWeight: FontWeight.bold,fontFamily: "SubHead"),softWrap: true,),
+      );
+    }
+    else if(chunckList.chunkType==2){
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Text("${chunckList.body}",style:TextStyle(fontSize: 30,fontWeight: FontWeight.w600,fontFamily: "SubHead"),softWrap: true,),
+      );
+    }
+    else if(chunckList.chunkType==3){
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Text("${chunckList.body}",style:TextStyle(fontFamily: "SubHead",height:1.4),softWrap: true,
+        ),
+      );
+    }
+    return Image.memory(base64Decode(chunckList.body!),height: 200,width: 100,fit: BoxFit.cover,);
+
+  }
+
+
+
 }
