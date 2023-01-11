@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:iconly/iconly.dart';
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
@@ -72,7 +73,7 @@ class PostCreate extends StatelessWidget {
                             ),
                             Visibility(
                                 visible: !cubic.isVisible,
-                                child:Image.memory(base64Decode(cubic.CoverImage),height: 200,width: double.infinity,fit: BoxFit.cover,)
+                                child:FullScreenWidget(child: Image.memory(base64Decode(cubic.CoverImage),height: 200,width: double.infinity,fit: BoxFit.fill,))
                             ),
                             ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
@@ -172,7 +173,7 @@ class PostCreate extends StatelessWidget {
                                           });
                                     }
                                   }
-                                  print(cubic.LastUpdatePostChnk);
+                                 /// print(cubic.LastUpdatePostChnk);
                                ///   print(cubic.LastUpdatePostChnk);
                                   if(cubic.isVisible) {
                                     cubic.CoverImage = "";

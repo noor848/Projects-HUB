@@ -207,7 +207,7 @@ class MyApp extends StatelessWidget {
                   caption: TextStyle(
                       color: Colors.white70,
                       fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                     /// fontWeight: FontWeight.bold,
                       fontFamily: 'SubHead'
                   ),
                   bodyText2: TextStyle(
@@ -221,12 +221,13 @@ class MyApp extends StatelessWidget {
                   ),
                   subtitle1: TextStyle(
                       color: Colors.grey,
-                      fontWeight: FontWeight.bold,
+                     /// fontWeight: FontWeight.bold,
                       fontSize: 18,
                       fontFamily: 'SubHead'
                   ),
                   subtitle2: TextStyle(
-                      color: Colors.grey,fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      ///fontWeight: FontWeight.bold,
                       fontSize: 13,
                       fontFamily: 'SubHead'
                   ),
@@ -237,23 +238,24 @@ class MyApp extends StatelessWidget {
                   ),
 
                   headline5: TextStyle(
-                      color: Colors.grey,fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                      ////fontWeight: FontWeight.bold,
                       fontSize: 14,
                       fontFamily: 'SubHead'
                   ),
                   headline3: TextStyle(
-                      color: Colors.white70,fontWeight: FontWeight.bold,
+                      color: Colors.white70,///fontWeight: FontWeight.bold,
                       fontSize: 30,
                       fontFamily: 'SubHead'
                   ),
                   headline4: TextStyle(
                       color: Colors.grey,
                       fontSize: 40,
-                      fontWeight: FontWeight.bold,
+                     /// fontWeight: FontWeight.bold,
                       fontFamily: 'SubHead'
                   ),
                   labelMedium: TextStyle(
-                      color: Colors.white,fontWeight: FontWeight.bold,
+                      color: Colors.white,////fontWeight: FontWeight.bold,
                       fontSize: 16,
                       height: 1.3,
                       fontFamily: 'SubHead'

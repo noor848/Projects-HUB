@@ -149,12 +149,10 @@ class SendMessage extends StatelessWidget {
                               },
                                 minWidth: 1,
                                 child: Icon(IconlyLight.image, color:Theme.of(context).errorColor,),
-
                               ),
                               MaterialButton(onPressed: (){
                                CubitMainScreen.get(context).sendMessages(RecieverId: RcvId, text: boxFeildController.text,);
                                 //CubitMainScreen.get(context).deleteFirebaseMyMessage(receiverId: RcvId);
-
                                 //CubitMainScreen.get(context).GetImageChat(RecieverId: RcvId,);
                               },
                                 minWidth: 1,

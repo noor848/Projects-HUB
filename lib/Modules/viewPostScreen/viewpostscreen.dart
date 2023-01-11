@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
@@ -29,7 +30,7 @@ class ViewPostScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Image.memory(base64Decode(postViewData.coverPicture!)),
+                FullScreenWidget(child: Image.memory(base64Decode(postViewData.coverPicture!))),
                 Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Text("Created at : ${postViewData.createdDate}",style: TextStyle(color: Colors.grey,fontSize:13,fontFamily: "SubHead"),),
@@ -66,7 +67,8 @@ class ViewPostScreen extends StatelessWidget {
         ),
       );
     }
-    return Image.memory(base64Decode(chunckList.body!),height: 200,width: 100,fit: BoxFit.cover,);
+    return FullScreenWidget(
+        child: Image.memory(base64Decode(chunckList.body!),height: 200,width: 100,fit: BoxFit.fill,));
 
   }
 

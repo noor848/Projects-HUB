@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:graduationproject1/Model/UserProfileModel.dart';
 import 'package:graduationproject1/Model/messageModel.dart';
 import 'package:graduationproject1/Service/DioHelper/Dio.dart';
@@ -191,11 +192,13 @@ class CubitMainScreen extends Cubit<MainScreenState> {
           child: Container(
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.memory(
-                  base64Decode(base64Encode(normalImageUnit!)),
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: 200,
+                child: FullScreenWidget(
+                  child: Image.memory(
+                    base64Decode(base64Encode(normalImageUnit!)),
+                    fit: BoxFit.fill,
+                    height: 200,
+                    width: 200,
+                  ),
                 )),
           )));
       emit(TextFieldCreated());
@@ -658,6 +661,7 @@ bool checkTheIamfollowings=false;
       coverPicture: coverPic,
       chunkList: chunckList
     ).then((value) {
+      print(value.body);
      ClearPostData();
      emit(PostCreated());
   emit(TextFieldCreated());
@@ -728,7 +732,7 @@ bool checkTheIamfollowings=false;
 
   late PostView viewDataPost=new PostView();
   void getViewPost({postId}){ /// loop according to the size then pass each id to it
-    DioHelper.GetViewPost(PostId: "63bf4168eb7ed1d0a59a6d5d").then((value){
+    DioHelper.GetViewPost(PostId: "63bf4923eb7ed1d0a59a6d61").then((value){
    // print(json.decode(json.encode(value.body)));
      viewDataPost=PostView.fromJson(json.decode(value.body));
   /// print(viewDataPost.postChunks[0].body);
