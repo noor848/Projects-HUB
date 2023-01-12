@@ -1,5 +1,4 @@
 class UserProfileModel{
-
   late String id;
   String ?FirstName;
   String ?LastName;
@@ -10,7 +9,9 @@ class UserProfileModel{
   List<dynamic>? projects;
   List<dynamic>?posts;
   UserProfileModel(){}
- UserProfileModel.fromJson(Map json){
+
+
+  UserProfileModel.fromJson(Map json){
    id=json['_Id'];
    FirstName=json['name'];
    FirstName=json['firstName'];

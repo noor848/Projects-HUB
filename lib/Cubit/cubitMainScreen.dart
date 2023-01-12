@@ -20,6 +20,7 @@ import '../Constants.dart';
 import '../Model/CreatePost.dart';
 import '../Model/contactModel.dart';
 import '../Model/postView.dart';
+import '../Modules/TappedCreatePost/tabWindos.dart';
 import '../Modules/mainPageScreens/PostCreat.dart';
 import '../Modules/mainPageScreens/posts.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
@@ -38,7 +39,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   static CubitMainScreen get(context) => BlocProvider.of(context);
   var listOfWholePostCreat = [];
-  List<Widget> PagesScreen = [Posts(), PostCreate(),ChatList()];
+  List<Widget> PagesScreen = [Posts(), /*PostCreate()*/ Tap(),ChatList()];
   int pageIndex = 0;
   bool themeChange = false;
   bool VisibleIcon = true;
@@ -402,12 +403,16 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         emit(LoginFailed());
         return;
       }
-    ///  print(value.toString());
+      print(value.toString());
       setToken(token: value.toString());
       emit(LoginSuccess());
+     print(loggedInUserId);
+
       DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
+        print(value.body);
         var user = json.decode(value.body);
         userProfileValues = UserProfileModel.fromJson(user);
+        print(userProfileValues.FirstName);
         emit(GetUserProfile());
       });
     }).catchError((onError) {
@@ -776,7 +781,6 @@ bool checkTheIamfollowings=false;
   var timeAgo="";
   void getViewPost({postId}){ /// loop according to the size then pass each id to it
     DioHelper.GetViewPost(PostId: "63bfd755eb7ed1d0a59a6d63").then((value){
-   // print(json.decode(json.encode(value.body)));
      viewDataPost=PostView.fromJson(json.decode(value.body));
      timeAgo=PastTimeAgo(viewDataPost.createdDate);
   emit(ViewDataPost());

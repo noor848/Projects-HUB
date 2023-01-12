@@ -42,6 +42,7 @@ class DioHelper {
    /// print(await json.decode(json.encode(response.body)));
     return response.body;
   }
+
   static Future<http.Response> GetUserProfile({path,data,idToken})async{
   var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/profile/${idToken==null?"":idToken}");
   var response = await http.Client().get(url ,headers: {

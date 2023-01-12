@@ -34,27 +34,19 @@ class ViewPostScreen extends StatelessWidget {
                 FullScreenWidget(child: Container( height: 300,
                     width: double.infinity,child: Image.memory(base64Decode(postViewData.coverPicture!),fit: BoxFit.cover,))),
                 Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.only(top: 10,left: 10),
+                  child: Row(
                     children: [
-                      Text("Created at : ${postViewData.createdDate}",style: TextStyle(color: Colors.grey,fontSize:13,fontFamily: "SubHead"),),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Row(
-                          children: [
-                            Icon(IconlyBold.time_circle,color: Colors.grey,),
-                            SizedBox(width:1),
-                            Text("${CubitMainScreen.get(context).timeAgo}",style: TextStyle(color: Colors.grey,fontSize:14,fontFamily: "SubHead"),),
-                          ],
-                        ),
-                      )
+                      Text("${postViewData.createdDate}",style: TextStyle(color: Colors.grey,fontSize:13,fontFamily: "SubHead"),),
+                      SizedBox(width:15),
+                      Icon(IconlyBold.time_circle,color: Colors.grey,size: 18,),
+                      SizedBox(width:1),
+                      Text("${CubitMainScreen.get(context).timeAgo}",style: TextStyle(color: Colors.grey,fontSize:14,fontFamily: "SubHead"),),
                     ],
                   ),
                 ),
                 ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder:  (context, index)=>ChunckItems(postViewData.postChunks[index],context),itemCount: postViewData.postChunks.length)
               ],
