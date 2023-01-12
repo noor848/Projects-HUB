@@ -44,5 +44,6 @@ class FollowUnfollow extends MainScreenState{}
 class PostCreated extends MainScreenState{}
 class ChangeBottomModalSheetVisibility extends MainScreenState{}
 class ViewDataPost extends MainScreenState{}
+class TimePassedAgo extends MainScreenState{}
 
 

@@ -73,7 +73,7 @@ class PostCreate extends StatelessWidget {
                             ),
                             Visibility(
                                 visible: !cubic.isVisible,
-                                child:FullScreenWidget(child: Image.memory(base64Decode(cubic.CoverImage),height: 200,width: double.infinity,fit: BoxFit.fill,))
+                                child:FullScreenWidget(child: Image.memory(base64Decode(cubic.CoverImage),/*,height: 200,*/width: double.infinity,fit: BoxFit.cover,))
                             ),
                             ListView.builder(
                               physics: NeverScrollableScrollPhysics(),

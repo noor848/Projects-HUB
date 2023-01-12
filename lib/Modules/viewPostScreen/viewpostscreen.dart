@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
+import 'package:iconly/iconly.dart';
 
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
@@ -30,10 +31,27 @@ class ViewPostScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FullScreenWidget(child: Image.memory(base64Decode(postViewData.coverPicture!))),
+                FullScreenWidget(child: Container( height: 300,
+                    width: double.infinity,child: Image.memory(base64Decode(postViewData.coverPicture!),fit: BoxFit.cover,))),
                 Padding(
                   padding: const EdgeInsets.all(6.0),
-                  child: Text("Created at : ${postViewData.createdDate}",style: TextStyle(color: Colors.grey,fontSize:13,fontFamily: "SubHead"),),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Created at : ${postViewData.createdDate}",style: TextStyle(color: Colors.grey,fontSize:13,fontFamily: "SubHead"),),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Row(
+                          children: [
+                            Icon(IconlyBold.time_circle,color: Colors.grey,),
+                            SizedBox(width:1),
+                            Text("${CubitMainScreen.get(context).timeAgo}",style: TextStyle(color: Colors.grey,fontSize:14,fontFamily: "SubHead"),),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
@@ -50,7 +68,7 @@ class ViewPostScreen extends StatelessWidget {
   Widget ChunckItems(chunckList,context){
     if(chunckList.chunkType==1){
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 3),
         child: Text("${chunckList.body}",style:TextStyle(fontSize: 60,fontWeight: FontWeight.bold,fontFamily: "SubHead"),softWrap: true,),
       );
     }
@@ -68,7 +86,8 @@ class ViewPostScreen extends StatelessWidget {
       );
     }
     return FullScreenWidget(
-        child: Image.memory(base64Decode(chunckList.body!),height: 200,width: 100,fit: BoxFit.fill,));
+        child: Container( height: 200,
+            width: 100,child: Image.memory(base64Decode(chunckList.body!),fit: BoxFit.cover,)));
 
   }
 

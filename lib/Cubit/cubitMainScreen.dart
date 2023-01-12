@@ -14,6 +14,7 @@ import 'package:graduationproject1/Model/UserProfileModel.dart';
 import 'package:graduationproject1/Model/messageModel.dart';
 import 'package:graduationproject1/Service/DioHelper/Dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import '../Constants.dart';
 import '../Model/CreatePost.dart';
@@ -193,11 +194,13 @@ class CubitMainScreen extends Cubit<MainScreenState> {
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: FullScreenWidget(
-                  child: Image.memory(
-                    base64Decode(base64Encode(normalImageUnit!)),
-                    fit: BoxFit.fill,
-                    height: 200,
-                    width: 200,
+                  child: Container(
+                     height: 200,
+                      width: 200,
+                    child: Image.memory(
+                      base64Decode(base64Encode(normalImageUnit!)),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 )),
           )));
@@ -213,15 +216,19 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       } );
       listOfWholePostCreat.add(Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Container(
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.memory(
-                  base64Decode(base64Encode(File(image.path).readAsBytesSync())),
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: 200,
-                )),
+          child: FullScreenWidget(
+            child: Container(
+              height: 200,
+              width: 200,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.memory(
+                    base64Decode(base64Encode(File(image.path).readAsBytesSync())),
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: 200,
+                  )),
+            ),
           )));
       emit(TextFieldCreated());
       emit(ImagePickerLoad());
@@ -730,14 +737,53 @@ bool checkTheIamfollowings=false;
 
   }
 
+  String  PastTimeAgo(timestamp){
+    final DateTime docDateTime = DateTime.parse(timestamp);
+    var date = DateTime.fromMicrosecondsSinceEpoch(docDateTime.microsecondsSinceEpoch);
+    final date2=DateTime.now();
+    final difference=date2.difference(date);
+    if (difference.inDays>8) {
+      return DateFormat("dd-MM-yyyy HH:mm:ss").format(date);
+    } else if((difference.inDays/7).floor()>=1)
+    {
+      return "Last week";
+    }else if(difference.inDays>=2){
+      return "${difference.inDays} days ago";
+    }
+    else if(difference.inDays>=1){
+      return "1 day ago";
+    }
+    else if( difference.inHours>=2){
+      return "${difference.inHours} hours ago";
+    }
+    else if(difference.inHours>=1){
+      return "1 hour ago";
+    }
+    else if( difference.inMinutes>=2){
+      return "${difference.inMinutes} minutes ago";
+    }
+    else if(difference.inMinutes>=1){
+      return "1 minute ago";
+    }
+    else if(difference.inSeconds>=3){
+      return "${difference.inSeconds} seconds ago";
+    }
+    return "Just now";
+  }
+
+
   late PostView viewDataPost=new PostView();
+  var timeAgo="";
   void getViewPost({postId}){ /// loop according to the size then pass each id to it
-    DioHelper.GetViewPost(PostId: "63bf4923eb7ed1d0a59a6d61").then((value){
+    DioHelper.GetViewPost(PostId: "63bfd755eb7ed1d0a59a6d63").then((value){
    // print(json.decode(json.encode(value.body)));
      viewDataPost=PostView.fromJson(json.decode(value.body));
-  /// print(viewDataPost.postChunks[0].body);
-   emit(ViewDataPost());
+     timeAgo=PastTimeAgo(viewDataPost.createdDate);
+  emit(ViewDataPost());
+  print(timeAgo);
+  emit(TimePassedAgo());
     }).catchError((onError){});
 
   }
+
 }
