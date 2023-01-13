@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:graduationproject1/Modules/MainScreen/MainScreen.dart';
 import 'package:iconly/iconly.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
+import '../../PDFView/pdfView.dart';
 
 class ProjectCreate extends StatelessWidget {
   final title2 = TextEditingController();
@@ -116,7 +119,10 @@ class ProjectCreate extends StatelessWidget {
                child: Visibility(
                   visible: CubitMainScreen.get(context).visiblefileChoose,
                   child: InkWell(
-                   onTap: ()=>CubitMainScreen.get(context).pickFiles(),
+                   onTap: ()=> kIsWeb?     Navigator.push(
+                     context,
+                     MaterialPageRoute(builder: (context) =>  PDFView(CubitMainScreen.get(context).f)),
+                   ):CubitMainScreen.get(context).pickFiles(),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       child: Column(
@@ -151,7 +157,6 @@ class ProjectCreate extends StatelessWidget {
                   ),
                 ),
              ),
-
             ],
           ),
         ),

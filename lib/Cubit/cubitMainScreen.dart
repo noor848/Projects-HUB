@@ -17,6 +17,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:open_file/open_file.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../Constants.dart';
 import '../Model/contactModel.dart';
 import '../Model/postView.dart';
@@ -771,7 +772,7 @@ bool checkTheIamfollowings=false;
   }
    PlatformFile file = new PlatformFile(name: 'd',size: 50) ;
    bool visiblefileChoose =false;
-
+  Uint8List? f;
   Future<void> pickFiles() async {
       var result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -781,15 +782,18 @@ bool checkTheIamfollowings=false;
       visiblefileChoose=true;
       file =result.files.first;
 
-   ///print(file.path);
-      openFile(file);
+      if(kIsWeb){
+        f=file.bytes;
+      }else{
+        OpenFile.open(file.path!);
+      }
       emit(PickFile());
     }
 
   void openFile(PlatformFile file){
-    ///OpenFile.open(file);
    OpenFile.open(file.path!);
   }
+
 
 
 
@@ -809,15 +813,24 @@ bool checkTheIamfollowings=false;
   String CoverImage2="";
   Uint8List? CoverImageunit2;
   Future<void> ChangeVisibilityProjectCreate() async { ////// web need to be fixed
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-      isVisible2=false;
-      final imageTemporarly = File(image.path);
-      CoverImageunit2 = imageTemporarly.readAsBytesSync();
+    if (kIsWeb) {
+      final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
+      if (temp == null) return;
+      isVisible2 = false;
+      CoverImageunit2 = await temp?.readAsBytes();
       CoverImage2=base64Encode(CoverImageunit2!);
       emit(ImagePickerLoad());
+    }
+    else{
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      isVisible2 = false;
+      final imageTemporarly = File(image.path);
+      CoverImageunit2 = imageTemporarly.readAsBytesSync();
+      CoverImage2 = base64Encode(CoverImageunit2!);
+      emit(ImagePickerLoad());
+    }
   }
-
   void clearProjectStuff(){
      CoverImage2="";
      CoverImageunit2=null;
@@ -827,8 +840,6 @@ bool checkTheIamfollowings=false;
      emit(ClearProjectStuff());
 
   }
-
-
   void likeDisLike(){
     if(viewDataPost.isLiked==false){
       DioHelper.LikeviewPost(postId: viewDataPost.id).then((value){
