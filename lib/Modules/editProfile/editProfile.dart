@@ -28,14 +28,14 @@ class ProfileEdit extends StatelessWidget {
             actions: [Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(onPressed: (){
-                CubitMainScreen.get(context).UpdateBio(bio: bio.text);
-                CubitMainScreen.get(context).UpdateUseName(FirstName: Firstname.text,LastName:Lastname.text);
+              CubitMainScreen.get(context).UpdateBio(bio: bio.text);
+                CubitMainScreen.get(context).getProfile(UserId: null);
               }, child: Text("Submit",style: TextStyle(
                   fontSize: 18,fontFamily: 'SubHead'
               ),)),
             )],
           ),
-          body: Padding(
+          body:Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
               child: Center(
@@ -54,7 +54,6 @@ class ProfileEdit extends StatelessWidget {
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -77,15 +76,33 @@ class ProfileEdit extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 10,),
-                    textField(context,hintText:"First Name",obscureText: false,prefixIcon:IconlyLight.user,borderRadius: 10.0,
-                        controller: Firstname
+                    textFieldEdit(context,hintText:"First Name",obscureText: false,prefixIcon:IconlyLight.user,borderRadius: 10.0,
+                        controller: Firstname,
                     ),
                     SizedBox(height: 10,),
-                    textField(context,hintText:"Last Name",obscureText: false,prefixIcon:Icons.supervised_user_circle,borderRadius: 10.0,
+                    textFieldEdit(context,hintText:"Last Name",obscureText: false,prefixIcon:Icons.supervised_user_circle,borderRadius: 10.0,
                         controller: Lastname
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        width: double.infinity,
+                        height: 50,
+                        child:Button(context,() {
+
+                          CubitMainScreen.get(context).UpdateUseName(FirstName: Firstname.text,LastName:Lastname.text);
+                          CubitMainScreen.get(context).getProfile(UserId: null);
+                         /// CubitMainScreen.get(context).UpdatePassword(NewPassword: NewPassword.text,OldPassword: OldPassword.text);
+                        },
+                          fontWeight: FontWeight.w600,fontSize: 20.0,text: "Update Name",
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100)
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 15,),
-                    textField(context,hintText:"Bio",obscureText: false,prefixIcon:IconlyLight.edit,borderRadius: 10.0 ,
+                    textFieldEdit(context,hintText:"Bio",obscureText: false,prefixIcon:IconlyLight.edit,borderRadius: 10.0 ,
                       controller: bio,
                     ),
                     SizedBox(height: 20,),
@@ -150,17 +167,7 @@ class ProfileEdit extends StatelessWidget {
         );
       },
       listener: (BuildContext context, Object? state) {
-        if(state is GetUserProfile){
-          Fluttertoast.showToast(
-            msg: "Update Successfully!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16,
-          );
-        }  if(state is updatepassword){
+       if(state is updatepassword){
           Fluttertoast.showToast(
             msg: "Updated Successfully!",
             toastLength: Toast.LENGTH_SHORT,
@@ -182,6 +189,30 @@ class ProfileEdit extends StatelessWidget {
             fontSize: 16,
           );
         }
+        if(state is UpdateBioText || state is UpdateUserFirasLstName){
+          Fluttertoast.showToast(
+            msg: "Update Successfully!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+          CubitMainScreen.get(context).getProfile(UserId: null);
+        }
+        /*if(state is UpdateUserFirasLstName){
+          Fluttertoast.showToast(
+            msg: "Update Successfully!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+          CubitMainScreen.get(context).getProfile(UserId: null);
+        }*/
       },
     );
   }

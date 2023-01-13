@@ -242,11 +242,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       imagepath: base64Encode(imagePath).toString(),
     ).then((value) {
       emit(UpdateImageProfile());
-      DioHelper.GetUserProfile(idToken: null).then((value) {
-        var user = json.decode(value.body);
-        userProfileValues = UserProfileModel.fromJson(user);
-        emit(GetUserProfile());
-      });
+      getProfile(UserId: null);
 
     }).catchError((onError){
       emit(UpdateImageProfile());
@@ -265,12 +261,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         imagepath: base64.encode(ProfileImage!),
       ).then((value) {
         emit(UpdateImageProfile());
-        DioHelper.GetUserProfile(idToken: null).then((value) {
-          var user = json.decode(value.body);
-          userProfileValues = UserProfileModel.fromJson(user);
-          emit(GetUserProfile());
-        });
-
+        getProfile(UserId: null);
       }).catchError((onError){
         emit(UpdateImageProfile());
       });
@@ -403,18 +394,11 @@ class CubitMainScreen extends Cubit<MainScreenState> {
         emit(LoginFailed());
         return;
       }
-      print(value.toString());
+     print(value.toString());
       setToken(token: value.toString());
       emit(LoginSuccess());
-     print(loggedInUserId);
-
-      DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
-        print(value.body);
-        var user = json.decode(value.body);
-        userProfileValues = UserProfileModel.fromJson(user);
-        print(userProfileValues.FirstName);
-        emit(GetUserProfile());
-      });
+      print(loggedInUserId);
+      getProfile(UserId: null);
     }).catchError((onError) {
       emit(LoginFailed());
     });
@@ -426,14 +410,8 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
     Map<String, dynamic> payload = Jwt.parseJwt(token);
     loggedInUserId = payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-
     UserToken=token;
-
-    DioHelper.GetUserProfile(idToken:null).then((value) {
-      var user = json.decode(value.body);
-      userProfileValues = UserProfileModel.fromJson(user);
-      emit(GetUserProfile());
-    });
+    getProfile(UserId: null);
     emit(TokenSet());
   }
 
@@ -467,26 +445,21 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     lastname = lastname;
     emit(KeepValuesFieldUpdated());
   }
+
   void UpdateBio({bio}){
     DioHelper.PutUserBio(idToken: loggedInUserId,bio: bio).then((value) {
+      print(value.statusCode);
+     /// getProfile(UserId: loggedInUserId);
       emit(UpdateBioText());
-
-      DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
-        var user = json.decode(value.body);
-        userProfileValues = UserProfileModel.fromJson(user);
-        emit(GetUserProfile());
-      });
-
     });}
   void UpdateUseName({FirstName,LastName}){
     DioHelper.PutUserName(idToken: loggedInUserId,FirstName: FirstName,lastName:LastName).then((value) {
+      print(value.statusCode);
+    /// getProfile(UserId: loggedInUserId);
       emit(UpdateUserFirasLstName());
-      DioHelper.GetUserProfile(idToken: loggedInUserId).then((value) {
-        var user = json.decode(value.body);
-        userProfileValues = UserProfileModel.fromJson(user);
-        emit(GetUserProfile());
-      });
     });}
+
+
   void UpdatePassword({NewPassword,OldPassword}){
     DioHelper.PutUserPassword(idToken: loggedInUserId,NewPassword: NewPassword,oldPassword:OldPassword).then((value) {
       if(value.statusCode==401||value.statusCode==400||value.statusCode==404){
@@ -526,6 +499,7 @@ void getContactList(){
     ContactList = json.decode(value.body);
     for(int i=0;i<ContactList.length;i++){
       var ContactItem= ContactModel.fromJson(ContactList[i]);
+
       DioHelper.GetUserProfile(idToken:ContactItem.id).then((value) {
         var user = json.decode(value.body);
         UserProfileValues.add(UserProfileModel.fromJson(user));
@@ -658,12 +632,19 @@ bool checkTheIamfollowings=false;
 
   void getProfile({UserId}){
     DioHelper.GetUserProfile(idToken: UserId).then((value) {
-      var user = json.decode(value.body);
-      userProfileValues = UserProfileModel.fromJson(user);
+      userProfileValues = UserProfileModel.fromJson(json.decode(value.body));
       emit(GetUserProfile());
     });
 
   }
+
+  void AssignUserProfileModel({user}){
+
+    userProfileValues = UserProfileModel.fromJson(user);
+
+  }
+
+
 
   void createPost({
   title,coverPic,chunckList

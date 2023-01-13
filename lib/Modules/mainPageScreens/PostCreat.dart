@@ -19,7 +19,8 @@ class PostCreate extends StatelessWidget {
       builder: (BuildContext context, state) {
         CubitMainScreen cubic= CubitMainScreen.get(context);
         return Scaffold(
-          body:Padding(
+          body: cubic.userProfileValues.profilePicture==""?
+            Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -130,6 +131,10 @@ class PostCreate extends StatelessWidget {
                       ),
                     ),
               ],
+            ),
+          ):Center(
+            child: CircularProgressIndicator(
+              color: Colors.red,
             ),
           ),
           floatingActionButton: Builder(builder: (BuildContext context)=>

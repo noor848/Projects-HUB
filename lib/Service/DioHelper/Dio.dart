@@ -50,9 +50,10 @@ class DioHelper {
     'Authorization':'Bearer $UserToken',
     //'Charset': 'utf-8'
   });
-  //print(await json.decode(json.encode(response.body))+"Hi");
+  ///print(await json.decode(json.encode(response.body))+"Hi");
   return response;
   }
+
   static Future<http.Response> PutUserImage({imagepath,idToken})async{
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/ProfilePicture");
     var response = await http.Client().put(url,
