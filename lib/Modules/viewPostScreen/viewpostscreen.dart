@@ -10,24 +10,30 @@ import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
 import '../../Model/CreatePost.dart';
 import '../../Model/postView.dart';
+import '../Comment/Comment.dart';
 class ViewPostScreen extends StatelessWidget {
   late PostView postViewData;
  ViewPostScreen(this.postViewData, {Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-   /// print(postViewData.isLiked);
     return BlocConsumer<CubitMainScreen,MainScreenState>( builder: (BuildContext context, state){
       return Scaffold(
         appBar: AppBar(title:postViewData.title==""?const Text(""):Text(postViewData.title),
         actions: [
+          postViewData.title!=""?IconButton(onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  CommentScreen(postViewData)));
+          },icon: const Icon(IconlyBold.chat,size:30),color: Colors.grey,):const Text(""),
           postViewData.title!=""?Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(onPressed: (){
               CubitMainScreen.get(context).likeDisLike();
             }
-            ,icon:postViewData.isLiked==false?const Icon(IconlyLight.heart,size:30):const Icon(IconlyBold.heart,size:30),color: Colors.pink,),
-          ):const Text("")],
+            ,icon:postViewData.isLiked==false?const Icon(IconlyLight.heart,size:30):const Icon(IconlyBold.heart,size:30),color: Colors.pinkAccent,),
+          ):const Text(""),
+
+        ],
         ),
         body: postViewData.coverPicture == ""?
         Center(
@@ -58,7 +64,8 @@ class ViewPostScreen extends StatelessWidget {
                 ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemBuilder:  (context, index)=>ChunckItems(postViewData.postChunks[index],context),itemCount: postViewData.postChunks.length)
+                    itemBuilder:  (context, index)=>ChunckItems(postViewData.postChunks[index],context),itemCount: postViewData.postChunks.length),
+
               ],
             ),
           ),

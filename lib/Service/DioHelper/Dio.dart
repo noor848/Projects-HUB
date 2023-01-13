@@ -239,6 +239,20 @@ class DioHelper {
   }
 
 
+  static Future<http.Response> AddComment({postId,chuckType,body})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$postId/Comment");
+    var response = await http.Client().put(url,
+        body: json.encode({
+          "chunkType": chuckType,
+          "body": body
+        })
+        ,headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
 
 }
 

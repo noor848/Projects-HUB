@@ -17,7 +17,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:open_file/open_file.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../Constants.dart';
 import '../Model/contactModel.dart';
 import '../Model/postView.dart';
@@ -859,5 +858,14 @@ bool checkTheIamfollowings=false;
 
   }
 
+  void AddCommentText({postId,body}){
+
+
+
+    DioHelper.AddComment(postId: postId,body: body,chuckType: 3).then((value){
+
+    }).catchError((onError){});
+
+  }
 }
 
