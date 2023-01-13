@@ -86,6 +86,7 @@ class ProjectCreate extends StatelessWidget {
                   child:FullScreenWidget(child: Image.memory(base64Decode(CubitMainScreen.get(context).CoverImage2),/*,height: 200,*/width: double.infinity,fit: BoxFit.cover,))
               ),
 
+
               /////////////
               Visibility(
                 visible: !CubitMainScreen.get(context).visiblefileChoose,

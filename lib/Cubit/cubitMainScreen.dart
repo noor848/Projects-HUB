@@ -774,7 +774,8 @@ bool checkTheIamfollowings=false;
 
   Future<void> pickFiles() async {
       var result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
+        type: FileType.custom,
+        allowedExtensions: ["pdf"]
       );
       if(result==null)return;
       visiblefileChoose=true;
@@ -827,6 +828,25 @@ bool checkTheIamfollowings=false;
 
   }
 
+
+  void likeDisLike(){
+    if(viewDataPost.isLiked==false){
+      DioHelper.LikeviewPost(postId: viewDataPost.id).then((value){
+        emit(LikedSuccess());
+        getViewPost(postId:viewDataPost.id );
+      }).catchError((onError){
+        emit(LikedError());
+      });
+    }else if(viewDataPost.isLiked==true){
+      DioHelper.UnLikeviewPost(postId: viewDataPost.id).then((value){
+        emit(ULikedSuccess());
+        getViewPost(postId:viewDataPost.id );
+      }).catchError((onError){
+        emit(ULikedError());
+      });
+    }
+
+  }
 
 }
 

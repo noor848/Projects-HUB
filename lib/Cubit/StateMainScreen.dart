@@ -49,5 +49,9 @@ class PickFile extends MainScreenState{}
 class Page0 extends MainScreenState{}
 class Page1 extends MainScreenState{}
 class ClearProjectStuff extends MainScreenState{}
+class LikedSuccess extends MainScreenState{}
+class LikedError extends MainScreenState{}
+class ULikedSuccess extends MainScreenState{}
+class ULikedError extends MainScreenState{}
 
 

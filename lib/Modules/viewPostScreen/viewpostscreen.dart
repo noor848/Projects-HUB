@@ -16,9 +16,19 @@ class ViewPostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   /// print(postViewData.isLiked);
     return BlocConsumer<CubitMainScreen,MainScreenState>( builder: (BuildContext context, state){
       return Scaffold(
-        appBar: AppBar(title:postViewData.title==""?Text(""):Text(postViewData.title)),
+        appBar: AppBar(title:postViewData.title==""?const Text(""):Text(postViewData.title),
+        actions: [
+          postViewData.title!=""?Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(onPressed: (){
+              CubitMainScreen.get(context).likeDisLike();
+            }
+            ,icon:postViewData.isLiked==false?const Icon(IconlyLight.heart,size:30):const Icon(IconlyBold.heart,size:30),color: Colors.pink,),
+          ):const Text("")],
+        ),
         body: postViewData.coverPicture == ""?
         Center(
           child: CircularProgressIndicator(
@@ -54,7 +64,12 @@ class ViewPostScreen extends StatelessWidget {
           ),
         ),);
 
-    }, listener:  (BuildContext context, Object? state) {  }
+    }, listener:  (BuildContext context, Object? state) {
+      if(state is ViewDataPost){
+      ///  CubitMainScreen.get(context).likeDisLike();
+      }
+
+    }
     );
   }
   Widget ChunckItems(chunckList,context){
@@ -82,7 +97,5 @@ class ViewPostScreen extends StatelessWidget {
             width: 100,child: Image.memory(base64Decode(chunckList.body!),fit: BoxFit.cover,)));
 
   }
-
-
 
 }
