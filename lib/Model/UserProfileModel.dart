@@ -8,8 +8,7 @@ class UserProfileModel{
   int followers=0;
   List<dynamic>? projects;
   List<dynamic>?posts;
-  UserProfileModel(){}
-
+  UserProfileModel();
 
   UserProfileModel.fromJson(Map json){
    id=json['_Id'];

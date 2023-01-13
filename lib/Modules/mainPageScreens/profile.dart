@@ -73,7 +73,7 @@ class Profile extends StatelessWidget {
                     children: [
                       Container(
                         width: 200,
-                        child: Text("${CubitMainScreen.get(context).userProfileValues.bio ?? "Yeeah This is Me...."}",style:Theme.of(context).textTheme.subtitle2,
+                        child: Text("${CubitMainScreen.get(context).userProfileValues.bio=="" ? "Yeeah This is Me....":CubitMainScreen.get(context).userProfileValues.bio}",style:Theme.of(context).textTheme.subtitle2,
                         maxLines: 1,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,

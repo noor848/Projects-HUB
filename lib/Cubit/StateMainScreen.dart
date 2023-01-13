@@ -45,5 +45,9 @@ class PostCreated extends MainScreenState{}
 class ChangeBottomModalSheetVisibility extends MainScreenState{}
 class ViewDataPost extends MainScreenState{}
 class TimePassedAgo extends MainScreenState{}
+class PickFile extends MainScreenState{}
+class Page0 extends MainScreenState{}
+class Page1 extends MainScreenState{}
+class ClearProjectStuff extends MainScreenState{}
 
 

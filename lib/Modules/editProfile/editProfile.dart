@@ -22,7 +22,7 @@ class ProfileEdit extends StatelessWidget {
       builder: (BuildContext context, state){
         Firstname.text= CubitMainScreen.get(context).userProfileValues.FirstName!;
         Lastname.text= CubitMainScreen.get(context).userProfileValues.LastName!;
-        bio.text=CubitMainScreen.get(context).userProfileValues.bio??"This is Me...";
+        bio.text=(CubitMainScreen.get(context).userProfileValues.bio==""?"This is Me...":CubitMainScreen.get(context).userProfileValues.bio)!;
         return Scaffold(
           appBar: AppBar(
             actions: [Padding(

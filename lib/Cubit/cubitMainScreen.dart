@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +16,11 @@ import 'package:graduationproject1/Service/DioHelper/Dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
+import 'package:open_file/open_file.dart';
 import '../Constants.dart';
-import '../Model/CreatePost.dart';
 import '../Model/contactModel.dart';
 import '../Model/postView.dart';
 import '../Modules/TappedCreatePost/tabWindos.dart';
-import '../Modules/mainPageScreens/PostCreat.dart';
 import '../Modules/mainPageScreens/posts.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
 import '../shared/postImageText.dart';
@@ -770,5 +769,64 @@ bool checkTheIamfollowings=false;
     }).catchError((onError){});
 
   }
+   PlatformFile file = new PlatformFile(name: 'd',size: 50) ;
+   bool visiblefileChoose =false;
+
+  Future<void> pickFiles() async {
+      var result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+      );
+      if(result==null)return;
+      visiblefileChoose=true;
+      file =result.files.first;
+
+   ///print(file.path);
+      openFile(file);
+      emit(PickFile());
+    }
+
+  void openFile(PlatformFile file){
+    ///OpenFile.open(file);
+   OpenFile.open(file.path!);
+  }
+
+
+
+  int indexCratePostChanged=0;
+  void ChangeIndexpage0(){
+    indexCratePostChanged=0;
+    emit(Page0());
+
+  }
+   void ChangeIndexpage1(){
+    indexCratePostChanged=1;
+    emit(Page1());
+
+  }
+
+  bool isVisible2=true;
+  String CoverImage2="";
+  Uint8List? CoverImageunit2;
+  Future<void> ChangeVisibilityProjectCreate() async { ////// web need to be fixed
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      isVisible2=false;
+      final imageTemporarly = File(image.path);
+      CoverImageunit2 = imageTemporarly.readAsBytesSync();
+      CoverImage2=base64Encode(CoverImageunit2!);
+      emit(ImagePickerLoad());
+  }
+
+  void clearProjectStuff(){
+     CoverImage2="";
+     CoverImageunit2=null;
+     isVisible2=true;
+     visiblefileChoose =false;
+     ///file= "";
+     emit(ClearProjectStuff());
+
+  }
+
 
 }
+

@@ -118,16 +118,25 @@ class Posts extends StatelessWidget {
                             padding: const EdgeInsets.only(right:10 ),
                             child: IconButton(constraints: BoxConstraints(),
                                 padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(
-                                    IconlyLight.chat,color: Colors.blueGrey)),
+                                    IconlyLight.heart,color: Colors.pinkAccent)),
                           ),
                           const Text("205"),
                           const SizedBox(width: 20,),
                           Padding(
                             padding: const EdgeInsets.only(right:10 ),
                             child: IconButton(constraints: BoxConstraints(),
+                                padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(
+                                    IconlyLight.chat,color: Colors.blueGrey)),
+                          ),
+                          const Text("205"),
+                          const SizedBox(width: 20,),
+
+                         /* Padding(
+                            padding: const EdgeInsets.only(right:10 ),
+                            child: IconButton(constraints: BoxConstraints(),
                                 padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(IconlyLight.star,color: Colors.yellow,)),
                           ),
-                          const Text("300")
+                          const Text("300")*/
                         ],
                       ),
                     )
