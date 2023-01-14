@@ -61,7 +61,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     }
     else{
       bottomModal=true;
-
     }
     emit(ChangeBottomModalSheetVisibility());
   }
@@ -859,12 +858,42 @@ bool checkTheIamfollowings=false;
   }
 
   void AddCommentText({postId,body}){
-
-
-
     DioHelper.AddComment(postId: postId,body: body,chuckType: 3).then((value){
-
+      print(value.body);
+      emit(CommentCreatedSuccess());
     }).catchError((onError){});
+    print(onError.toString());
+    emit(CommentCreatedFailed());
+
+  }
+
+  String commentImage="";
+  Uint8List? commentImageunit;
+  Future<void> AddCommentImage({postId,body}) async {
+    if (kIsWeb) {
+      final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
+    if (temp == null) return;
+
+      commentImageunit = await temp?.readAsBytes();
+      commentImage=base64Encode(commentImageunit!);
+    emit(ImagePickerLoad());
+    }
+    else{
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+
+    final imageTemporarly = File(image.path);
+    commentImageunit = imageTemporarly.readAsBytesSync();
+    commentImage=base64Encode(commentImageunit!);
+    emit(ImagePickerLoad());
+    }
+
+    DioHelper.AddComment(postId: postId,body: commentImage,chuckType: 0).then((value){
+      print(value.body);
+      emit(CommentCreatedSuccess());
+    }).catchError((onError){});
+    print(onError.toString());
+    emit(CommentCreatedFailed());
 
   }
 }

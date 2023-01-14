@@ -83,7 +83,7 @@ class ViewPostScreen extends StatelessWidget {
     if(chunckList.chunkType==1){
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Text("${chunckList.body}",style:TextStyle(fontSize: 60,fontWeight: FontWeight.bold,fontFamily: "SubHead"),softWrap: true,),
+        child: Text("${chunckList.body}",style:TextStyle(fontSize: 55,fontWeight: FontWeight.bold,fontFamily: "SubHead"),softWrap: true,),
       );
     }
     else if(chunckList.chunkType==2){

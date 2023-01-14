@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduationproject1/Model/postView.dart';
 import 'package:iconly/iconly.dart';
 
@@ -30,17 +31,21 @@ class CommentScreen extends StatelessWidget {
                 CircleAvatar(
                     radius: 20,
                     backgroundImage: MemoryImage(base64Decode(CubitMainScreen.get(context).userProfileValues.profilePicture!),) ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 Expanded(
                   child: TextField(
                     controller: comment,
-                    style: TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: Colors.grey),
                     decoration: InputDecoration(
-                      suffixIcon: IconButton(onPressed: () { print("hello");}, icon: Icon(IconlyLight.camera),),
-                      hintStyle: TextStyle(color: Colors.grey,fontSize: 16),
+                      suffixIcon: IconButton(onPressed: () {
+                        CubitMainScreen.get(context).AddCommentImage(body: comment.text,postId: postView.id);
+
+
+                      }, icon: const Icon(IconlyLight.camera),),
+                      hintStyle: const TextStyle(color: Colors.grey,fontSize: 16),
                       hintText: "Add Comment....",
                       contentPadding: EdgeInsets.only(left: 8),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.red, width: 1.0),
                       ),
                       enabledBorder: OutlineInputBorder(
@@ -63,7 +68,19 @@ class CommentScreen extends StatelessWidget {
           ],),
         ),
       );  },
-      listener: (BuildContext context, Object? state) {  },
+      listener: (BuildContext context, Object? state) {
+        if(state is CommentCreatedSuccess){
+          Fluttertoast.showToast(
+            msg: "Thank You !",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+        }
+      },
     );
   }
 }
