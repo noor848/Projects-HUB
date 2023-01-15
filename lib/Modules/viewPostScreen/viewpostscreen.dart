@@ -22,10 +22,10 @@ class ViewPostScreen extends StatelessWidget {
         appBar: AppBar(title:postViewData.title==""?const Text(""):Text(postViewData.title),
         actions: [
           postViewData.title!=""?IconButton(onPressed: (){
-            CubitMainScreen.get(context).getListOfComments(postViewData.comments);
+            CubitMainScreen.get(context).getListOfComments(postId:postViewData.id );
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) =>  CommentScreen(postViewData)));
+              MaterialPageRoute(builder: (context) =>  CommentScreen(postViewData.id)));
           },icon: const Icon(IconlyBold.chat,size:30),color: Colors.grey,):const Text(""),
           postViewData.title!=""?Padding(
             padding: const EdgeInsets.only(right: 10),

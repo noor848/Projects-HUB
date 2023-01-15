@@ -14,18 +14,17 @@ import '../../Cubit/cubitMainScreen.dart';
 import '../shortProfile/shortProfile.dart';
 
 class CommentScreen extends StatelessWidget {
-  late PostView postView;
+  String postId;
   final comment = TextEditingController();
-  CommentScreen(this.postView);
+  CommentScreen(this.postId);
 
   @override
   Widget build(BuildContext context) {
-    print(postView.comments.length);
     return BlocConsumer<CubitMainScreen,MainScreenState>(
       builder: (BuildContext context, state) {
         return Scaffold(
         appBar: AppBar(title:Text("Comments")),
-        body: CubitMainScreen.get(context).CommentList.length==0?
+        body: CubitMainScreen.get(context).CommentsData.isEmpty?
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -53,7 +52,7 @@ class CommentScreen extends StatelessWidget {
                       style: const TextStyle(color: Colors.grey),
                       decoration: InputDecoration(
                         suffixIcon: IconButton(onPressed: () {
-                          CubitMainScreen.get(context).AddCommentImage(body: comment.text,postId: postView.id);
+                          CubitMainScreen.get(context).AddCommentImage(body: comment.text,postId: postId);
 
 
                         }, icon: const Icon(IconlyLight.camera),),
@@ -70,7 +69,7 @@ class CommentScreen extends StatelessWidget {
                       maxLines: null,
                     ),
                   ), IconButton(onPressed: () {
-                    CubitMainScreen.get(context).AddCommentText(body: comment.text,postId: postView.id);
+                    CubitMainScreen.get(context).AddCommentText(body: comment.text,postId: postId);
                   }, icon: Icon(IconlyLight.send,size: 25,color: Colors.red,),),
 
                 ],
@@ -79,7 +78,7 @@ class CommentScreen extends StatelessWidget {
           ),
         ): Padding(
           padding: const EdgeInsets.all(8.0),
-          child:CubitMainScreen.get(context).CommenterImage.length != CubitMainScreen.get(context).CommentList.length &&CubitMainScreen.get(context).CommenterFirstName.length != CubitMainScreen.get(context).CommentList.length &&CubitMainScreen.get(context).CommenterLastName.length != CubitMainScreen.get(context).CommentList.length?Center(child: CircularProgressIndicator(color: Colors.red,)): Column(
+          child: Column(
             children: [
               Expanded(
                 child: Padding(
@@ -89,43 +88,35 @@ class CommentScreen extends StatelessWidget {
                       shrinkWrap:true,
                       itemBuilder: (context, index)
                        {
-                         print(CubitMainScreen.get(context).CommentList[index].userId);
                          return
-                           CubitMainScreen.get(context).CommentList[index].userId== CubitMainScreen.get(context).userProfileValues.id?
+                           CubitMainScreen.get(context).CommentsData[index].user.UserId== CubitMainScreen.get(context).userProfileValues.id?
                            Row(
                              children: [
                                CircleAvatar(
                                    radius: 20,
                                    backgroundImage:
-                                   MemoryImage(base64Decode(CubitMainScreen.get(context).CommenterImage[index]!),)),
+                                   MemoryImage(base64Decode(CubitMainScreen.get(context).CommentsData[index].user.profilePic!),)),
                                const SizedBox(width: 20,),
                                Expanded(
                                  child: Column(
                                    mainAxisAlignment: MainAxisAlignment.start,
                                    crossAxisAlignment: CrossAxisAlignment.start,
                                    children: [
-                                     ChunckItems(CubitMainScreen
-                                         .get(context)
-                                         .CommentList[index].postChunck,CubitMainScreen.get(context).CommenterFirstName[index],CubitMainScreen.get(context).CommenterLastName[index],context),
+                                     ChunckItems(
+                                         CubitMainScreen.get(context).CommentsData[index].postChunck,CubitMainScreen.get(context).CommentsData[index].user.firstName,CubitMainScreen.get(context).CommentsData[index].user.lastName,context),
                                      Padding(
                                        padding: const EdgeInsets.only(left: 8,),
                                        child: Text(
                                          CubitMainScreen.get(context).PastTimeAgo(
-                                             CubitMainScreen
-                                                 .get(context)
-                                                 .CommentList[index].createdDate),
+                                             CubitMainScreen.get(context).CommentsData[index].createdDate),
                                          style: TextStyle(color: Colors.grey,fontSize: 12),),
                                      )
                                    ],
                                  ),
                                ),
-                               CubitMainScreen
-                                   .get(context)
-                                   .CommentList[index].userId== CubitMainScreen.get(context).userProfileValues.id ? IconButton(onPressed: (){
+                               CubitMainScreen.get(context).CommentsData[index].user.UserId== CubitMainScreen.get(context).userProfileValues.id ? IconButton(onPressed: (){
 
-                                 CubitMainScreen.get(context).DeleteComment(postId: postView.id,commentNumbr: CubitMainScreen
-                                     .get(context)
-                                     .CommentList[index].id,index: index);
+                                 CubitMainScreen.get(context).DeleteComment(postId: postId,commentNumbr:  CubitMainScreen.get(context).CommentsData[index].id);
 
 
                                }, icon: Icon(Icons.delete_outlined,color: Colors.red,)):Container()
@@ -135,7 +126,7 @@ class CommentScreen extends StatelessWidget {
                            onTap: (){
                              CubitMainScreen.get(context).getContactProfile(RcvId: CubitMainScreen
                                  .get(context)
-                                 .CommentList[index].userId);
+                                 .CommentsData[index].user.UserId);
 
                            Navigator.push(context, MaterialPageRoute(builder: (context) => ContactProfile()));
 
@@ -145,35 +136,34 @@ class CommentScreen extends StatelessWidget {
                             CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
-                                MemoryImage(base64Decode(CubitMainScreen.get(context).CommenterImage[index]!),)),
+                                MemoryImage(base64Decode(CubitMainScreen.get(context)
+                                    .CommentsData[index].user.profilePic!),)),
                             const SizedBox(width: 20,),
                             Expanded(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ChunckItems(CubitMainScreen
-                                      .get(context)
-                                      .CommentList[index].postChunck,CubitMainScreen.get(context).CommenterFirstName[index],CubitMainScreen.get(context).CommenterLastName[index],context),
+                                  ChunckItems(CubitMainScreen.get(context)
+                                      .CommentsData[index].postChunck,CubitMainScreen.get(context)
+                                      .CommentsData[index].user.firstName,CubitMainScreen.get(context)
+                                      .CommentsData[index].user.lastName,context),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8,),
                                     child: Text(
                                       CubitMainScreen.get(context).PastTimeAgo(
-                                          CubitMainScreen
-                                              .get(context)
-                                              .CommentList[index].createdDate),
+                                          CubitMainScreen.get(context)
+                                              .CommentsData[index].createdDate),
                                       style: TextStyle(color: Colors.grey,fontSize: 12),),
                                   )
                                 ],
                               ),
                             ),
-                            CubitMainScreen
-                                .get(context)
-                                .CommentList[index].userId== CubitMainScreen.get(context).userProfileValues.id ? IconButton(onPressed: (){
+                          CubitMainScreen.get(context)
+                              .CommentsData[index].user.UserId== CubitMainScreen.get(context).userProfileValues.id ? IconButton(onPressed: (){
 
-                                  CubitMainScreen.get(context).DeleteComment(postId: postView.id,commentNumbr: CubitMainScreen
-                                      .get(context)
-                                      .CommentList[index].id,index: index);
+                                  CubitMainScreen.get(context).DeleteComment(postId: postId,commentNumbr:  CubitMainScreen.get(context)
+                                      .CommentsData[index].id);
 
 
                             }, icon: Icon(Icons.delete_outlined,color: Colors.red,)):Container()
@@ -183,7 +173,7 @@ class CommentScreen extends StatelessWidget {
                       separatorBuilder:  (context, index)=> Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                         child: Container(height:1,color: Colors.grey,width: double.infinity,),
-                      ), itemCount: CubitMainScreen.get(context).CommentList.length),
+                      ), itemCount: CubitMainScreen.get(context).CommentsData.length),
                 ),
               ),
               Row(
@@ -198,7 +188,7 @@ class CommentScreen extends StatelessWidget {
                       style: const TextStyle(color: Colors.grey),
                       decoration: InputDecoration(
                         suffixIcon: IconButton(onPressed: () {
-                          CubitMainScreen.get(context).AddCommentImage(body: comment.text,postId: postView.id);
+                          CubitMainScreen.get(context).AddCommentImage(body: comment.text,postId: postId);
 
 
                         }, icon: const Icon(IconlyLight.camera),),
@@ -215,7 +205,7 @@ class CommentScreen extends StatelessWidget {
                       maxLines: null,
                     ),
                   ), IconButton(onPressed: () {
-                    CubitMainScreen.get(context).AddCommentText(body: comment.text,postId: postView.id);
+                    CubitMainScreen.get(context).AddCommentText(body: comment.text,postId: postId);
                   }, icon: Icon(IconlyLight.send,size: 25,color: Colors.red,),),
 
                 ],
@@ -237,7 +227,7 @@ class CommentScreen extends StatelessWidget {
           );
         }
         if(state is CommentDeletedSuccess){
-          CubitMainScreen.get(context).getListOfComments(postView.comments);
+         /// CubitMainScreen.get(context).getListOfComments(postView.comments);
         }
       },
     );

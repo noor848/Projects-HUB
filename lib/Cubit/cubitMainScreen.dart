@@ -19,6 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:open_file/open_file.dart';
 import '../Constants.dart';
+import '../Model/comment.dart';
 import '../Model/contactModel.dart';
 import '../Model/postView.dart';
 import '../Modules/TappedCreatePost/tabWindos.dart';
@@ -475,9 +476,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
     }
   }
-
-
-
 
   void SetValues({email, pass, firstname, lastname}) {
     email = email;
@@ -959,15 +957,14 @@ bool checkTheIamfollowings=false;
   }
 
   void AddCommentText({postId,body}){
-    //print(postId);
-    ///print(body);
+
     DioHelper.AddComment(postId: postId,body: body,chuckType: 3).then((value){
       emit(CommentCreatedSuccess());
-      getViewPost(postId:postId );
-
-    }).catchError((onError){});
-    print(onError.toString());
-    emit(CommentCreatedFailed());
+      getListOfComments(postId: postId);
+    }).catchError((onError){
+      print(onError.toString());
+      emit(CommentCreatedFailed());
+    });
 
   }
 
@@ -1000,19 +997,31 @@ bool checkTheIamfollowings=false;
   }
 
 
-  void DeleteComment({postId,commentNumbr,index}){
-
+  void DeleteComment({postId,commentNumbr,}){
     DioHelper.DeleteComment(postId: postId,commentNum: commentNumbr).then((value){
       emit(CommentDeletedSuccess());
+      getListOfComments(postId: postId);
     }).catchError((onError){print(onError.toString());});
   }
 
 
-  void getListOfComments(comment) {
+  List <dynamic> Comment=[];
 
+  List <dynamic> CommentsData=[];
+  void getListOfComments({postId}) {
+    Comment=[];
+    CommentsData=[];
+    DioHelper.GetComments(PostId:postId ).then((value){
+      Comment = json.decode(value.body);
+      for(int i=0;i<Comment.length;i++){
+         CommentsData.add(Commnet.fromJson(Comment[i]));
 
+      }
 
-    
+    emit(GetCommentList());
+    }).catchError((onError){
+      print(onError.toString());
+    });
   }
 
 }

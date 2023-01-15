@@ -6,7 +6,7 @@ class PostView{
   String authorId = "";
   int  usersWhoLiked=0;
  late List<PostChunks>postChunks;
- late List<Commnet>comments;
+ int comments=0;
  bool isLiked=false;
  PostView();
   PostView.fromJson(Map<String, dynamic> json)
@@ -19,7 +19,7 @@ class PostView{
       usersWhoLiked=json['usersWhoLiked'];
       isLiked=json['isLiked'];
       postChunks=List<dynamic>.from(json['postChunks']).map((i) => PostChunks.fromJson(i)).toList();
-     comments=List<dynamic>.from(json['comments']).map((i) => Commnet.fromJson(i)).toList();
+     comments=json['comments'];
   }
 
 }
@@ -41,17 +41,3 @@ class PostChunks{
 }
 
 
-class Commnet{
-  String userId="";
-  String createdDate="";
-  int id=0;
-  late PostChunks postChunck;
-  Commnet(this.id,this.userId);
-  Commnet.fromJson(Map<String, dynamic> json)
-  {
-    userId=json['userId'];
-    id=json['id'];
-    createdDate=json['createdDate'];
-    postChunck=PostChunks.fromJson(json['commentchunk']);
-  }
-}
