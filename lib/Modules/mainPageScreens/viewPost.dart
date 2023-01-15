@@ -1,73 +1,52 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduationproject1/Modules/mainPageScreens/viewPost.dart';
 import 'package:iconly/iconly.dart';
-import '../../Components/getPosts.dart';
+
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
 import '../viewPostScreen/viewpostscreen.dart';
-import 'ProjectCreate.dart';
-import 'ProjectView.dart';
 
-class Posts extends StatelessWidget {
+class Postview extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CubitMainScreen,MainScreenState>(builder: (BuildContext context, state) {
-      return
-        DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              flexibleSpace: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children:  [
-                  TabBar(
-                    tabs: [
-                      Tab(child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(IconlyBold.paper,color: Colors.red,),
-                          SizedBox(width: 5,),
-                          Text("Post",style: Theme.of(context).textTheme.subtitle2,)
-                        ],
-                      )),
-                      Tab(child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.panorama_photosphere,color: Colors.yellow,),
-                          SizedBox(width: 5,),
-                          Text("Project",style: Theme.of(context).textTheme.subtitle2)
-                        ],
-                      )),
-                    ],
+    return  BlocConsumer<CubitMainScreen,MainScreenState>(
+    builder: (BuildContext context, state) {return Column(
+      children: [
+        Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+                height: 50,
+                child: TextField(
+                  onChanged: (value){
+                    print(value);
+                  },
+                  style: Theme.of(context).textTheme.bodyText1,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(IconlyLight.search,color: Colors.grey[300],),
+                    hintText: "Search",
+                    hintStyle: Theme.of(context).textTheme.bodyText1,
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey, ),borderRadius: BorderRadius.circular(100.0),),
+                    focusedBorder:OutlineInputBorder(
+                      borderSide:  BorderSide(color: Colors.grey, width: 1),
+                      borderRadius: BorderRadius.circular(100.0),
+                    ),
                   ),
-                ],
-              ),
-              automaticallyImplyLeading: false,
-
-            ),
-       body :
-       TabBarView(
-         children: [
-           Postview(),
-           Projectview()
-         ],
-       )
-
-
-
-          ),
-        );
-    }, listener: (BuildContext context, Object? state) {  },
-
+                )
+            )),
+        Expanded(
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemBuilder: (context, index)=>getPosts(context),
+              itemCount: 1,
+            ))
+      ],
+    );},
+      listener: (BuildContext context, Object? state) {  },
     );
-
   }
-
 
   Widget getPosts(context){
     return Padding(
@@ -149,7 +128,7 @@ class Posts extends StatelessWidget {
                           const Text("205"),
                           const SizedBox(width: 20,),
 
-                         /* Padding(
+                          /* Padding(
                             padding: const EdgeInsets.only(right:10 ),
                             child: IconButton(constraints: BoxConstraints(),
                                 padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(IconlyLight.star,color: Colors.yellow,)),

@@ -16,11 +16,13 @@ class ViewPostScreen extends StatelessWidget {
  ViewPostScreen(this.postViewData, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    print(postViewData.id);
     return BlocConsumer<CubitMainScreen,MainScreenState>( builder: (BuildContext context, state){
       return Scaffold(
         appBar: AppBar(title:postViewData.title==""?const Text(""):Text(postViewData.title),
         actions: [
           postViewData.title!=""?IconButton(onPressed: (){
+            CubitMainScreen.get(context).getListOfComments(postViewData.comments);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) =>  CommentScreen(postViewData)));
@@ -36,7 +38,7 @@ class ViewPostScreen extends StatelessWidget {
         ],
         ),
         body: postViewData.coverPicture == ""?
-        Center(
+        const Center(
           child: CircularProgressIndicator(
             color: Colors.red
           ),
@@ -65,7 +67,6 @@ class ViewPostScreen extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder:  (context, index)=>ChunckItems(postViewData.postChunks[index],context),itemCount: postViewData.postChunks.length),
-
               ],
             ),
           ),

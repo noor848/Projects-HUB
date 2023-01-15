@@ -116,10 +116,7 @@ class ProjectCreate extends StatelessWidget {
                child: Visibility(
                   visible: CubitMainScreen.get(context).visiblefileChoose,
                   child: InkWell(
-                   onTap: ()=> kIsWeb?Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) =>  PDFView(CubitMainScreen.get(context).f)),
-                   ):CubitMainScreen.get(context).pickFiles(),
+                   onTap: ()=> CubitMainScreen.get(context).pickFiles(),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       child: Column(
@@ -181,6 +178,10 @@ class ProjectCreate extends StatelessWidget {
                               ///filepath
                               ///title
                               ///abstract
+                            ///
+                            ///
+                            ///
+
                           }, child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,

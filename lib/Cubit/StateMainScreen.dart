@@ -55,5 +55,8 @@ class ULikedSuccess extends MainScreenState{}
 class ULikedError extends MainScreenState{}
 class CommentCreatedSuccess extends MainScreenState{}
 class CommentCreatedFailed extends MainScreenState{}
+class GetCommentList extends MainScreenState{}
+class CommentDeletedSuccess extends MainScreenState{}
+class DefualtImage extends MainScreenState{}
 
 

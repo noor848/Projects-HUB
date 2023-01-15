@@ -37,7 +37,7 @@ class ContactProfile extends StatelessWidget {
         builder: (BuildContext context, Object? state) {
           return Scaffold(
             appBar: AppBar(),
-            body:CubitMainScreen.get(context).Contactmode==null?const Center(
+            body:CubitMainScreen.get(context).ContactmodeUserProfile==null?const Center(
               child: CircularProgressIndicator(
                 color: Colors.red,
               ),
@@ -49,7 +49,7 @@ class ContactProfile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("${CubitMainScreen.get(context).Contactmode.FirstName+"'s"} Profile",style: const TextStyle(
+                      Text("${"${CubitMainScreen.get(context).ContactmodeUserProfile.FirstName!}'s"} Profile",style: const TextStyle(
                           fontSize: 40,
                           fontFamily: 'HeadFont'
                       ),),
@@ -66,9 +66,9 @@ class ContactProfile extends StatelessWidget {
                                   border: Border.all(color: Colors.grey),
                                   borderRadius: BorderRadiusDirectional.circular(100),
                                 ),
-                                child:CubitMainScreen.get(context).Contactmode.profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 200,
+                                child:CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 200,
                                   width: 200,
-                                  fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).Contactmode.profilePicture.toString()!),
+                                  fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture.toString()!),
                                   height: 200,
                                   width: 200,
                                   fit: BoxFit.cover,
@@ -78,7 +78,7 @@ class ContactProfile extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 10,),
-                      Text("${CubitMainScreen.get(context).Contactmode.FirstName} ${CubitMainScreen.get(context).Contactmode.LastName}", style:Theme.of(context).textTheme.headline3,),
+                      Text("${CubitMainScreen.get(context).ContactmodeUserProfile.FirstName} ${CubitMainScreen.get(context).ContactmodeUserProfile.LastName}", style:Theme.of(context).textTheme.headline3,),
                       SizedBox(height: 10,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,7 +86,7 @@ class ContactProfile extends StatelessWidget {
                         children: [
                           Container(
                             width: 200,
-                            child: Text("${CubitMainScreen.get(context).userProfileValues.bio ?? "Yeeah This is Me...."}",style:Theme.of(context).textTheme.subtitle2,
+                            child: Text("${CubitMainScreen.get(context).ContactmodeUserProfile.bio==""?"Yeeah This Me...":CubitMainScreen.get(context).ContactmodeUserProfile.bio}",style:Theme.of(context).textTheme.subtitle2,
                               maxLines: 1,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
@@ -105,10 +105,11 @@ class ContactProfile extends StatelessWidget {
                             Container(
                               width: 200,
                               child: OutlinedButton(onPressed: () {
-                              CubitMainScreen.get(context).AddContact(contactId:CubitMainScreen.get(context).Contactmode.id );
+                              CubitMainScreen.get(context).AddContact(contactId:CubitMainScreen.get(context).ContactmodeUserProfile.id );
+                              CubitMainScreen.get(context).getMessages(receiverId:CubitMainScreen.get(context).ContactmodeUserProfile.id);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) =>  SendMessage(CubitMainScreen.get(context).Contactmode.profilePicture, CubitMainScreen.get(context).Contactmode.FirstName,CubitMainScreen.get(context).Contactmode.LastName, CubitMainScreen.get(context).Contactmode.id)),
+                                MaterialPageRoute(builder: (context) =>  SendMessage(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture, CubitMainScreen.get(context).ContactmodeUserProfile.FirstName!,CubitMainScreen.get(context).ContactmodeUserProfile.LastName!, CubitMainScreen.get(context).ContactmodeUserProfile.id)),
                               );
                               },
                                 child: Text("Message",style: TextStyle(
@@ -119,9 +120,9 @@ class ContactProfile extends StatelessWidget {
 
                               child: CubitMainScreen.get(context).checkTheIamfollowings==false?
                               OutlinedButton(onPressed: () {
-                                CubitMainScreen.get(context).FollowUser(UserId: CubitMainScreen.get(context).Contactmode.id);
-                               // CubitMainScreen.get(context).getFollowings(UserId: null);
-                                CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).Contactmode.id);
+                                CubitMainScreen.get(context).FollowUser(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                print("k"+CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
                                 },
                                 child: Text("+ Follow",style: TextStyle(
                                   fontSize: 18,fontFamily: 'SubHead',
@@ -131,8 +132,8 @@ class ContactProfile extends StatelessWidget {
                                   backgroundColor: MaterialStateProperty.all(Colors.red),
                                 ),
                                 onPressed: () {
-                                //CubitMainScreen.get(context).FollowUser(UserId: CubitMainScreen.get(context).Contactmode.id);
-                                CubitMainScreen.get(context).followUNfollow(UserId: CubitMainScreen.get(context).Contactmode.id);
+                                //CubitMainScreen.get(context).FollowUser(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                CubitMainScreen.get(context).followUNfollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
                               },
                                 child: Text("Following",style: TextStyle(
                                   fontSize: 18,fontFamily: 'SubHead',color: Colors.white

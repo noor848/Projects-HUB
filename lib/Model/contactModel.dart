@@ -1,7 +1,5 @@
-
 class Contactmodl {
   late String id;
-  late String Name="";
   late String FirstName="";
   late String LastName="";
   String profilePicture = "";

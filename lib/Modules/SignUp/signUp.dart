@@ -50,10 +50,10 @@ class SignUp extends StatelessWidget {
         return Scaffold(
                 appBar: AppBar(
                   actions: [
-
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextButton(onPressed: (){
+                        CubitMainScreen.get(context).putDefulatImage();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) =>  ImagePicker()),

@@ -44,7 +44,7 @@ class DioHelper {
   }
 
   static Future<http.Response> GetUserProfile({path,data,idToken})async{
-  var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/profile/${idToken==null?"":idToken}");
+  var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/profile/${idToken ?? ""}");
   var response = await http.Client().get(url ,headers: {
     'Content-Type': 'application/json;charset=UTF-8',
     'Authorization':'Bearer $UserToken',
@@ -106,6 +106,7 @@ class DioHelper {
         });
     return response;
   }
+
   static Future<http.Response> GetUserContacts({path,data,idToken})async{
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts");
     var response = await http.Client().get(url ,headers: {
@@ -116,6 +117,8 @@ class DioHelper {
    // print(response.body);
     return response;
   }
+
+
   static Future<http.Response> DeleteContact({ContactId,Token}) async {
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts/");
     var response = await http.Client().delete(url, body:
@@ -138,7 +141,6 @@ class DioHelper {
       'Content-Type': 'application/json;charset=UTF-8',
       //'Charset': 'utf-8'
     });
-    print("ccc"+await json.decode(json.encode(response.body)));
     return response;
   }
   static Future<http.Response> AddContact({ContactId,idToken})async{
@@ -191,7 +193,12 @@ class DioHelper {
 
     return response;
   }
+
   static Future<http.Response>  CreatePost({title,coverPicture,chunkList})async{
+    print(title);
+    print(coverPicture);
+    print(chunkList);
+
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post");
     var response = await http.Client().post(url, body:
     json.encode(
@@ -205,7 +212,6 @@ class DioHelper {
       'Authorization':'Bearer $UserToken',
     });
     print(response.statusCode);
-
     return response;
   }
   static Future<http.Response> GetViewPost({PostId})async{
@@ -215,7 +221,7 @@ class DioHelper {
           HttpHeaders.contentTypeHeader: 'application/json',
           'Authorization':'Bearer $UserToken',
         });
-
+   /// print(response.body);
     return response;
   }
 
@@ -238,7 +244,6 @@ class DioHelper {
     return response;
   }
 
-
   static Future<http.Response> AddComment({postId,chuckType,body})async{
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$postId/Comment");
     var response = await http.Client().put(url,
@@ -252,6 +257,27 @@ class DioHelper {
         });
     return response;
   }
+
+  static Future<http.Response> DeleteComment({postId,commentNum})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$postId/Comment/$commentNum");
+    var response = await http.Client().delete(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
+  static Future<http.Response> GetComments({PostId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$PostId/Comments");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
 
 
 }

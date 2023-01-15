@@ -22,6 +22,7 @@ class SendMessage extends StatelessWidget {
   SendMessage(this.profilePicture, this.firstName, this.lastName,this.RcvId, {Key? key});
   @override
   Widget build(BuildContext context) {
+    print("hello");
     return BlocConsumer<CubitMainScreen,MainScreenState>(
       builder: (BuildContext context, state) {
         return  Scaffold(
@@ -47,9 +48,7 @@ class SendMessage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50)
                       ),
                       child:
-                      profilePicture.isEmpty?Image.asset('assets/images/profileImage.jpg', height: 40,
-                        width: 40,
-                        fit: BoxFit.fill,): Image.memory(base64Decode(profilePicture),
+                      Image.memory(base64Decode(profilePicture),
                         height: 40,
                         width: 40,
                         fit: BoxFit.cover,
@@ -61,7 +60,8 @@ class SendMessage extends StatelessWidget {
                 ],
               ),
             ),
-            actions: [Padding(
+            actions: [
+              Padding(
               padding: const EdgeInsets.all(8.0),
               child: IconButton(onPressed: (){}, icon: Icon(Icons.error,color: Colors.grey[500],)),
             )],
@@ -89,8 +89,11 @@ class SendMessage extends StatelessWidget {
                                 return MyMessage(Message,context);
                               }
                               return HisMessage(Message,context);
-                            } , separatorBuilder:(context, index)=> SizedBox(
+                            } , separatorBuilder:(context, index)=>
+                            SizedBox(
                           height: 15,
+                              child: Text(CubitMainScreen.get(context).PastTimeAgo2(
+                                  CubitMainScreen.get(context).messages[index].date.toDate()),style: TextStyle(color: Colors.grey,fontSize: 10),textAlign: TextAlign.center,),
                         ), itemCount: CubitMainScreen.get(context).messages.length),
                       ):
                       Expanded(

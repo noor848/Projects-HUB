@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:graduationproject1/Model/UserProfileModel.dart';
@@ -388,16 +389,18 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       password: password.toString(),
       email: email.toString(),
     ).then((value) {
+      print(value);
       if (value == "User Not Found") {
         emit(LoginFailed());
         return;
       }
-     print(value.toString());
+    /// print(value.toString());
       setToken(token: value.toString());
       emit(LoginSuccess());
-      print(loggedInUserId);
+     print(loggedInUserId);
       getProfile(UserId: null);
     }).catchError((onError) {
+      print(onError.toString());
       emit(LoginFailed());
     });
   }
@@ -413,13 +416,39 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     emit(TokenSet());
   }
 
-  var imageSignUpPath;
+  String imageSignUpPath="";
   File? imageSignUp;
-  void SignUp({FirstName, LastName, email, password}) {
+
+  Future<void> SignUpImage() async {
+
+    if(kIsWeb){
+      final temp = (await ImagePicker().
+      getImage(source:ImageSource.camera,imageQuality:
+      80));
+      if(temp==null) {
+        return;
+      }
+      Uint8List? x= await temp?.readAsBytes();
+      imageSignUpPath=base64.encode(x!);
+
+    emit(ImagePickerLoad());
+    }else{
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemporarly = File(image.path);
+      imageSignUpPath=base64Encode(imageTemporarly.readAsBytesSync()!);
+
+    emit(ImagePickerLoad());
+    }
+
+  }
+
+  Future<void> SignUp({FirstName, LastName, email, password}) async {
+    putDefulatImage();
     DioHelper.SignUp(
             password: password,
             email: email,
-            image: "",
+            image: imageSignUpPath,
             FirstName: FirstName,
             LastName: LastName)
         .then((value) {
@@ -435,6 +464,20 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       emit(SignedUpFailed());
     });
   }
+
+  Future<void> putDefulatImage() async {
+    if(imageSignUpPath==""){
+      ByteData byteData = await rootBundle.load("assets/images/profile.png");
+      Uint8List bytes = byteData.buffer.asUint8List();
+      imageSignUpPath = base64.encode(bytes);
+      print(imageSignUpPath);
+      emit(DefualtImage());
+
+    }
+  }
+
+
+
 
   void SetValues({email, pass, firstname, lastname}) {
     email = email;
@@ -529,6 +572,10 @@ Future GetImageChat({RecieverId}) async {
     }
     emit(ImagePickerLoad());
   }}
+
+
+
+
 void DeleteContact({RcvId}){
 
   DioHelper.DeleteContact(Token: loggedInUserId,ContactId: RcvId).then((value) {
@@ -557,12 +604,20 @@ void DeleteContact({RcvId}){
 
 
   late Contactmodl Contactmode = Contactmodl();
+
+  late UserProfileModel ContactmodeUserProfile = UserProfileModel();
   void getContactProfile({RcvId}){
-    DioHelper.GetContactProfile(idToken:RcvId,).then((value) {
-      var user = json.decode(value.body);
-      Contactmode = Contactmodl.fromJson(user);
+    DioHelper.GetUserProfile(idToken: null).then((value) {
+      print(RcvId);
+       var user = json.decode(value.body);
+      print(json.decode(value.body));
+       ContactmodeUserProfile = UserProfileModel.fromJson(user);
+        print(ContactmodeUserProfile);
       emit(GetContactProfile());
+    }).catchError((onError){
+      print(onError.toString());
     });
+
   }
   void AddContact({contactId}) {
     DioHelper.AddContact(ContactId: contactId, idToken: loggedInUserId).then((value) {
@@ -571,8 +626,8 @@ void DeleteContact({RcvId}){
   }
   void FollowUser({UserId}){
     DioHelper.FollowUser(UserId: UserId).then((value){
-      checktheIamfollowing(UserId: UserId);
       emit(FollowedSuccessfully());
+     checktheIamfollowing(UserId: UserId);
     }).catchError((onError) {});
   }
 
@@ -597,9 +652,12 @@ void DeleteContact({RcvId}){
 
 
 bool checkTheIamfollowings=false;
+
   void checktheIamfollowing({UserId}){
+
     DioHelper.GetFollowing(UserId: null).then((value){
      List following =json.decode(value.body);
+     print(following.contains(UserId));
         if(following.contains(UserId)){
           checkTheIamfollowings = true;
         }
@@ -607,8 +665,12 @@ bool checkTheIamfollowings=false;
           checkTheIamfollowings = false;
           uNFollowUser(UserId:UserId);
         }
-    }).catchError((onError) {});
-    emit(ChecktheIamfollowing());
+        print(checkTheIamfollowings);
+     emit(ChecktheIamfollowing());
+
+    }).catchError((onError) {
+      print(onError.toString());
+    });
   }
 
   void followUNfollow({UserId}){
@@ -755,21 +817,58 @@ bool checkTheIamfollowings=false;
     return "Just now";
   }
 
+  String  PastTimeAgo2(timestamp){
+    var date = DateTime.fromMicrosecondsSinceEpoch(timestamp.microsecondsSinceEpoch);
+    final date2=DateTime.now();
+    final difference=date2.difference(date);
+    if (difference.inDays>8) {
+      return DateFormat("dd-MM-yyyy HH:mm:ss").format(date);
+    } else if((difference.inDays/7).floor()>=1)
+    {
+      return "Last week";
+    }else if(difference.inDays>=2){
+      return "${difference.inDays} days ago";
+    }
+    else if(difference.inDays>=1){
+      return "1 day ago";
+    }
+    else if( difference.inHours>=2){
+      return "${difference.inHours} hours ago";
+    }
+    else if(difference.inHours>=1){
+      return "1 hour ago";
+    }
+    else if( difference.inMinutes>=2){
+      return "${difference.inMinutes} minutes ago";
+    }
+    else if(difference.inMinutes>=1){
+      return "1 minute ago";
+    }
+    else if(difference.inSeconds>=3){
+      return "${difference.inSeconds} seconds ago";
+    }
+    return "Just now";
+  }
+
 
   late PostView viewDataPost=new PostView();
   var timeAgo="";
+
+
   void getViewPost({postId}){ /// loop according to the size then pass each id to it
-    DioHelper.GetViewPost(PostId: "63bfd755eb7ed1d0a59a6d63").then((value){
+    DioHelper.GetViewPost(PostId: "63c4060017450b71b89a8938").then((value){
      viewDataPost=PostView.fromJson(json.decode(value.body));
      timeAgo=PastTimeAgo(viewDataPost.createdDate);
   emit(ViewDataPost());
-  print(timeAgo);
   emit(TimePassedAgo());
     }).catchError((onError){});
-
   }
+
+
+
    PlatformFile file = new PlatformFile(name: 'd',size: 50) ;
    bool visiblefileChoose =false;
+
   Uint8List? f;
   Future<void> pickFiles() async {
       var result = await FilePicker.platform.pickFiles(
@@ -782,6 +881,7 @@ bool checkTheIamfollowings=false;
 
       if(kIsWeb){
         f=file.bytes;
+        print(f);
       }else{
         OpenFile.open(file.path!);
       }
@@ -829,6 +929,7 @@ bool checkTheIamfollowings=false;
       emit(ImagePickerLoad());
     }
   }
+
   void clearProjectStuff(){
      CoverImage2="";
      CoverImageunit2=null;
@@ -858,9 +959,12 @@ bool checkTheIamfollowings=false;
   }
 
   void AddCommentText({postId,body}){
+    //print(postId);
+    ///print(body);
     DioHelper.AddComment(postId: postId,body: body,chuckType: 3).then((value){
-      print(value.body);
       emit(CommentCreatedSuccess());
+      getViewPost(postId:postId );
+
     }).catchError((onError){});
     print(onError.toString());
     emit(CommentCreatedFailed());
@@ -873,7 +977,6 @@ bool checkTheIamfollowings=false;
     if (kIsWeb) {
       final temp = (await ImagePicker().getImage(source: ImageSource.camera, imageQuality:80));
     if (temp == null) return;
-
       commentImageunit = await temp?.readAsBytes();
       commentImage=base64Encode(commentImageunit!);
     emit(ImagePickerLoad());
@@ -887,14 +990,29 @@ bool checkTheIamfollowings=false;
     commentImage=base64Encode(commentImageunit!);
     emit(ImagePickerLoad());
     }
-
     DioHelper.AddComment(postId: postId,body: commentImage,chuckType: 0).then((value){
-      print(value.body);
       emit(CommentCreatedSuccess());
+      getViewPost(postId:postId );
     }).catchError((onError){});
     print(onError.toString());
     emit(CommentCreatedFailed());
 
   }
-}
 
+
+  void DeleteComment({postId,commentNumbr,index}){
+
+    DioHelper.DeleteComment(postId: postId,commentNum: commentNumbr).then((value){
+      emit(CommentDeletedSuccess());
+    }).catchError((onError){print(onError.toString());});
+  }
+
+
+  void getListOfComments(comment) {
+
+
+
+    
+  }
+
+}

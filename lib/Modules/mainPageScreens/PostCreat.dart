@@ -152,7 +152,7 @@ class PostCreate extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 2, horizontal: 20),
                                 child: ElevatedButton(onPressed: () {
-
+                                  print(cubic.PostChnk);
                                   int k=0;
                                   for(int i=0;i< cubic.PostChnk.length;i++)
                                   {
