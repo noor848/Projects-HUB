@@ -534,13 +534,15 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 void getContactList(){
   UserProfileValues =[];
   ContactList =[];
-  DioHelper.GetUserContacts(idToken: loggedInUserId).then((value) {
-    ContactList = json.decode(value.body);
-    for(int i=0;i<ContactList.length;i++){
-      var ContactItem= ContactModel.fromJson(ContactList[i]);
 
-      DioHelper.GetUserProfile(idToken:ContactItem.id).then((value) {
-        var user = json.decode(value.body);
+  DioHelper.GetUserContacts().then((value) {
+    ContactList = json.decode(value.body);
+    print(ContactList);
+    for(int i=0;i<ContactList.length;i++){
+      ///var ContactItem= ContactModel.fromJson(ContactList[i]);
+
+      DioHelper.GetUserProfile(idToken:ContactList[i]).then((value) async {
+        var user =  await json.decode(value.body);
         UserProfileValues.add(UserProfileModel.fromJson(user));
         emit(GetUserProfile());
       });
@@ -604,9 +606,11 @@ void DeleteContact({RcvId}){
   late Contactmodl Contactmode = Contactmodl();
 
   late UserProfileModel ContactmodeUserProfile = UserProfileModel();
+
   void getContactProfile({RcvId}){
-    DioHelper.GetUserProfile(idToken: null).then((value) {
-      print(RcvId);
+
+    DioHelper.GetUserProfile(idToken: RcvId).then((value) {
+      print(value.body);
        var user = json.decode(value.body);
       print(json.decode(value.body));
        ContactmodeUserProfile = UserProfileModel.fromJson(user);
@@ -622,16 +626,18 @@ void DeleteContact({RcvId}){
       emit(AddContactSuccessfully());
     }).catchError((onError) {});
   }
-  void FollowUser({UserId}){
-    DioHelper.FollowUser(UserId: UserId).then((value){
-      emit(FollowedSuccessfully());
-     checktheIamfollowing(UserId: UserId);
-    }).catchError((onError) {});
-  }
+
 
   void getFollowers({UserId}){
     DioHelper.GetFollowers(UserId: UserId).then((value){
+
       emit(GetFollowers());
+    }).catchError((onError) {});
+  }
+  void getFollowings({UserId}){
+    DioHelper.GetFollowing(UserId: UserId).then((value){
+      //  print(value.body);
+      emit(GetFollowings());
     }).catchError((onError) {});
   }
 
@@ -640,57 +646,39 @@ void DeleteContact({RcvId}){
       emit(UnfollowSuccess());
     }).catchError((onError) {});
   }
-
-  void getFollowings({UserId}){
-    DioHelper.GetFollowing(UserId: UserId).then((value){
-    //  print(value.body);
-      emit(GetFollowings());
+  void FollowUser({UserId}){
+    DioHelper.FollowUser(UserId: UserId).then((value){
+      emit(FollowedSuccessfully());
+      ///checktheIamfollowing(UserId: UserId);
     }).catchError((onError) {});
   }
-
-
 bool checkTheIamfollowings=false;
 
   void checktheIamfollowing({UserId}){
-
-    DioHelper.GetFollowing(UserId: null).then((value){
+    DioHelper.GetFollowing().then((value){
      List following =json.decode(value.body);
      print(following.contains(UserId));
         if(following.contains(UserId)){
-          checkTheIamfollowings = true;
+          uNFollowUser(UserId:UserId );
+          checkTheIamfollowings=false;
         }
         else{
-          checkTheIamfollowings = false;
-          uNFollowUser(UserId:UserId);
+          FollowUser(UserId: UserId);
+          checkTheIamfollowings=true;
         }
-        print(checkTheIamfollowings);
      emit(ChecktheIamfollowing());
-
+     getContactProfile(RcvId: UserId);
+     print(checkTheIamfollowings);
     }).catchError((onError) {
       print(onError.toString());
     });
   }
 
-  void followUNfollow({UserId}){
-    if(checkTheIamfollowings==true){
-      checkTheIamfollowings=false;
-      uNFollowUser(UserId:UserId);
-      emit(FollowUnfollow());
-
-    }else{
-      checkTheIamfollowings=true;
-      FollowUser(UserId: UserId);
-      getProfile(UserId: null);
-      emit(FollowUnfollow());
-    }
-    checktheIamfollowing(UserId: UserId);
-    getProfile(UserId: null);
-    emit(FollowUnfollow());
-  }
 
   void getProfile({UserId}){
-    DioHelper.GetUserProfile(idToken: UserId).then((value) {
-      userProfileValues = UserProfileModel.fromJson(json.decode(value.body));
+    DioHelper.GetUserProfile(idToken: UserId).then((value) async {
+      var user = await json.decode(value.body);
+      userProfileValues = UserProfileModel.fromJson(user);
       emit(GetUserProfile());
     });
 
@@ -854,7 +842,7 @@ bool checkTheIamfollowings=false;
 
 
   void getViewPost({postId}){ /// loop according to the size then pass each id to it
-    DioHelper.GetViewPost(PostId: "63c4060017450b71b89a8938").then((value){
+    DioHelper.GetViewPost(PostId: "63c4756d8c3f23a1e477a599").then((value){
      viewDataPost=PostView.fromJson(json.decode(value.body));
      timeAgo=PastTimeAgo(viewDataPost.createdDate);
   emit(ViewDataPost());

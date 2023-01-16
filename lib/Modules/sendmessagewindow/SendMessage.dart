@@ -86,14 +86,13 @@ class SendMessage extends StatelessWidget {
                             itemBuilder:(context, index) {
                               var Message=CubitMainScreen.get(context).messages[index];
                               if(Message.senderId==CubitMainScreen.get(context).userProfileValues.id){
-                                return MyMessage(Message,context);
+                                return MyMessage(Message,context,index);
                               }
-                              return HisMessage(Message,context);
+                              return HisMessage(Message,context,index);
                             } , separatorBuilder:(context, index)=>
                             SizedBox(
                           height: 15,
-                              child: Text(CubitMainScreen.get(context).PastTimeAgo2(
-                                  CubitMainScreen.get(context).messages[index].date.toDate()),style: TextStyle(color: Colors.grey,fontSize: 10),textAlign: TextAlign.center,),
+
                         ), itemCount: CubitMainScreen.get(context).messages.length),
                       ):
                       Expanded(
@@ -182,48 +181,72 @@ class SendMessage extends StatelessWidget {
     );
   }
 
-  Widget MyMessage(MessageModel model,context)=>Align(alignment: AlignmentDirectional.topEnd, child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.black12,
-          borderRadius: BorderRadiusDirectional.only(
-            bottomStart: Radius.circular(10),
-            topEnd: Radius.circular(10),
-            topStart: Radius.circular(10),
+  Widget MyMessage(MessageModel model,context,index)=>
+      Column(
+        children: [
+          Align(alignment: AlignmentDirectional.topEnd, child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadiusDirectional.only(
+                bottomStart: Radius.circular(10),
+                topEnd: Radius.circular(10),
+                topStart: Radius.circular(10),
+              ),
+            ),
+            padding:const  EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal:10.0
+            ),
+            child:model.text!.isEmpty?
+            Hero(
+                tag: "hello",
+                child: FullScreenWidget(child: Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,)),
+            ):
+              Text("${model.text}",
+              style: TextStyle(color: Colors.red,fontFamily:'SubHead',fontSize: 16),
+            ),
+          ),),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(CubitMainScreen.get(context).PastTimeAgo2(
+                CubitMainScreen.get(context).messages[index].date.toDate()),style: TextStyle(color: Colors.grey,fontSize: 10),textAlign: TextAlign.center,),
           ),
-        ),
-        padding:const  EdgeInsets.symmetric(
-            vertical: 5,
-            horizontal:10.0
-        ),
-        child:model.text!.isEmpty?
-        Hero(
-            tag: "hello",
-            child: FullScreenWidget(child: Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,)),
-        ):
-          Text("${model.text}",
-          style: TextStyle(color: Colors.red,fontFamily:'SubHead',fontSize: 16),
-        ),
-      ),);
-  Widget HisMessage(MessageModel model,context)=> Align(
+        ],
+      );
+
+
+
+
+  Widget HisMessage(MessageModel model,context,index)=>
+      Column(
+        children: [
+          Align(
     alignment: AlignmentDirectional.topStart,
     child: Container(
-      decoration: const BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadiusDirectional.only(
-          bottomEnd: Radius.circular(10),
-          topEnd: Radius.circular(10),
-          topStart: Radius.circular(10),
-        ),
-      ),
-      padding:const  EdgeInsets.symmetric(
-          vertical: 5,
-          horizontal:10.0
-      ),
-      child: model.text!.isEmpty? FullScreenWidget(child: Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,)):
-      Text("${model.text}",
-        style: TextStyle(color: Colors.white,fontFamily:'SubHead',fontSize: 16),
-      ),
+          decoration: const BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadiusDirectional.only(
+              bottomEnd: Radius.circular(10),
+              topEnd: Radius.circular(10),
+              topStart: Radius.circular(10),
+            ),
+          ),
+          padding:const  EdgeInsets.symmetric(
+              vertical: 5,
+              horizontal:10.0
+          ),
+          child: model.text!.isEmpty? FullScreenWidget(child: Image.memory(base64Decode(model.image.toString()!),fit: BoxFit.cover,height: 200,width: 200,)):
+          Text("${model.text}",
+            style: TextStyle(color: Colors.white,fontFamily:'SubHead',fontSize: 16),
+          ),
     ),
-  );
+  ),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(CubitMainScreen.get(context).PastTimeAgo2(
+                CubitMainScreen.get(context).messages[index].date.toDate()),style: TextStyle(color: Colors.grey,fontSize: 10),textAlign: TextAlign.center,),
+          ),
+        ],
+      );
 
 }

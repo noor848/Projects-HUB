@@ -1,7 +1,7 @@
 class UserProfileModel{
-  late String id;
-  String ?FirstName;
-  String ?LastName;
+  late String id="";
+   String ?FirstName="";
+  String ? LastName="";
   String profilePicture="";
   String ?bio;
   int  following=0;

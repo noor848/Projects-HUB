@@ -127,9 +127,7 @@ class CommentScreen extends StatelessWidget {
                              CubitMainScreen.get(context).getContactProfile(RcvId: CubitMainScreen
                                  .get(context)
                                  .CommentsData[index].user.UserId);
-
                            Navigator.push(context, MaterialPageRoute(builder: (context) => ContactProfile()));
-
                            },
                            child: Row(
                         children: [

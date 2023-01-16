@@ -37,7 +37,7 @@ class ContactProfile extends StatelessWidget {
         builder: (BuildContext context, Object? state) {
           return Scaffold(
             appBar: AppBar(),
-            body:CubitMainScreen.get(context).ContactmodeUserProfile==null?const Center(
+            body:CubitMainScreen.get(context).ContactmodeUserProfile==""?const Center(
               child: CircularProgressIndicator(
                 color: Colors.red,
               ),
@@ -49,7 +49,7 @@ class ContactProfile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("${"${CubitMainScreen.get(context).ContactmodeUserProfile.FirstName!}'s"} Profile",style: const TextStyle(
+                      Text("${"${CubitMainScreen.get(context).ContactmodeUserProfile.FirstName}'s"} Profile",style: const TextStyle(
                           fontSize: 40,
                           fontFamily: 'HeadFont'
                       ),),
@@ -66,9 +66,7 @@ class ContactProfile extends StatelessWidget {
                                   border: Border.all(color: Colors.grey),
                                   borderRadius: BorderRadiusDirectional.circular(100),
                                 ),
-                                child:CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 200,
-                                  width: 200,
-                                  fit: BoxFit.fill,): Image.memory(base64Decode(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture.toString()!),
+                                child: Image.memory(base64Decode(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture.toString()),
                                   height: 200,
                                   width: 200,
                                   fit: BoxFit.cover,
@@ -95,7 +93,36 @@ class ContactProfile extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 15,),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                    padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                                    child: Text("Following",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                                Text("${CubitMainScreen.get(context).ContactmodeUserProfile.following}",style:Theme.of(context).textTheme.labelMedium,)
+                              ],
+                            ),
+                          ),
+                          SizedBox(width:8)
+                          , Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                    padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                                    child: Text("Followers",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                                Text("${CubitMainScreen.get(context).ContactmodeUserProfile.followers}",style:Theme.of(context).textTheme.labelMedium,)
+                              ],
 
+                            ),
+
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -115,16 +142,15 @@ class ContactProfile extends StatelessWidget {
                                 child: Text("Message",style: TextStyle(
                                     fontSize: 18,fontFamily: 'SubHead',
                                 ),),),
-                            ), SizedBox(width: 5,),
+                            ), const SizedBox(width: 5,),
                             Container(
 
                               child: CubitMainScreen.get(context).checkTheIamfollowings==false?
                               OutlinedButton(onPressed: () {
                                 CubitMainScreen.get(context).FollowUser(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                                print("k"+CubitMainScreen.get(context).ContactmodeUserProfile.id);
                                 CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
                                 },
-                                child: Text("+ Follow",style: TextStyle(
+                                child: const Text("+ Follow",style: TextStyle(
                                   fontSize: 18,fontFamily: 'SubHead',
                                 ),),):
                               OutlinedButton(
@@ -132,8 +158,7 @@ class ContactProfile extends StatelessWidget {
                                   backgroundColor: MaterialStateProperty.all(Colors.red),
                                 ),
                                 onPressed: () {
-                                //CubitMainScreen.get(context).FollowUser(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                                CubitMainScreen.get(context).followUNfollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
                               },
                                 child: Text("Following",style: TextStyle(
                                   fontSize: 18,fontFamily: 'SubHead',color: Colors.white
@@ -141,7 +166,8 @@ class ContactProfile extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
+                      ),
+
                     ],
                   ),
                 ),

@@ -117,8 +117,7 @@ class ChatList extends StatelessWidget {
                             borderRadius: BorderRadius.circular(100)
                         ),
                         child:
-                        contactInfo.profilePicture.toString().isEmpty?Image.asset('assets/images/profileImage.jpg', height: 60, width: 60,
-                          fit: BoxFit.fill,): Image.memory(base64Decode(contactInfo.profilePicture.toString()!),
+                        Image.memory(base64Decode(contactInfo.profilePicture.toString()!),
                           height: 60,
                           width: 60,
                           fit: BoxFit.cover,
