@@ -58,5 +58,6 @@ class CommentCreatedFailed extends MainScreenState{}
 class GetCommentList extends MainScreenState{}
 class CommentDeletedSuccess extends MainScreenState{}
 class DefualtImage extends MainScreenState{}
+class FollwoUnFollow extends MainScreenState{}
 
 

@@ -30,8 +30,9 @@ class SendMessage extends StatelessWidget {
             elevation: 1,
             title: InkWell(
               onTap: (){
+
                 CubitMainScreen.get(context).getContactProfile(RcvId:RcvId);
-                CubitMainScreen.get(context).checktheIamfollowing(UserId: RcvId);
+                CubitMainScreen.get(context).checktheIamfollowing(UserId:RcvId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ContactProfile(

@@ -1,16 +1,13 @@
-
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduationproject1/Modules/followsList/followers.dart';
 import 'package:graduationproject1/Modules/sendmessagewindow/SendMessage.dart';
-import 'package:iconly/iconly.dart';
-
-import '../../Components/button.dart';
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
+import '../followsList/following.dart';
 
 class ContactProfile extends StatelessWidget {
 
@@ -37,7 +34,7 @@ class ContactProfile extends StatelessWidget {
         builder: (BuildContext context, Object? state) {
           return Scaffold(
             appBar: AppBar(),
-            body:CubitMainScreen.get(context).ContactmodeUserProfile==""?const Center(
+            body:CubitMainScreen.get(context).ContactmodeUserProfile.LastName==""?const Center(
               child: CircularProgressIndicator(
                 color: Colors.red,
               ),
@@ -97,28 +94,44 @@ class ContactProfile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                    padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
-                                    child: Text("Following",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
-                                Text("${CubitMainScreen.get(context).ContactmodeUserProfile.following}",style:Theme.of(context).textTheme.labelMedium,)
-                              ],
+                          InkWell(
+                            onTap: (){
+                              CubitMainScreen.get(context).getFollowingList(userId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                              CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Following()));
+
+                            },
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Container(
+                                      padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                                      child: Text("Following",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                                  Text("${CubitMainScreen.get(context).ContactmodeUserProfile.following}",style:Theme.of(context).textTheme.labelMedium,)
+                                ],
+                              ),
                             ),
                           ),
                           SizedBox(width:8)
-                          , Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                    padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
-                                    child: Text("Followers",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
-                                Text("${CubitMainScreen.get(context).ContactmodeUserProfile.followers}",style:Theme.of(context).textTheme.labelMedium,)
-                              ],
+                          , InkWell(
+                            onTap: (){
+                              CubitMainScreen.get(context).getFollowersrList(userId:CubitMainScreen.get(context).ContactmodeUserProfile.id );
+                              CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Followers()));
+
+                            },
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Container(
+                                      padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                                      child: Text("Followers",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                                  Text("${CubitMainScreen.get(context).ContactmodeUserProfile.followers}",style:Theme.of(context).textTheme.labelMedium,)
+                                ],
+
+                              ),
 
                             ),
-
                           ),
                         ],
                       ),
@@ -144,11 +157,9 @@ class ContactProfile extends StatelessWidget {
                                 ),),),
                             ), const SizedBox(width: 5,),
                             Container(
-
                               child: CubitMainScreen.get(context).checkTheIamfollowings==false?
                               OutlinedButton(onPressed: () {
-                                CubitMainScreen.get(context).FollowUser(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                                CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
                                 },
                                 child: const Text("+ Follow",style: TextStyle(
                                   fontSize: 18,fontFamily: 'SubHead',
@@ -158,7 +169,7 @@ class ContactProfile extends StatelessWidget {
                                   backgroundColor: MaterialStateProperty.all(Colors.red),
                                 ),
                                 onPressed: () {
-                                CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
                               },
                                 child: Text("Following",style: TextStyle(
                                   fontSize: 18,fontFamily: 'SubHead',color: Colors.white

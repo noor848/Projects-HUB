@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduationproject1/Modules/followsList/following.dart';
 import 'package:iconly/iconly.dart';
 
 import '../../Components/getPosts.dart';
@@ -10,6 +11,7 @@ import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
 import '../allUserPost/allUserPosts.dart';
 import '../editProfile/editProfile.dart';
+import '../followsList/followers.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -84,28 +86,39 @@ class Profile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                     Container(
-                       child: Column(
-                         children: [
-                           Container(
-                               padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
-                               child: Text("Following",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
-                           Text("${CubitMainScreen.get(context).userProfileValues.following}",style:Theme.of(context).textTheme.labelMedium,)
-                         ],
+                     InkWell(
+                       onTap: (){
+                         CubitMainScreen.get(context).getFollowingList();
+                         ///CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).userProfileValues.id);
+                         Navigator.push(context, MaterialPageRoute(builder: (context) => Following()));
+                       },
+                       child: Container(
+                         child: Column(
+                           children: [
+                             Container(
+                                 padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                                 child: Text("Following",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                             Text("${CubitMainScreen.get(context).userProfileValues.following}",style:Theme.of(context).textTheme.labelMedium,)
+                           ],
+                         ),
                        ),
                      ),
                       SizedBox(width:8)
-                      , Container(
-                        child: Column(
-                          children: [
-                            Container(
-                                padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
-                                child: Text("Followers",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
-                            Text("${CubitMainScreen.get(context).userProfileValues.followers}",style:Theme.of(context).textTheme.labelMedium,)
-                          ],
-
+                      , InkWell(
+                        onTap: (){
+                          CubitMainScreen.get(context).getFollowersrList();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Followers()));
+                        },
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.symmetric(vertical:4, horizontal: 15 ),
+                                  child: Text("Followers",style:TextStyle(color: Colors.red,fontSize: 18,fontFamily: 'SubHead'))),
+                              Text("${CubitMainScreen.get(context).userProfileValues.followers}",style:Theme.of(context).textTheme.labelMedium,)
+                            ],
+                          ),
                         ),
-
                       ),
                     ],
                   ),

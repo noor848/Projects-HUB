@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduationproject1/Cubit/cubitMainScreen.dart';
+
+import '../Cubit/StateMainScreen.dart';
 
 class PDFview extends StatelessWidget {
 
@@ -7,16 +11,16 @@ class PDFview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget child = const Center(child: CircularProgressIndicator());
-      child =Container(
+    return BlocConsumer<CubitMainScreen,MainScreenState>(
+      builder: (BuildContext context, state) {
+        return   Scaffold(
+          appBar: AppBar(title: const Text('Pdf Viewer')),
+          body:Container()
+          ,
+        );
+      },
+      listener: (BuildContext context, Object? state) {  },
 
-      );/*SfPdfViewer.memory(
-        f!,
-        key: _pdfViewerKey,
-      );*/
-    return Scaffold(
-      appBar: AppBar(title: const Text('Pdf Viewer')),
-      body: child,
     );
   }
 }

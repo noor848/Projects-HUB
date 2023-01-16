@@ -127,6 +127,11 @@ class CommentScreen extends StatelessWidget {
                              CubitMainScreen.get(context).getContactProfile(RcvId: CubitMainScreen
                                  .get(context)
                                  .CommentsData[index].user.UserId);
+
+                             CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen
+                                 .get(context)
+                                 .CommentsData[index].user.UserId);
+
                            Navigator.push(context, MaterialPageRoute(builder: (context) => ContactProfile()));
                            },
                            child: Row(
@@ -212,6 +217,8 @@ class CommentScreen extends StatelessWidget {
           ),
         ),
       );  },
+
+
       listener: (BuildContext context, Object? state) {
         if(state is CommentCreatedSuccess){
           Fluttertoast.showToast(
@@ -225,7 +232,17 @@ class CommentScreen extends StatelessWidget {
           );
         }
         if(state is CommentDeletedSuccess){
-         /// CubitMainScreen.get(context).getListOfComments(postView.comments);
+          Fluttertoast.showToast(
+            msg: "Deleted Success !",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+
+
         }
       },
     );

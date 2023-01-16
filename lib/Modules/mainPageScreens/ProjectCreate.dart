@@ -116,7 +116,12 @@ class ProjectCreate extends StatelessWidget {
                child: Visibility(
                   visible: CubitMainScreen.get(context).visiblefileChoose,
                   child: InkWell(
-                   onTap: ()=> CubitMainScreen.get(context).pickFiles(),
+                   onTap: (){
+                     CubitMainScreen.get(context).pickFiles();
+
+                  ///   Navigator.push(context, MaterialPageRoute(builder: (context) => PDFview()));
+
+                   },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       child: Column(

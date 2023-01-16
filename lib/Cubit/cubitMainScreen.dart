@@ -608,13 +608,9 @@ void DeleteContact({RcvId}){
   late UserProfileModel ContactmodeUserProfile = UserProfileModel();
 
   void getContactProfile({RcvId}){
-
     DioHelper.GetUserProfile(idToken: RcvId).then((value) {
-      print(value.body);
        var user = json.decode(value.body);
-      print(json.decode(value.body));
        ContactmodeUserProfile = UserProfileModel.fromJson(user);
-        print(ContactmodeUserProfile);
       emit(GetContactProfile());
     }).catchError((onError){
       print(onError.toString());
@@ -630,49 +626,193 @@ void DeleteContact({RcvId}){
 
   void getFollowers({UserId}){
     DioHelper.GetFollowers(UserId: UserId).then((value){
-
+      follower=json.decode(value.body);
       emit(GetFollowers());
     }).catchError((onError) {});
   }
-  void getFollowings({UserId}){
-    DioHelper.GetFollowing(UserId: UserId).then((value){
-      //  print(value.body);
-      emit(GetFollowings());
-    }).catchError((onError) {});
-  }
+
 
   void uNFollowUser({UserId}){
     DioHelper.UnFollowUser(UserId: UserId).then((value){
       emit(UnfollowSuccess());
+      getContactProfile(RcvId: UserId);
+   ///   getProfile();
+
     }).catchError((onError) {});
   }
+
   void FollowUser({UserId}){
     DioHelper.FollowUser(UserId: UserId).then((value){
+      print(value.body);
       emit(FollowedSuccessfully());
-      ///checktheIamfollowing(UserId: UserId);
+      getContactProfile(RcvId: UserId);
+     /// getProfile();
     }).catchError((onError) {});
   }
 bool checkTheIamfollowings=false;
+bool x=false;
 
-  void checktheIamfollowing({UserId}){
-    DioHelper.GetFollowing().then((value){
+  void follwoUnFollow({UserId}){///the guy
+    x=false;
+    DioHelper.GetFollowing().then((value){///My followings --when i follow the guy so means i have it as a following
      List following =json.decode(value.body);
-     print(following.contains(UserId));
-        if(following.contains(UserId)){
-          uNFollowUser(UserId:UserId );
-          checkTheIamfollowings=false;
-        }
-        else{
-          FollowUser(UserId: UserId);
-          checkTheIamfollowings=true;
-        }
-     emit(ChecktheIamfollowing());
-     getContactProfile(RcvId: UserId);
-     print(checkTheIamfollowings);
+     following.forEach((element) {
+       if(element==UserId){ // I do so unfllow him
+         x=true;
+       }
+     });
+
+     if(x){
+       checkTheIamfollowings=false;
+       uNFollowUser(UserId: UserId);
+      // GetContactProfile();
+       ///ChecktheIamfollowing
+     }
+     else{
+       checkTheIamfollowings=true; /// idont so follow him
+       FollowUser(UserId: UserId);
+       print(checkTheIamfollowings);
+      /// GetContactProfile();
+     }
+     emit(FollwoUnFollow());
     }).catchError((onError) {
       print(onError.toString());
     });
   }
+
+bool followedOrNot=false;
+ void checktheIamfollowing({UserId}){
+   followedOrNot=false;
+   print("${UserId}+++jjj");
+   DioHelper.GetFollowing().then((value){///My followings --when i follow the guy so means i have it as a following
+     List following =json.decode(value.body);
+     following.forEach((element) {
+       if(element==UserId){ // I do so unfllow him
+         followedOrNot=true;
+         followedOrNot=true;
+         emit(ChecktheIamfollowing());
+       }
+     });
+     if(followedOrNot){
+       checkTheIamfollowings=true; // i do
+       getContactProfile(RcvId: UserId);
+       emit(ChecktheIamfollowing());
+
+     }
+     else{
+       checkTheIamfollowings=false; /// idont
+       getContactProfile(RcvId: UserId);
+       emit(ChecktheIamfollowing());
+
+     }
+
+  ///   print(checkTheIamfollowings);
+     emit(ChecktheIamfollowing());
+   }).catchError((onError) {
+     print(onError.toString());
+   });
+
+ }
+
+
+/*
+List xx=[];
+List profileData=[];
+  void checktheIamfollowingNotMe({UserId}){
+    xx=[];
+    profileData=[];
+
+    DioHelper.GetFollowing().then((value){
+      profileData=json.decode(value.body);
+    emit(ChecktheIamfollowing());
+
+    });
+    DioHelper.GetFollowing(UserId: UserId).then((value){///My followings --when i follow the guy so means i have it as a following
+      List following =json.decode(value.body);
+
+      for(int i=0;i<profileData.length;i++){
+        for(int j=0;j<following.length;j++){
+          if(profileData[i]== following[j]){ // I do so unfllow him
+            followedOrNot=true;
+            xx.add(true);
+          }else{
+            xx.add(false);
+          }
+
+        }
+
+      }
+
+
+      if(followedOrNot){
+        checkTheIamfollowings=true; // i do
+        getContactProfile(RcvId: UserId);
+      }
+      else{
+        checkTheIamfollowings=false; /// idont
+        getContactProfile(RcvId: UserId);
+      }
+print(xx);
+      ///   print(checkTheIamfollowings);
+      emit(ChecktheIamfollowing());
+    }).catchError((onError) {
+      print(onError.toString());
+    });
+
+  }
+
+*/
+
+
+
+ List following=[];
+
+  List <UserProfileModel> followingProfile=[];
+
+ void getFollowingList({userId}){
+   following=[];
+   followingProfile=[];
+
+   DioHelper.GetFollowing(UserId: userId).then((value){
+     following=json.decode(value.body);
+     for(int i=0;i<following.length;i++){
+       ///var ContactItem= ContactModel.fromJson(ContactList[i]);
+       DioHelper.GetUserProfile(idToken:following[i]).then((value) async {
+         var user =  await json.decode(value.body);
+         followingProfile.add(UserProfileModel.fromJson(user));
+         emit(GetUserProfile());
+       });
+     }
+     emit(GetFollowings());
+   }).catchError((onError) {});
+
+
+ }
+
+
+  List follower=[];
+  List <UserProfileModel> FollowerProfile=[];
+ void getFollowersrList({userId}){
+   follower=[];
+   FollowerProfile=[];
+   DioHelper.GetFollowers(UserId: userId).then((value){
+     follower=json.decode(value.body);
+     for(int i=0;i<follower.length;i++){
+       ///var ContactItem= ContactModel.fromJson(ContactList[i]);
+       DioHelper.GetUserProfile(idToken:follower[i]).then((value) async {
+         var user =  await json.decode(value.body);
+         FollowerProfile.add(UserProfileModel.fromJson(user));
+         emit(GetUserProfile());
+       });
+     }
+     emit(GetFollowings());
+   }).catchError((onError) {});
+
+
+ }
+
+
+
 
 
   void getProfile({UserId}){
@@ -856,6 +996,7 @@ bool checkTheIamfollowings=false;
    bool visiblefileChoose =false;
 
   Uint8List? f;
+  Uint8List? ff;
   Future<void> pickFiles() async {
       var result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -864,11 +1005,14 @@ bool checkTheIamfollowings=false;
       if(result==null)return;
       visiblefileChoose=true;
       file =result.files.first;
-
+      print(file.path);
+      print(file.bytes);
       if(kIsWeb){
         f=file.bytes;
         print(f);
       }else{
+      ///  ff=result.files.first.bytes;
+       // print(ff);
         OpenFile.open(file.path!);
       }
       emit(PickFile());
@@ -977,10 +1121,11 @@ bool checkTheIamfollowings=false;
     }
     DioHelper.AddComment(postId: postId,body: commentImage,chuckType: 0).then((value){
       emit(CommentCreatedSuccess());
-      getViewPost(postId:postId );
-    }).catchError((onError){});
-    print(onError.toString());
-    emit(CommentCreatedFailed());
+      getListOfComments(postId:postId );
+    }).catchError((onError){
+      print(onError.toString());
+    emit(CommentCreatedFailed());});
+
 
   }
 
@@ -998,8 +1143,9 @@ bool checkTheIamfollowings=false;
   List <dynamic> CommentsData=[];
   void getListOfComments({postId}) {
     Comment=[];
-    CommentsData=[];
+   /// CommentsData=[];
     DioHelper.GetComments(PostId:postId ).then((value){
+      CommentsData=[];
       Comment = json.decode(value.body);
       for(int i=0;i<Comment.length;i++){
          CommentsData.add(Commnet.fromJson(Comment[i]));
