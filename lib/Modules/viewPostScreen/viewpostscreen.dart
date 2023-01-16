@@ -31,6 +31,7 @@ class ViewPostScreen extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(onPressed: (){
               CubitMainScreen.get(context).likeDisLike();
+              CubitMainScreen.get(context).getShortProfileUserPost();
             }
             ,icon:postViewData.isLiked==false?const Icon(IconlyLight.heart,size:30):const Icon(IconlyBold.heart,size:30),color: Colors.pinkAccent,),
           ):const Text(""),

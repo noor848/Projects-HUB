@@ -5,9 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:graduationproject1/Modules/followsList/followers.dart';
 import 'package:graduationproject1/Modules/sendmessagewindow/SendMessage.dart';
+import 'package:iconly/iconly.dart';
+import '../../Components/getPosts.dart';
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
+import '../allUserPost/allUserPosts.dart';
 import '../followsList/following.dart';
+import '../viewPostScreen/viewpostscreen.dart';
 
 class ContactProfile extends StatelessWidget {
 
@@ -33,7 +37,27 @@ class ContactProfile extends StatelessWidget {
         },
         builder: (BuildContext context, Object? state) {
           return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: CubitMainScreen.get(context).checkTheIamfollowings==false?
+                    TextButton(onPressed: (){
+                      CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                    }, child: Text("+ Follow",style: TextStyle(
+                      fontSize: 15,fontFamily: 'SubHead',fontWeight: FontWeight.w700
+                    ))):
+                    TextButton(onPressed: (){
+                      CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                    }, child: Text("Following",style: TextStyle(
+                      fontSize: 15,fontFamily: 'SubHead',fontWeight: FontWeight.w700
+                    )))
+                  ),
+                )
+
+              ],
+            ),
             body:CubitMainScreen.get(context).ContactmodeUserProfile.LastName==""?const Center(
               child: CircularProgressIndicator(
                 color: Colors.red,
@@ -50,7 +74,7 @@ class ContactProfile extends StatelessWidget {
                           fontSize: 40,
                           fontFamily: 'HeadFont'
                       ),),
-                      SizedBox(height: 30,),
+                      SizedBox(height: 10,),
                       Stack(
                         alignment: AlignmentDirectional.bottomEnd,
                         children: [
@@ -89,7 +113,7 @@ class ContactProfile extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 15,),
+                      SizedBox(height: 10,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +159,7 @@ class ContactProfile extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: 1,),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -143,20 +167,25 @@ class ContactProfile extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              width: 200,
-                              child: OutlinedButton(onPressed: () {
-                              CubitMainScreen.get(context).AddContact(contactId:CubitMainScreen.get(context).ContactmodeUserProfile.id );
-                              CubitMainScreen.get(context).getMessages(receiverId:CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>  SendMessage(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture, CubitMainScreen.get(context).ContactmodeUserProfile.FirstName!,CubitMainScreen.get(context).ContactmodeUserProfile.LastName!, CubitMainScreen.get(context).ContactmodeUserProfile.id)),
-                              );
-                              },
-                                child: Text("Message",style: TextStyle(
+                              // width: double.infinity,
+                              child: Expanded(
+                                child: OutlinedButton(onPressed: () {
+                                  CubitMainScreen.get(context).AddContact(contactId:CubitMainScreen.get(context).ContactmodeUserProfile.id );
+                                  CubitMainScreen.get(context).getMessages(receiverId:CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>  SendMessage(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture, CubitMainScreen.get(context).ContactmodeUserProfile.FirstName!,CubitMainScreen.get(context).ContactmodeUserProfile.LastName!, CubitMainScreen.get(context).ContactmodeUserProfile.id)),
+                                  );
+                                },
+                                  child: Text("Message",style: TextStyle(
                                     fontSize: 18,fontFamily: 'SubHead',
-                                ),),),
-                            ), const SizedBox(width: 5,),
-                            Container(
+                                  ),),),
+                              ),
+                            ),
+/*
+                            const SizedBox(width: 5,),
+*/
+                            /* Container(
                               child: CubitMainScreen.get(context).checkTheIamfollowings==false?
                               OutlinedButton(onPressed: () {
                                 CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
@@ -174,17 +203,136 @@ class ContactProfile extends StatelessWidget {
                                 child: Text("Following",style: TextStyle(
                                   fontSize: 18,fontFamily: 'SubHead',color: Colors.white
                                 ),),),
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
-
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("Thumb-Nails ", textAlign: TextAlign.end,
+                            style: TextStyle(
+                                fontSize: 25, fontFamily: 'HeadFont'),),
+                      /*    Spacer(),
+                          TextButton(onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserPost()),
+                            );
+                          }, child: Text("Show All", style: TextStyle(
+                              fontFamily: 'SubHead', fontSize: 15
+                          ),)),
+                          SizedBox(width: 10,)*/
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Card(
+                              borderOnForeground: true,
+                              child:Container(
+                                  height: 180,
+                                  width: 150,
+                                  child: ListView.separated(
+                                      itemBuilder: (context, index)
+                                      {
+                                        print(CubitMainScreen.get(context).shortPostUserProfile[index]);
+                                        return getUserPosts(
+                                            context,
+                                            CubitMainScreen.get(context)
+                                                .shortPostUserProfile[
+                                            index]);
+                                      },
+                                      separatorBuilder: (context, index) =>
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            child: SizedBox(height: 1,
+                                                child: Container(
+                                                  color: Colors.grey[300],)),
+                                          ), itemCount: CubitMainScreen.get(context)
+                                      .shortPostUserProfile.length)
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Card(
+                              child: Container(
+                                  height: 180,
+                                  width: 150,
+                                  child: ListView.separated(
+                                      itemBuilder: (context, index) =>
+                                          getUserQuestions(context),
+                                      separatorBuilder: (context, index) =>
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            child: SizedBox(height: 1,
+                                                child: Container(
+                                                  color: Colors.grey[300],)),
+                                          ), itemCount: 5)
+                              ),
+                            ),
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
               ),
             ),
           );}
+    );
+  }
+
+  Widget getUserPosts(context,list){
+    return InkWell(
+      onTap: (){
+        CubitMainScreen.get(context).getViewPost(postId: list.id);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ViewPostScreen(CubitMainScreen.get(context).viewDataPost)));
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Image(image: MemoryImage(base64Decode(list.coverPicture!)),
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 5,),
+              Text("${list.title}",
+                overflow: TextOverflow.ellipsis,
+                maxLines:2,
+                style:Theme.of(context).textTheme.bodyText2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10,right: 10,top: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right:5 ),
+                      child: IconButton(constraints: BoxConstraints(),
+                          padding: EdgeInsets.zero,onPressed: (){},icon:Icon(IconlyLight.chat,color: Colors.blueGrey,)),
+                    ),
+                    Text("${list.comments}",style: TextStyle(fontSize: 12),),
+                    SizedBox(width: 15,),
+                    Padding(
+                      padding: const EdgeInsets.only(right:5 ),
+                      child: IconButton(constraints: BoxConstraints(),
+                          padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(IconlyLight.heart,color: Colors.pinkAccent)),
+                    ),
+                    Text("${list.usersWhoLiked}",style:  TextStyle(fontSize: 12),)
+                  ],
+                ),
+              )
+
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -131,6 +131,9 @@ class CommentScreen extends StatelessWidget {
                              CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen
                                  .get(context)
                                  .CommentsData[index].user.UserId);
+                             CubitMainScreen.get(context).getShortProfileUserPost(userId: CubitMainScreen
+                                 .get(context)
+                                 .CommentsData[index].user.UserId);
 
                            Navigator.push(context, MaterialPageRoute(builder: (context) => ContactProfile()));
                            },

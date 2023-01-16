@@ -64,6 +64,8 @@ class Followers extends StatelessWidget {
                                     onTap: (){
                                       CubitMainScreen.get(context).getContactProfile(RcvId: CubitMainScreen.get(context).FollowerProfile[index].id);
                                       CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).FollowerProfile[index].id);
+                                      CubitMainScreen.get(context).getShortProfileUserPost(userId: CubitMainScreen.get(context).FollowerProfile[index].id);
+
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => ContactProfile()));
                                     },
                                     child: Card(

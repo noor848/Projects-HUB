@@ -22,6 +22,7 @@ import '../Constants.dart';
 import '../Model/comment.dart';
 import '../Model/contactModel.dart';
 import '../Model/postView.dart';
+import '../Model/shortPost.dart';
 import '../Modules/TappedCreatePost/tabWindos.dart';
 import '../Modules/mainPageScreens/posts.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
@@ -445,25 +446,33 @@ class CubitMainScreen extends Cubit<MainScreenState> {
   }
 
   Future<void> SignUp({FirstName, LastName, email, password}) async {
-    putDefulatImage();
-    DioHelper.SignUp(
-            password: password,
-            email: email,
-            image: imageSignUpPath,
-            FirstName: FirstName,
-            LastName: LastName)
-        .then((value) {
-      if (value.toString() == "User Already Exists") {
+    if(imageSignUpPath==""){
+      ByteData byteData = await rootBundle.load("assets/images/profile.png");
+      Uint8List bytes = byteData.buffer.asUint8List();
+      imageSignUpPath = base64.encode(bytes);
+      print(imageSignUpPath);
+      emit(DefualtImage());
+      DioHelper.SignUp(
+          password: password,
+          email: email,
+          image: imageSignUpPath,
+          FirstName: FirstName,
+          LastName: LastName)
+          .then((value) {
+        if (value.toString() == "User Already Exists") {
+          emit(SignedUpFailed());
+          return;
+        } else {
+          ///setToken(token:value.toString());
+          imageSignUp = null;
+          emit(SignedUpSuccess());
+        }
+      }).catchError((onError) {
         emit(SignedUpFailed());
-        return;
-      } else {
-        ///setToken(token:value.toString());
-        imageSignUp = null;
-        emit(SignedUpSuccess());
-      }
-    }).catchError((onError) {
-      emit(SignedUpFailed());
-    });
+      });
+    }
+
+
   }
 
   Future<void> putDefulatImage() async {
@@ -636,7 +645,7 @@ void DeleteContact({RcvId}){
     DioHelper.UnFollowUser(UserId: UserId).then((value){
       emit(UnfollowSuccess());
       getContactProfile(RcvId: UserId);
-   ///   getProfile();
+    getProfile();
 
     }).catchError((onError) {});
   }
@@ -646,7 +655,7 @@ void DeleteContact({RcvId}){
       print(value.body);
       emit(FollowedSuccessfully());
       getContactProfile(RcvId: UserId);
-     /// getProfile();
+     getProfile();
     }).catchError((onError) {});
   }
 bool checkTheIamfollowings=false;
@@ -982,7 +991,7 @@ print(xx);
 
 
   void getViewPost({postId}){ /// loop according to the size then pass each id to it
-    DioHelper.GetViewPost(PostId: "63c4756d8c3f23a1e477a599").then((value){
+    DioHelper.GetViewPost(PostId: "$postId").then((value){
      viewDataPost=PostView.fromJson(json.decode(value.body));
      timeAgo=PastTimeAgo(viewDataPost.createdDate);
   emit(ViewDataPost());
@@ -1149,13 +1158,44 @@ print(xx);
       Comment = json.decode(value.body);
       for(int i=0;i<Comment.length;i++){
          CommentsData.add(Commnet.fromJson(Comment[i]));
-
       }
-
     emit(GetCommentList());
     }).catchError((onError){
       print(onError.toString());
     });
   }
+
+
+
+  List <ShortProfileModel> shortPostUserProfile=[];
+  List SHortPost=[];
+
+  void getShortProfileUserPost({userId}){
+
+    DioHelper.GetUserProfile(idToken: userId).then((value) async {
+      SHortPost=[];
+      shortPostUserProfile=[];
+      var user = await json.decode(value.body);
+      userProfileValues = UserProfileModel.fromJson(user);
+      print(userProfileValues.posts);
+      emit(GetUserProfile());
+
+      userProfileValues.posts?.forEach((element) {
+
+        DioHelper.GetShorPostUser(PostId: element).then((value){
+          var post=json.decode(value.body);
+          shortPostUserProfile.add(ShortProfileModel.fromJson(post));
+          emit(GetShortProfileUser());
+
+        }).catchError((onError){});
+
+      });
+
+    });
+
+
+
+  }
+
 
 }

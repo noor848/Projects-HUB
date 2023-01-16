@@ -278,6 +278,16 @@ class DioHelper {
     return response;
   }
 
+  static Future<http.Response> GetShorPostUser({PostId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$PostId/ShortPost");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
 
 
 }
