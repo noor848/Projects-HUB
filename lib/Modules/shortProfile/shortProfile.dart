@@ -45,14 +45,10 @@ class ContactProfile extends StatelessWidget {
                     child: CubitMainScreen.get(context).checkTheIamfollowings==false?
                     TextButton(onPressed: (){
                       CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                    }, child: Text("+ Follow",style: TextStyle(
-                      fontSize: 15,fontFamily: 'SubHead',fontWeight: FontWeight.w700
-                    ))):
+                    }, child: Icon(IconlyBold.add_user,size: 40,)):
                     TextButton(onPressed: (){
                       CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                    }, child: Text("Following",style: TextStyle(
-                      fontSize: 15,fontFamily: 'SubHead',fontWeight: FontWeight.w700
-                    )))
+                    }, child: Icon(Icons.verified_user_rounded,color: Colors.green,size: 40,))
                   ),
                 )
 
@@ -215,7 +211,7 @@ class ContactProfile extends StatelessWidget {
                                 fontSize: 25, fontFamily: 'HeadFont'),),
                           Spacer(),
                           TextButton(onPressed: () {
-                            CubitMainScreen.get(context).getShortProfileFront();
+                            CubitMainScreen.get(context).getShortProfileFront(userId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -287,8 +287,8 @@ class DioHelper {
         });
     return response;
   }
-  static Future<http.Response> GetShorPostUserfrontPage()async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/Post/");
+  static Future<http.Response> GetShorPostUserfrontPage({userId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/Post/$userId");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',

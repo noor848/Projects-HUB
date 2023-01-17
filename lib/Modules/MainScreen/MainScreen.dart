@@ -117,7 +117,9 @@ class MainScreen extends StatelessWidget {
             title: const Text('Log Out'),
             onTap: () async {
               CubitMainScreen.get(context).pageIndex=0;
+              CubitMainScreen.get(context).SignOut();
   //  await GoogleSignInOutApi.logOut(context);
+
     Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => SignIn()));}

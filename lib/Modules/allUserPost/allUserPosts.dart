@@ -142,13 +142,34 @@ class UserPost extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10,),
-                        Text("${list.author.firstName} ${list.author.lastName}",style: Theme.of(context).textTheme.caption,),
-                        const SizedBox(width: 10,),
-                         Text("${list.createdDate}",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("${list.author.firstName} ${list.author.lastName}",style: Theme.of(context).textTheme.caption,),
+                            const SizedBox(height:2,),
+                            Text("${list.createdDate}",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                            const SizedBox(height:2,),;
+                            Row(
+                              children: [
+                                Icon(IconlyBold.time_circle,size: 12,color: Colors.grey,),
+                                SizedBox(width: 2,),
+                                Text("${CubitMainScreen.get(context).PastTimeAgo(
+                                    list.createdDate)}",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                              ],
+                            ),
+                          ],
+                        ),
                         Spacer(),
+                        CubitMainScreen.get(context).userProfileValues.id==list.author.userId?
                         TextButton(onPressed: (){
-                        CubitMainScreen.get(context).deletPost(postId: list.id);
-                        }, child: Text("Delete"))
+                          CubitMainScreen.get(context).deletPost(postId: list.id,userid: list.author.userId);
+                        }, child: Text("Delete")):
+                        TextButton(onPressed: (){
+                          CubitMainScreen.get(context).follwoUnFollow(UserId: list.author.userId);
+                          CubitMainScreen.get(context).getShortProfileFront(userId:list.author.userId);
+                        }, child: list.isAuthorFollowed==false?Text("+ Follow"):Text("Following"))
+
                       ],
                     ),
                     Padding(

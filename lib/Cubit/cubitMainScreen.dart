@@ -391,15 +391,14 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       password: password.toString(),
       email: email.toString(),
     ).then((value) {
-      print(value);
+   ///   print(value);
       if (value == "User Not Found") {
         emit(LoginFailed());
         return;
       }
-    /// print(value.toString());
       setToken(token: value.toString());
       emit(LoginSuccess());
-     print(loggedInUserId);
+     ////print(loggedInUserId);
       getProfile(UserId: null);
     }).catchError((onError) {
       print(onError.toString());
@@ -645,6 +644,7 @@ void DeleteContact({RcvId}){
     DioHelper.UnFollowUser(UserId: UserId).then((value){
       emit(UnfollowSuccess());
       getContactProfile(RcvId: UserId);
+      getShortProfileFront(userId:UserId);
     getProfile();
 
     }).catchError((onError) {});
@@ -656,6 +656,8 @@ void DeleteContact({RcvId}){
       emit(FollowedSuccessfully());
       getContactProfile(RcvId: UserId);
      getProfile();
+      getShortProfileFront(userId:UserId);
+
     }).catchError((onError) {});
   }
 bool checkTheIamfollowings=false;
@@ -1014,8 +1016,8 @@ print(xx);
       if(result==null)return;
       visiblefileChoose=true;
       file =result.files.first;
-      print(file.path);
-      print(file.bytes);
+     /* print(file.path);
+      print(file.bytes);*/
       if(kIsWeb){
         f=file.bytes;
         print(f);
@@ -1177,7 +1179,7 @@ print(xx);
       shortPostUserProfile=[];
       var user = await json.decode(value.body);
       var xx = UserProfileModel.fromJson(user);
-      print(xx.posts);
+     /// print(xx.posts);
       emit(GetUserProfile());
 
       xx.posts?.forEach((element) {
@@ -1196,12 +1198,14 @@ print(xx);
 List <dynamic>frontShortPost=[];
 
 
-  void getShortProfileFront(){
-    DioHelper.GetShorPostUserfrontPage().then((value){
+  void getShortProfileFront({userId}){
+    frontShortPost=[];
+    DioHelper.GetShorPostUserfrontPage(userId: userId).then((value){
       frontShortPost=[];
       List post=json.decode(value.body);
       post.forEach((element) {
         frontShortPost.add(ShortProfileModel.fromJson(element));
+        print(ShortProfileModel.fromJson(element).isAuthorFollowed);
       });
 
       emit(GetShortFrontProfileUser());
@@ -1210,12 +1214,74 @@ List <dynamic>frontShortPost=[];
 
   }
 
-  void deletPost({postId}){
+  void deletPost({postId,userid}){
     DioHelper.DeletePost(postId: postId).then((value) {
       emit(DeletePostSuccess());
-      getShortProfileFront();
+      getShortProfileFront(userId: userid);
+      getShortProfileUserPost(userId: userid);
     }).catchError((onError){});
 
+  }
+
+
+  void SignOut(){
+    frontShortPost=[];
+    SHortPost=[];
+    shortPostUserProfile=[];
+    Comment=[];
+     CommentsData=[];
+     commentImage="";
+   commentImageunit;
+     isVisible2=true;
+     CoverImage2="";
+    CoverImageunit2;
+    indexCratePostChanged=0;
+    file = new PlatformFile(name: 'd',size: 50) ;
+     visiblefileChoose =false;
+     PostView viewDataPost=new PostView();
+     timeAgo="";
+     RedoList=[];
+     RedoListObjects=[];
+    follower=[];
+    FollowerProfile=[];
+    following=[];
+    followingProfile=[];
+    followedOrNot=false;
+     checkTheIamfollowings=false;
+     x=false;
+
+      Contactmode = Contactmodl();
+      ContactmodeUserProfile = UserProfileModel();
+    UserProfileValues =[];
+    ContactList =[];
+    NewPassword="";
+     imageSignUpPath="";
+     imageSignUp;
+    loggedInUserId = "";
+     messages = [];
+   messagesLocal = [];
+    ProfileImage;
+    _image;
+     ImagesList = [];
+     PostChnk=[];
+     LastUpdatePostChnk=[];
+
+     listOfWholePostCreat = [];
+     pageIndex = 0;
+     VisibleIcon = true;
+     ImagePath = "";
+     textFieldIndex = 0;
+   textFieldController = [];
+     textFieldCreate = [];
+     objectImageText = [];
+     isVisible=true;
+     bottomModal=true;
+     CoverImage="";
+     CoverImageunit;
+     normalImageUnit;
+     normalImage="";
+
+     emit(LogOut());
   }
 
 

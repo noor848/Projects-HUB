@@ -62,5 +62,6 @@ class FollwoUnFollow extends MainScreenState{}
 class GetShortProfileUser extends MainScreenState{}
 class GetShortFrontProfileUser extends MainScreenState{}
 class DeletePostSuccess extends MainScreenState{}
+class LogOut extends MainScreenState{}
 
 

@@ -184,7 +184,7 @@ class Profile extends StatelessWidget {
                                 fontSize: 25, fontFamily: 'HeadFont'),),
                           Spacer(),
                           TextButton(onPressed: () {
-                            CubitMainScreen.get(context).getShortProfileFront();
+                            CubitMainScreen.get(context).getShortProfileFront(userId:CubitMainScreen.get(context).userProfileValues.id );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
