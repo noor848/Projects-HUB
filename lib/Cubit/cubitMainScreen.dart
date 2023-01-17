@@ -1181,7 +1181,6 @@ print(xx);
       emit(GetUserProfile());
 
       xx.posts?.forEach((element) {
-
         DioHelper.GetShorPostUser(PostId: element).then((value){
           var post=json.decode(value.body);
           shortPostUserProfile.add(ShortProfileModel.fromJson(post));
@@ -1192,8 +1191,30 @@ print(xx);
       });
 
     });
+  }
+
+List <dynamic>frontShortPost=[];
 
 
+  void getShortProfileFront(){
+    DioHelper.GetShorPostUserfrontPage().then((value){
+      frontShortPost=[];
+      List post=json.decode(value.body);
+      post.forEach((element) {
+        frontShortPost.add(ShortProfileModel.fromJson(element));
+      });
+
+      emit(GetShortFrontProfileUser());
+
+    }).catchError((onError){});
+
+  }
+
+  void deletPost({postId}){
+    DioHelper.DeletePost(postId: postId).then((value) {
+      emit(DeletePostSuccess());
+      getShortProfileFront();
+    }).catchError((onError){});
 
   }
 

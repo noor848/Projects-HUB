@@ -26,7 +26,7 @@ class MainScreen extends StatelessWidget {
           appBar: AppBar(title: const Text("Projects Hub"),
           actions: [
             IconButton(onPressed: (){
-             /// cubic.getContactList();
+             cubic.getContactList();
             cubic.changeThem();
           }, icon:const Icon(Icons.brightness_4_outlined,))],
 
@@ -96,7 +96,6 @@ class MainScreen extends StatelessWidget {
           onTap: () {
             CubitMainScreen.get(context).getProfile(UserId: null);
             CubitMainScreen.get(context).getShortProfileUserPost();
-
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Profile()),

@@ -60,5 +60,7 @@ class CommentDeletedSuccess extends MainScreenState{}
 class DefualtImage extends MainScreenState{}
 class FollwoUnFollow extends MainScreenState{}
 class GetShortProfileUser extends MainScreenState{}
+class GetShortFrontProfileUser extends MainScreenState{}
+class DeletePostSuccess extends MainScreenState{}
 
 

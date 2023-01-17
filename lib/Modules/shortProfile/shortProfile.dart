@@ -213,8 +213,9 @@ class ContactProfile extends StatelessWidget {
                           Text("Thumb-Nails ", textAlign: TextAlign.end,
                             style: TextStyle(
                                 fontSize: 25, fontFamily: 'HeadFont'),),
-                      /*    Spacer(),
+                          Spacer(),
                           TextButton(onPressed: () {
+                            CubitMainScreen.get(context).getShortProfileFront();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -223,7 +224,7 @@ class ContactProfile extends StatelessWidget {
                           }, child: Text("Show All", style: TextStyle(
                               fontFamily: 'SubHead', fontSize: 15
                           ),)),
-                          SizedBox(width: 10,)*/
+                          SizedBox(width: 10,)
                         ],
                       ),
                       Row(

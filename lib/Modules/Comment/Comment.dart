@@ -238,6 +238,7 @@ class CommentScreen extends StatelessWidget {
           CubitMainScreen.get(context).getShortProfileUserPost(
             userId:authorId
           );
+          CubitMainScreen.get(context).getShortProfileFront();
 
         }
         if(state is CommentDeletedSuccess){
@@ -250,7 +251,7 @@ class CommentScreen extends StatelessWidget {
             textColor: Colors.white,
             fontSize: 16,
           );
-
+          CubitMainScreen.get(context).getShortProfileFront();
 
         }
       },
