@@ -37,6 +37,7 @@ class MainScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             color: SecondaryColor,
 
+
             onTap:(value){
               cubic.changeScreenIndex(value);
             },

@@ -15,8 +15,9 @@ import '../shortProfile/shortProfile.dart';
 
 class CommentScreen extends StatelessWidget {
   String postId;
+  String authorId;
   final comment = TextEditingController();
-  CommentScreen(this.postId);
+  CommentScreen(this.postId,this.authorId);
 
   @override
   Widget build(BuildContext context) {
@@ -233,6 +234,11 @@ class CommentScreen extends StatelessWidget {
             textColor: Colors.white,
             fontSize: 16,
           );
+
+          CubitMainScreen.get(context).getShortProfileUserPost(
+            userId:authorId
+          );
+
         }
         if(state is CommentDeletedSuccess){
           Fluttertoast.showToast(

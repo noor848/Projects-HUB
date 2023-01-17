@@ -1176,11 +1176,11 @@ print(xx);
       SHortPost=[];
       shortPostUserProfile=[];
       var user = await json.decode(value.body);
-      userProfileValues = UserProfileModel.fromJson(user);
-      print(userProfileValues.posts);
+      var xx = UserProfileModel.fromJson(user);
+      print(xx.posts);
       emit(GetUserProfile());
 
-      userProfileValues.posts?.forEach((element) {
+      xx.posts?.forEach((element) {
 
         DioHelper.GetShorPostUser(PostId: element).then((value){
           var post=json.decode(value.body);

@@ -23,15 +23,16 @@ class ViewPostScreen extends StatelessWidget {
         actions: [
           postViewData.title!=""?IconButton(onPressed: (){
             CubitMainScreen.get(context).getListOfComments(postId:postViewData.id );
+
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) =>  CommentScreen(postViewData.id)));
+              MaterialPageRoute(builder: (context) =>  CommentScreen(postViewData.id,postViewData.authorId)));
           },icon: const Icon(IconlyBold.chat,size:30),color: Colors.grey,):const Text(""),
           postViewData.title!=""?Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(onPressed: (){
               CubitMainScreen.get(context).likeDisLike();
-              CubitMainScreen.get(context).getShortProfileUserPost();
+              CubitMainScreen.get(context).getShortProfileUserPost(userId:postViewData.authorId );
             }
             ,icon:postViewData.isLiked==false?const Icon(IconlyLight.heart,size:30):const Icon(IconlyBold.heart,size:30),color: Colors.pinkAccent,),
           ):const Text(""),

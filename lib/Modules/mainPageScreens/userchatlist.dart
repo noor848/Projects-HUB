@@ -141,7 +141,7 @@ class ChatList extends StatelessWidget {
             builder: (BuildContext context) {
               return AlertDialog(
                // title: const Text("Delete Confirmation"),
-                content: const Text("Are you sure you want to delete this item?"),
+                content: const Text("Are you sure you want to delete this message?"),
                 actions: <Widget>[
                   MaterialButton(
                       onPressed: () => Navigator.of(context).pop(true),

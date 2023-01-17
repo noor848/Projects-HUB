@@ -67,7 +67,7 @@ class SignIn extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Sign In",style:TextStyle(fontFamily: 'HeadFont',fontSize: 50),),
-                      SizedBox(height: 10,),
+
                       Text("Would you like to contribute your own projects to Projects Hub? Share your project with us your Ideas and Questions we will work with you !",
                           style:Theme.of(context).textTheme.headline5,)
                      , Form(
@@ -75,7 +75,7 @@ class SignIn extends StatelessWidget {
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                               child:
 
                               TextFormField(
