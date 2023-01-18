@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:iconly/iconly.dart';
 
 import '../../Cubit/StateMainScreen.dart';
@@ -39,18 +40,28 @@ class ViewProjectScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.memory(base64Decode(projectData.coverPicture!)),
+                FullScreenWidget(
+                    child: Image.memory(base64Decode(projectData.coverPicture!),fit: BoxFit.cover,height: 300,width: double.infinity,)),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(projectData.abstract,style: TextStyle(fontSize: 20),),
                 ),
                 SizedBox(height: 10,),
                 Center(child: Container(
-                    color: Colors.red[100],
+                    color: Colors.red,
+                    width: double.infinity,
                     child: TextButton(onPressed: (){
                       CubitMainScreen.get(context).openFile(projectData.projectFile);
                     },
-                        child: Text("Work PDF File",style: TextStyle(fontSize: 20)))))
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text("Work file",style: TextStyle(fontSize: 20,color: Theme.of(context).scaffoldBackgroundColor)),
+                            SizedBox(width:10,),
+                            Icon(Icons.cloud_download,color:Theme.of(context).scaffoldBackgroundColor,size: 30,)
+                          ],
+                        ))))
               ],
             ),
           ),
