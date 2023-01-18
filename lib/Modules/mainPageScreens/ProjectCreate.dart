@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_screen_image_null_safe/full_screen_image_null_safe.dart';
 import 'package:iconly/iconly.dart';
 import '../../Cubit/StateMainScreen.dart';
@@ -117,10 +118,8 @@ class ProjectCreate extends StatelessWidget {
                   visible: CubitMainScreen.get(context).visiblefileChoose,
                   child: InkWell(
                    onTap: (){
-                     CubitMainScreen.get(context).pickFiles();
-
-                  ///   Navigator.push(context, MaterialPageRoute(builder: (context) => PDFview()));
-
+                     CubitMainScreen.get(context).openFile(CubitMainScreen.get(context).file.path);
+                    /// Navigator.push(context, MaterialPageRoute(builder: (context) => pdfView(CubitMainScreen.get(context).file.path)));
                    },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -179,13 +178,8 @@ class ProjectCreate extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               vertical: 2, horizontal: 20),
                           child: ElevatedButton(onPressed: () {
-                              ///CoverImage2
-                              ///filepath
-                              ///title
-                              ///abstract
-                            ///
-                            ///
-                            ///
+                            CubitMainScreen.get(context).createProject(abstract: abstract.text,title: title2.text,coverpic: CubitMainScreen.get(context).CoverImage2,filepath: CubitMainScreen.get(context).file.path);
+                           CubitMainScreen.get(context).clearProjectStuff();
 
                           }, child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -196,6 +190,29 @@ class ProjectCreate extends StatelessWidget {
                                   .scaffoldBackgroundColor, size: 30,),
                               SizedBox(width: 15,),
                               Text("Submit", style: TextStyle(
+                                  color: Theme
+                                      .of(context)
+                                      .scaffoldBackgroundColor,
+                                  fontFamily: "SubHead",
+                                  fontSize: 16
+                              ),),
+                            ],
+                          )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 20),
+                          child: ElevatedButton(onPressed: () {
+                            CubitMainScreen.get(context).pickFiles();
+                          }, child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(IconlyBroken.document, color: Theme
+                                  .of(context)
+                                  .scaffoldBackgroundColor, size: 30,),
+                              SizedBox(width: 15,),
+                              Text("Change File", style: TextStyle(
                                   color: Theme
                                       .of(context)
                                       .scaffoldBackgroundColor,
@@ -270,7 +287,21 @@ class ProjectCreate extends StatelessWidget {
 
       ),
     ); },
-      listener: (BuildContext context, Object? state) {  },
+      listener: (BuildContext context, Object? state) {
+
+        if(state is ProjectCreated){
+          Fluttertoast.showToast(
+            msg: "Creation Success !",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16,
+          );
+
+        }
+      },
 
     );
   }

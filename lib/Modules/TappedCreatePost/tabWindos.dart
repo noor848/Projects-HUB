@@ -1,5 +1,6 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,7 @@ class Tap extends StatelessWidget {
           body: SafeArea(
             child: DefaultTabController(
               initialIndex: CubitMainScreen.get(context).indexCratePostChanged,
-              length: 2,
+              length: kIsWeb?1:2,
               child: Column(
                 children: <Widget>[
                   ButtonsTabBar(
@@ -26,7 +27,22 @@ class Tap extends StatelessWidget {
                     unselectedLabelStyle: TextStyle(color: Colors.black,fontFamily: 'SubHead'),
                     labelStyle:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontFamily: 'SubHead'),
-                    tabs:[
+                    tabs:kIsWeb?[
+                      Tab(
+                        icon: InkWell(
+                          onTap: () =>CubitMainScreen.get(context).ChangeIndexpage0(),
+                          child:
+                          Row(
+                            children: const[
+                              Icon(Icons.style),
+                              SizedBox(width: 5,),
+                              Text("post",textAlign: TextAlign.center,style: TextStyle(color: Colors.white),),
+                              SizedBox(width: 5,),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]:[
                       Tab(
                         icon: InkWell(
                           onTap: () =>CubitMainScreen.get(context).ChangeIndexpage0(),
@@ -58,7 +74,11 @@ class Tap extends StatelessWidget {
                   ),
                   Expanded(
                     child: TabBarView(
-                      children: <Widget>[
+                      children:kIsWeb? [
+                        Center(
+                          child: PostCreate(),
+                        )
+                      ]: [
                         Center(
                           child: PostCreate(),
                         ),

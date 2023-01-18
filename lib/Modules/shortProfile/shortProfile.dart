@@ -9,6 +9,7 @@ import 'package:iconly/iconly.dart';
 import '../../Components/getPosts.dart';
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
+import '../ViewProjectScreen/viewProjectScreen.dart';
 import '../allUserPost/allUserPosts.dart';
 import '../followsList/following.dart';
 import '../viewPostScreen/viewpostscreen.dart';
@@ -45,6 +46,7 @@ class ContactProfile extends StatelessWidget {
                     child: CubitMainScreen.get(context).checkTheIamfollowings==false?
                     TextButton(onPressed: (){
                       CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+
                     }, child: Icon(IconlyBold.add_user,size: 40,)):
                     TextButton(onPressed: (){
                       CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
@@ -109,7 +111,32 @@ class ContactProfile extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 5,),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              // width: double.infinity,
+                              child: Expanded(
+                                child: OutlinedButton(onPressed: () {
+                                  CubitMainScreen.get(context).AddContact(contactId:CubitMainScreen.get(context).ContactmodeUserProfile.id );
+                                  CubitMainScreen.get(context).getMessages(receiverId:CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>  SendMessage(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture, CubitMainScreen.get(context).ContactmodeUserProfile.FirstName!,CubitMainScreen.get(context).ContactmodeUserProfile.LastName!, CubitMainScreen.get(context).ContactmodeUserProfile.id)),
+                                  );
+                                },
+                                  child: Text("Message",style: TextStyle(
+                                    fontSize: 18,fontFamily: 'SubHead',
+                                  ),),),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -155,63 +182,18 @@ class ContactProfile extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 1,),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              // width: double.infinity,
-                              child: Expanded(
-                                child: OutlinedButton(onPressed: () {
-                                  CubitMainScreen.get(context).AddContact(contactId:CubitMainScreen.get(context).ContactmodeUserProfile.id );
-                                  CubitMainScreen.get(context).getMessages(receiverId:CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) =>  SendMessage(CubitMainScreen.get(context).ContactmodeUserProfile.profilePicture, CubitMainScreen.get(context).ContactmodeUserProfile.FirstName!,CubitMainScreen.get(context).ContactmodeUserProfile.LastName!, CubitMainScreen.get(context).ContactmodeUserProfile.id)),
-                                  );
-                                },
-                                  child: Text("Message",style: TextStyle(
-                                    fontSize: 18,fontFamily: 'SubHead',
-                                  ),),),
-                              ),
-                            ),
-/*
-                            const SizedBox(width: 5,),
-*/
-                            /* Container(
-                              child: CubitMainScreen.get(context).checkTheIamfollowings==false?
-                              OutlinedButton(onPressed: () {
-                                CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                                },
-                                child: const Text("+ Follow",style: TextStyle(
-                                  fontSize: 18,fontFamily: 'SubHead',
-                                ),),):
-                              OutlinedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.red),
-                                ),
-                                onPressed: () {
-                                CubitMainScreen.get(context).follwoUnFollow(UserId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
-                              },
-                                child: Text("Following",style: TextStyle(
-                                  fontSize: 18,fontFamily: 'SubHead',color: Colors.white
-                                ),),),
-                            ),*/
-                          ],
-                        ),
-                      ),
+                      SizedBox(height: 5,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text("Thumb-Nails ", textAlign: TextAlign.end,
+                          const Text("Thumb-Nails ", textAlign: TextAlign.end,
                             style: TextStyle(
                                 fontSize: 25, fontFamily: 'HeadFont'),),
                           Spacer(),
                           TextButton(onPressed: () {
                             CubitMainScreen.get(context).getShortProfileFront(userId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+                            CubitMainScreen.get(context).getUserAllProjectInProfileFront(userId: CubitMainScreen.get(context).ContactmodeUserProfile.id);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -260,7 +242,7 @@ class ContactProfile extends StatelessWidget {
                                   width: 150,
                                   child: ListView.separated(
                                       itemBuilder: (context, index) =>
-                                          getUserQuestions(context),
+                                          getUserProjects(CubitMainScreen.get(context).allFrontProjectProfile[index],context),
                                       separatorBuilder: (context, index) =>
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -268,7 +250,7 @@ class ContactProfile extends StatelessWidget {
                                             child: SizedBox(height: 1,
                                                 child: Container(
                                                   color: Colors.grey[300],)),
-                                          ), itemCount: 5)
+                                          ), itemCount: CubitMainScreen.get(context).allFrontProjectProfile.length)
                               ),
                             ),
                           )
@@ -324,6 +306,39 @@ class ContactProfile extends StatelessWidget {
                     Text("${list.usersWhoLiked}",style:  TextStyle(fontSize: 12),)
                   ],
                 ),
+              )
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  Widget getUserProjects(list,context){
+    return InkWell(
+      onTap: (){
+        CubitMainScreen.get(context).getSpecificProjectView(projectId: list.id);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ViewProjectScreen(CubitMainScreen.get(context).projectViewData)));
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(list.title,
+                overflow: TextOverflow.ellipsis,
+                maxLines:2,
+                style:Theme.of(context).textTheme.bodyText2,
+              ),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(constraints: BoxConstraints(),
+                      padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(IconlyLight.star,color: Colors.yellow,size: 20,)),
+                  Text("${list.usersWhoLiked}",style: TextStyle(fontSize: 12),),
+                ],
               )
 
             ],

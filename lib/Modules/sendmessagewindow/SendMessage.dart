@@ -35,6 +35,7 @@ class SendMessage extends StatelessWidget {
                 CubitMainScreen.get(context).checktheIamfollowing(UserId:RcvId);
               ///  CubitMainScreen.get(context).getProfile(UserId: null);
                 CubitMainScreen.get(context).getShortProfileUserPost(userId: RcvId);
+                CubitMainScreen.get(context).getUserAllProjectInProfileFront(userId: RcvId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ContactProfile(

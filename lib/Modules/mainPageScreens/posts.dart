@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,14 +18,24 @@ class Posts extends StatelessWidget {
     return BlocConsumer<CubitMainScreen,MainScreenState>(builder: (BuildContext context, state) {
       return
         DefaultTabController(
-          length: 2,
+          length:kIsWeb?1:2,
           child: Scaffold(
             appBar: AppBar(
               flexibleSpace: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children:  [
                   TabBar(
-                    tabs: [
+                    tabs:kIsWeb?[
+                    Tab(child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(IconlyBold.paper,color: Colors.red,),
+                        SizedBox(width: 5,),
+                        Text("Post",style: Theme.of(context).textTheme.subtitle2,)
+                      ],
+                    )),
+                    ]: [
                       Tab(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +63,9 @@ class Posts extends StatelessWidget {
             ),
        body :
        TabBarView(
-         children: [
+         children:kIsWeb? [
+           Postview(),
+         ]: [
            Postview(),
            Projectview()
          ],

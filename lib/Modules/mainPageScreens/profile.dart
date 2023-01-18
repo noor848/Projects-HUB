@@ -10,6 +10,7 @@ import '../../Components/getPosts.dart';
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
 import '../../Model/shortPost.dart';
+import '../ViewProjectScreen/viewProjectScreen.dart';
 import '../allUserPost/allUserPosts.dart';
 import '../editProfile/editProfile.dart';
 import '../followsList/followers.dart';
@@ -119,7 +120,6 @@ class Profile extends StatelessWidget {
                           InkWell(
                             onTap: () {
                               CubitMainScreen.get(context).getFollowingList();
-
                               ///CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen.get(context).userProfileValues.id);
                               Navigator.push(context, MaterialPageRoute(
                                   builder: (context) => Following()));
@@ -185,6 +185,7 @@ class Profile extends StatelessWidget {
                           Spacer(),
                           TextButton(onPressed: () {
                             CubitMainScreen.get(context).getShortProfileFront(userId:CubitMainScreen.get(context).userProfileValues.id );
+                            CubitMainScreen.get(context).getUserAllProjectInProfileFront(userId:CubitMainScreen.get(context).userProfileValues.id );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -233,7 +234,7 @@ class Profile extends StatelessWidget {
                                   width: 150,
                                   child: ListView.separated(
                                       itemBuilder: (context, index) =>
-                                          getUserQuestions(context),
+                                          getUserProjects(CubitMainScreen.get(context).allFrontProjectProfile[index],context),
                                       separatorBuilder: (context, index) =>
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -241,7 +242,7 @@ class Profile extends StatelessWidget {
                                             child: SizedBox(height: 1,
                                                 child: Container(
                                                   color: Colors.grey[300],)),
-                                          ), itemCount: 5)
+                                          ), itemCount: CubitMainScreen.get(context).allFrontProjectProfile.length)
                               ),
                             ),
                           )
@@ -305,4 +306,39 @@ class Profile extends StatelessWidget {
       ),
     );
   }
+  Widget getUserProjects(list,context){
+    return InkWell(
+      onTap: (){
+        CubitMainScreen.get(context).getSpecificProjectView(projectId: list.id);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ViewProjectScreen(CubitMainScreen.get(context).projectViewData)));
+
+        },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(list.title,
+                overflow: TextOverflow.ellipsis,
+                maxLines:2,
+                style:Theme.of(context).textTheme.bodyText2,
+              ),
+              Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(constraints: BoxConstraints(),
+                      padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(IconlyLight.star,color: Colors.yellow,size: 20,)),
+                   Text("${list.usersWhoLiked}",style: TextStyle(fontSize: 12),),
+                ],
+              )
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 }

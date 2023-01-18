@@ -226,7 +226,7 @@ class DioHelper {
   }
 
   static Future<http.Response> LikeviewPost({postId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/Like/${postId}");
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/Like/$postId");
     var response = await http.Client().put(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -308,6 +308,80 @@ class DioHelper {
       ///'Authorization':Token
     });
     /// print(await json.decode(json.encode(response.body)));
+    return response;
+  }
+
+
+
+  static Future<http.Response>  CreatePproject({title,coverPicture,abstract,projectFile})async{
+
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project");
+    var response = await http.Client().post(url, body:
+    json.encode(
+        {
+          "title":title,
+          "coverPicture" :coverPicture,
+          "abstract":abstract,
+          "projectFile" :projectFile
+        }
+    ), headers: {
+      HttpHeaders.contentTypeHeader: 'application/json',
+      'Authorization':'Bearer $UserToken',
+    });
+    print(response.statusCode);
+    return response;
+  }
+
+
+  static Future<http.Response> GetUserProjects({userId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/Projects/${userId ?? ""}");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+  static Future<http.Response> DeleteProject({projectId}) async {
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/$projectId");
+    var response = await http.Client().delete(url,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          //'Charset': 'utf-8'
+          'Authorization':'Bearer $UserToken',
+          ///'Authorization':Token
+        });
+    /// print(await json.decode(json.encode(response.body)));
+    return response;
+  }
+
+  static Future<http.Response> GetSpecificProjectView({projectId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/$projectId");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
+
+  static Future<http.Response> LikeviewProject({projectId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/Like/$projectId");
+    var response = await http.Client().put(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+  static Future<http.Response> UnLikeviewProject({projectId})async{
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/unLike/$projectId");
+    var response = await http.Client().put(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
     return response;
   }
 

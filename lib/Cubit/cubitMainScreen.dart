@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -18,10 +19,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import '../Constants.dart';
 import '../Model/comment.dart';
 import '../Model/contactModel.dart';
+import '../Model/getAllUserProjects.dart';
 import '../Model/postView.dart';
+import '../Model/projectModel.dart';
 import '../Model/shortPost.dart';
 import '../Modules/TappedCreatePost/tabWindos.dart';
 import '../Modules/mainPageScreens/posts.dart';
@@ -398,7 +402,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       }
       setToken(token: value.toString());
       emit(LoginSuccess());
-     ////print(loggedInUserId);
+     print(loggedInUserId);
       getProfile(UserId: null);
     }).catchError((onError) {
       print(onError.toString());
@@ -449,7 +453,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       ByteData byteData = await rootBundle.load("assets/images/profile.png");
       Uint8List bytes = byteData.buffer.asUint8List();
       imageSignUpPath = base64.encode(bytes);
-      print(imageSignUpPath);
+      //print(imageSignUpPath);
       emit(DefualtImage());
       DioHelper.SignUp(
           password: password,
@@ -479,7 +483,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       ByteData byteData = await rootBundle.load("assets/images/profile.png");
       Uint8List bytes = byteData.buffer.asUint8List();
       imageSignUpPath = base64.encode(bytes);
-      print(imageSignUpPath);
+     /// print(imageSignUpPath);
       emit(DefualtImage());
 
     }
@@ -645,6 +649,7 @@ void DeleteContact({RcvId}){
       emit(UnfollowSuccess());
       getContactProfile(RcvId: UserId);
       getShortProfileFront(userId:UserId);
+      getUserAllProjectInProfileFront(userId:UserId);
     getProfile();
 
     }).catchError((onError) {});
@@ -652,11 +657,13 @@ void DeleteContact({RcvId}){
 
   void FollowUser({UserId}){
     DioHelper.FollowUser(UserId: UserId).then((value){
-      print(value.body);
+    //  print(value.body);
       emit(FollowedSuccessfully());
       getContactProfile(RcvId: UserId);
      getProfile();
       getShortProfileFront(userId:UserId);
+      getUserAllProjectInProfileFront(userId:UserId);
+
 
     }).catchError((onError) {});
   }
@@ -694,7 +701,7 @@ bool x=false;
 bool followedOrNot=false;
  void checktheIamfollowing({UserId}){
    followedOrNot=false;
-   print("${UserId}+++jjj");
+  // print("${UserId}+++jjj");
    DioHelper.GetFollowing().then((value){///My followings --when i follow the guy so means i have it as a following
      List following =json.decode(value.body);
      following.forEach((element) {
@@ -1006,7 +1013,7 @@ print(xx);
    PlatformFile file = new PlatformFile(name: 'd',size: 50) ;
    bool visiblefileChoose =false;
 
-  Uint8List? f;
+  Uint8List ? f;
   Uint8List? ff;
   Future<void> pickFiles() async {
       var result = await FilePicker.platform.pickFiles(
@@ -1015,25 +1022,34 @@ print(xx);
       );
       if(result==null)return;
       visiblefileChoose=true;
-      file =result.files.first;
+     ///
      /* print(file.path);
       print(file.bytes);*/
       if(kIsWeb){
-        f=file.bytes;
-        print(f);
+     ///   f=file.bytes as String?;
+       /// print(f);
       }else{
-      ///  ff=result.files.first.bytes;
+       file =result.files.first;
        // print(ff);
-        OpenFile.open(file.path!);
+
+        final newFile=await SaveFilePermenant(file);
+        print(newFile);
+       OpenFile.open(file.path!);
       }
       emit(PickFile());
     }
 
-  void openFile(PlatformFile file){
-   OpenFile.open(file.path!);
+  void openFile(file){
+    OpenFile.open(file);
   }
 
 
+  Future<File>SaveFilePermenant(PlatformFile f)async{
+final appStorage =await getApplicationDocumentsDirectory();
+final newFile=File('${appStorage.path}/${file.name}');
+
+return File(f.path!).copy(newFile.path);
+  }
 
 
   int indexCratePostChanged=0;
@@ -1047,6 +1063,19 @@ print(xx);
     emit(Page1());
 
   }
+
+  int ShowAll=0;
+  void ShowAllpage0(){
+    ShowAll=0;
+    emit(Page0());
+
+  }
+  void ShowAllpage1(){
+    ShowAll=1;
+    emit(Page1());
+
+  }
+
 
   bool isVisible2=true;
   String CoverImage2="";
@@ -1173,7 +1202,8 @@ print(xx);
   List SHortPost=[];
 
   void getShortProfileUserPost({userId}){
-
+    SHortPost=[];
+    shortPostUserProfile=[];
     DioHelper.GetUserProfile(idToken: userId).then((value) async {
       SHortPost=[];
       shortPostUserProfile=[];
@@ -1196,7 +1226,6 @@ print(xx);
   }
 
 List <dynamic>frontShortPost=[];
-
 
   void getShortProfileFront({userId}){
     frontShortPost=[];
@@ -1222,67 +1251,148 @@ List <dynamic>frontShortPost=[];
     }).catchError((onError){});
 
   }
-
-
   void SignOut(){
     frontShortPost=[];
     SHortPost=[];
     shortPostUserProfile=[];
     Comment=[];
-     CommentsData=[];
-     commentImage="";
-   commentImageunit;
-     isVisible2=true;
-     CoverImage2="";
+    CommentsData=[];
+    commentImage="";
+    commentImageunit;
+    isVisible2=true;
+    CoverImage2="";
     CoverImageunit2;
     indexCratePostChanged=0;
     file = new PlatformFile(name: 'd',size: 50) ;
-     visiblefileChoose =false;
-     PostView viewDataPost=new PostView();
-     timeAgo="";
-     RedoList=[];
-     RedoListObjects=[];
+    visiblefileChoose =false;
+    PostView viewDataPost=new PostView();
+    timeAgo="";
+    RedoList=[];
+    RedoListObjects=[];
     follower=[];
     FollowerProfile=[];
     following=[];
     followingProfile=[];
     followedOrNot=false;
-     checkTheIamfollowings=false;
-     x=false;
+    checkTheIamfollowings=false;
+    x=false;
 
-      Contactmode = Contactmodl();
-      ContactmodeUserProfile = UserProfileModel();
+    Contactmode = Contactmodl();
+    ContactmodeUserProfile = UserProfileModel();
     UserProfileValues =[];
     ContactList =[];
     NewPassword="";
-     imageSignUpPath="";
-     imageSignUp;
+    imageSignUpPath="";
+    imageSignUp;
     loggedInUserId = "";
-     messages = [];
-   messagesLocal = [];
+    messages = [];
+    messagesLocal = [];
     ProfileImage;
     _image;
-     ImagesList = [];
-     PostChnk=[];
-     LastUpdatePostChnk=[];
+    ImagesList = [];
+    PostChnk=[];
+    LastUpdatePostChnk=[];
 
-     listOfWholePostCreat = [];
-     pageIndex = 0;
-     VisibleIcon = true;
-     ImagePath = "";
-     textFieldIndex = 0;
-   textFieldController = [];
-     textFieldCreate = [];
-     objectImageText = [];
-     isVisible=true;
-     bottomModal=true;
-     CoverImage="";
-     CoverImageunit;
-     normalImageUnit;
-     normalImage="";
+    listOfWholePostCreat = [];
+    pageIndex = 0;
+    VisibleIcon = true;
+    ImagePath = "";
+    textFieldIndex = 0;
+    textFieldController = [];
+    textFieldCreate = [];
+    objectImageText = [];
+    isVisible=true;
+    bottomModal=true;
+    CoverImage="";
+    CoverImageunit;
+    normalImageUnit;
+    normalImage="";
 
-     emit(LogOut());
+    emit(LogOut());
   }
+
+
+  void createProject({title,coverpic,abstract,filepath}){
+
+    DioHelper.CreatePproject(title: title,coverPicture: coverpic,abstract: abstract,projectFile: filepath)
+    .then((value) async {
+    /* /// print(value.body);
+      var project= await json.decode(value.body);
+    print(project);
+      projectCreatedData=ProjectCreate.fromJson(project);
+     print(projectCreatedData.id);*/
+      emit(ProjectCreated());
+    }).catchError((onError){
+      print(onError.toString());
+
+    });
+
+  }
+
+  List <dynamic>allFrontProjectProfile=[];
+  void getUserAllProjectInProfileFront({userId}){
+    allFrontProjectProfile=[];
+    DioHelper.GetUserProjects(userId: userId).then((value) async {
+      allFrontProjectProfile=[];
+      List project=await json.decode(value.body);
+      project.forEach((element) {
+        allFrontProjectProfile.add(AllProjects.fromJson(element));
+      });
+      emit(AllProjectFrontUser());
+    }).catchError((onError){
+      print(onError.toString());
+    });
+
+  }
+
+
+
+  void deleteProject({projectId,userid}){
+    DioHelper.DeleteProject(projectId: projectId).then((value){
+      emit(ProjectDeletedSucess());
+      getUserAllProjectInProfileFront(userId: userid);
+
+    }).onError((error, stackTrace) {
+      print(error.toString());
+    });
+
+  }
+
+
+  ProjectModel projectViewData=ProjectModel();
+
+  void getSpecificProjectView({projectId}){
+
+    DioHelper.GetSpecificProjectView(projectId: projectId).then((value) async {
+      /// print(value.body);
+      var project= await json.decode(value.body);
+      ///print(project);
+      projectViewData=ProjectModel.fromJson(project);
+      emit(ProjectView());
+
+    }).catchError((onError){
+
+    });
+
+  }
+
+  void LikeProject({projectId,userId}){
+    DioHelper.LikeviewProject(projectId:projectId ).then((value){
+      emit(ProjectLiked());
+      getSpecificProjectView(projectId: projectId);
+      getUserAllProjectInProfileFront(userId: userId);
+    }).catchError((onError){});
+
+  }
+  void UnLikeProject({projectId,userId}){
+    DioHelper.UnLikeviewProject(projectId:projectId ).then((value){
+      emit(ProjectUnLiked());
+      getSpecificProjectView(projectId: projectId);
+      getUserAllProjectInProfileFront(userId: userId);
+    }).catchError((onError){});
+
+  }
+
 
 
 }

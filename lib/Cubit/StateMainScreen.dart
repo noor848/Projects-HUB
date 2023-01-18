@@ -63,5 +63,11 @@ class GetShortProfileUser extends MainScreenState{}
 class GetShortFrontProfileUser extends MainScreenState{}
 class DeletePostSuccess extends MainScreenState{}
 class LogOut extends MainScreenState{}
+class ProjectCreated extends MainScreenState{}
+class AllProjectFrontUser extends MainScreenState{}
+class ProjectDeletedSucess extends MainScreenState{}
+class ProjectView extends MainScreenState{}
+class ProjectLiked extends MainScreenState{}
+class ProjectUnLiked extends MainScreenState{}
 
 
