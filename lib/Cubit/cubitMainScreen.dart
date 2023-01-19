@@ -27,6 +27,7 @@ import '../Model/getAllUserProjects.dart';
 import '../Model/postView.dart';
 import '../Model/projectModel.dart';
 import '../Model/shortPost.dart';
+import '../Modules/Network/network.dart';
 import '../Modules/TappedCreatePost/tabWindos.dart';
 import '../Modules/mainPageScreens/posts.dart';
 import '../Modules/mainPageScreens/userchatlist.dart';
@@ -45,7 +46,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
 
   static CubitMainScreen get(context) => BlocProvider.of(context);
   var listOfWholePostCreat = [];
-  List<Widget> PagesScreen = [Posts(), /*PostCreate()*/ Tap(),ChatList()];
+  List<Widget> PagesScreen = [Posts(),Tap(),ChatList(),Network()];
   int pageIndex = 0;
   bool themeChange = false;
   bool VisibleIcon = true;
@@ -430,21 +431,16 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       final temp = (await ImagePicker().
       getImage(source:ImageSource.camera,imageQuality:
       80));
-      if(temp==null) {
-        return;
-      }
       Uint8List? x= await temp?.readAsBytes();
       imageSignUpPath=base64.encode(x!);
-
-    emit(ImagePickerLoad());
     }else{
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
       final imageTemporarly = File(image.path);
       imageSignUpPath=base64Encode(imageTemporarly.readAsBytesSync()!);
 
-    emit(ImagePickerLoad());
     }
+    emit(ImagePickerLoad());
 
   }
 
@@ -454,7 +450,6 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       Uint8List bytes = byteData.buffer.asUint8List();
       imageSignUpPath = base64.encode(bytes);
       //print(imageSignUpPath);
-      emit(DefualtImage());
       DioHelper.SignUp(
           password: password,
           email: email,
@@ -462,20 +457,32 @@ class CubitMainScreen extends Cubit<MainScreenState> {
           FirstName: FirstName,
           LastName: LastName)
           .then((value) {
-        if (value.toString() == "User Already Exists") {
+   if(value.statusCode==400){
+     emit(SignedUpFailed());
+   }else{
+     emit(SignedUpSuccess());
+   }
+      }).catchError((onError) {
+        print(onError);
+      });
+    }else{
+      DioHelper.SignUp(
+          password: password,
+          email: email,
+          image: imageSignUpPath,
+          FirstName: FirstName,
+          LastName: LastName)
+          .then((value) {
+        if(value.statusCode==400){
           emit(SignedUpFailed());
-          return;
-        } else {
-          ///setToken(token:value.toString());
-          imageSignUp = null;
+        }else{
           emit(SignedUpSuccess());
         }
       }).catchError((onError) {
+        print(onError);
         emit(SignedUpFailed());
       });
     }
-
-
   }
 
   Future<void> putDefulatImage() async {
@@ -548,6 +555,8 @@ void getContactList(){
   ContactList =[];
 
   DioHelper.GetUserContacts().then((value) {
+    UserProfileValues =[];
+    ContactList =[];
     ContactList = json.decode(value.body);
     print(ContactList);
     for(int i=0;i<ContactList.length;i++){
@@ -632,6 +641,7 @@ void DeleteContact({RcvId}){
   void AddContact({contactId}) {
     DioHelper.AddContact(ContactId: contactId, idToken: loggedInUserId).then((value) {
       emit(AddContactSuccessfully());
+      getContactList();
     }).catchError((onError) {});
   }
 

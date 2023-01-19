@@ -18,7 +18,7 @@ class Tap extends StatelessWidget {
           body: SafeArea(
             child: DefaultTabController(
               initialIndex: CubitMainScreen.get(context).indexCratePostChanged,
-              length: kIsWeb?1:2,
+              length: 2,
               child: Column(
                 children: <Widget>[
                   ButtonsTabBar(
@@ -27,22 +27,7 @@ class Tap extends StatelessWidget {
                     unselectedLabelStyle: TextStyle(color: Colors.black,fontFamily: 'SubHead'),
                     labelStyle:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontFamily: 'SubHead'),
-                    tabs:kIsWeb?[
-                      Tab(
-                        icon: InkWell(
-                          onTap: () =>CubitMainScreen.get(context).ChangeIndexpage0(),
-                          child:
-                          Row(
-                            children: const[
-                              Icon(Icons.style),
-                              SizedBox(width: 5,),
-                              Text("post",textAlign: TextAlign.center,style: TextStyle(color: Colors.white),),
-                              SizedBox(width: 5,),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ]:[
+                    tabs:[
                       Tab(
                         icon: InkWell(
                           onTap: () =>CubitMainScreen.get(context).ChangeIndexpage0(),
@@ -74,11 +59,7 @@ class Tap extends StatelessWidget {
                   ),
                   Expanded(
                     child: TabBarView(
-                      children:kIsWeb? [
-                        Center(
-                          child: PostCreate(),
-                        )
-                      ]: [
+                      children: [
                         Center(
                           child: PostCreate(),
                         ),

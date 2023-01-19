@@ -23,7 +23,7 @@ class DioHelper {
    /// print(await json.decode(json.encode(response.body)));
     return response.body;
   }
-  static Future<String> SignUp({FirstName,LastName,email, password,image,Token}) async {
+  static Future<http.Response> SignUp({FirstName,LastName,email, password,image,Token}) async {
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/signup");
     var response = await http.Client().post(url, body:
     json.encode(
@@ -40,7 +40,8 @@ class DioHelper {
       ///'Authorization':Token
     });
    /// print(await json.decode(json.encode(response.body)));
-    return response.body;
+    print(response.statusCode);
+    return response;
   }
 
   static Future<http.Response> GetUserProfile({path,data,idToken})async{

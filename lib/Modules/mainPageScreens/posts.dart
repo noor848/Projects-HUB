@@ -18,24 +18,14 @@ class Posts extends StatelessWidget {
     return BlocConsumer<CubitMainScreen,MainScreenState>(builder: (BuildContext context, state) {
       return
         DefaultTabController(
-          length:kIsWeb?1:2,
+          length:2,
           child: Scaffold(
             appBar: AppBar(
               flexibleSpace: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children:  [
                   TabBar(
-                    tabs:kIsWeb?[
-                    Tab(child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(IconlyBold.paper,color: Colors.red,),
-                        SizedBox(width: 5,),
-                        Text("Post",style: Theme.of(context).textTheme.subtitle2,)
-                      ],
-                    )),
-                    ]: [
+                    tabs: [
                       Tab(child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,9 +53,7 @@ class Posts extends StatelessWidget {
             ),
        body :
        TabBarView(
-         children:kIsWeb? [
-           Postview(),
-         ]: [
+         children: [
            Postview(),
            Projectview()
          ],
@@ -80,6 +68,9 @@ class Posts extends StatelessWidget {
     );
 
   }
+
+
+
 
 
   Widget getPosts(context){
@@ -132,7 +123,7 @@ class Posts extends StatelessWidget {
                               style:Theme.of(context).textTheme.bodyText2,
                             ),),
                           SizedBox(width:5,),
-                          Image(image: NetworkImage("https://assets.entrepreneur.com/content/3x2/2000/1391122457-10-most-have-ingredients-successful-invention.jpg"),
+                          Image(image: NetworkImage("https://images.unsplash.com/photo-1601541984851-6779505c272c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
                             height: 50,
                             width: 50,
                             fit: BoxFit.cover,

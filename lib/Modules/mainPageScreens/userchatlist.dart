@@ -33,7 +33,7 @@ class ChatList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.archive,size: 200,color: Colors.redAccent,),
-              Text("No Message Yet",style: TextStyle(fontSize: 15),)
+              Text("No Contacts Yet",style: TextStyle(fontSize: 15),)
             ],
           ));
 
@@ -44,9 +44,9 @@ class ChatList extends StatelessWidget {
                 child: const Text('Confirm Dialog'),
                 onPressed: () async {
                   if (await confirm(context)) {
-                    return print('pressedOK');
+                    return print('pressed OK');
                   }
-                  return print('pressedCancel');
+                  return print('pressed Cancel');
                 },
               ),
             );
@@ -141,7 +141,7 @@ class ChatList extends StatelessWidget {
             builder: (BuildContext context) {
               return AlertDialog(
                // title: const Text("Delete Confirmation"),
-                content: const Text("Are you sure you want to delete this message?"),
+                content: const Text("Are you sure you want to delete this Contact?"),
                 actions: <Widget>[
                   MaterialButton(
                       onPressed: () => Navigator.of(context).pop(true),

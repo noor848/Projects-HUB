@@ -127,7 +127,7 @@ class SignIn extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Padding(
+                         /*   Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text("Or", style:Theme.of(context).textTheme.headline5,),
                             ),
@@ -141,7 +141,7 @@ class SignIn extends StatelessWidget {
                                 },
 
                               ),
-                            ),
+                            ),*/
                             TextButton(onPressed: (){
                               Navigator.push(
                                 context,

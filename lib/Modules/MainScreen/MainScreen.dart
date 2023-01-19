@@ -37,14 +37,14 @@ class MainScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             color: SecondaryColor,
 
-
             onTap:(value){
               cubic.changeScreenIndex(value);
             },
             items: const[
               Icon(IconlyLight.home),
               Icon(IconlyLight.plus),
-              Icon(IconlyLight.chat),],
+              Icon(IconlyLight.chat),
+              Icon(IconlyLight.user_1),],
             height: 60,
           ),
 
