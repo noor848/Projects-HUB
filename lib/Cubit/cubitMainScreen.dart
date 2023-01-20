@@ -1119,11 +1119,14 @@ return File(f.path!).copy(newFile.path);
      emit(ClearProjectStuff());
 
   }
-  void likeDisLike(){
+  void likeDisLike({userId}){
     if(viewDataPost.isLiked==false){
       DioHelper.LikeviewPost(postId: viewDataPost.id).then((value){
         emit(LikedSuccess());
         getViewPost(postId:viewDataPost.id );
+        getShortProfileUserPostandProjects(userId:userId);
+       getShortProfileFront(userId: userId);
+       getUserAllProjectInProfileFront(userId: userId);
       }).catchError((onError){
         emit(LikedError());
       });
@@ -1131,6 +1134,9 @@ return File(f.path!).copy(newFile.path);
       DioHelper.UnLikeviewPost(postId: viewDataPost.id).then((value){
         emit(ULikedSuccess());
         getViewPost(postId:viewDataPost.id );
+        getShortProfileUserPostandProjects(userId:userId);
+        getShortProfileFront(userId: userId);
+        getUserAllProjectInProfileFront(userId: userId);
       }).catchError((onError){
         emit(ULikedError());
       });
@@ -1209,29 +1215,39 @@ return File(f.path!).copy(newFile.path);
 
 
   List <ShortProfileModel> shortPostUserProfile=[];
+  List <AllProjects> max5Projects=[];
   List SHortPost=[];
+  UserProfileModel xx=UserProfileModel();
 
-  void getShortProfileUserPost({userId}){
+  void getShortProfileUserPostandProjects({userId}){
     SHortPost=[];
     shortPostUserProfile=[];
     DioHelper.GetUserProfile(idToken: userId).then((value) async {
       SHortPost=[];
       shortPostUserProfile=[];
+      max5Projects=[];
       var user = await json.decode(value.body);
-      var xx = UserProfileModel.fromJson(user);
+       xx = UserProfileModel.fromJson(user);
      /// print(xx.posts);
       emit(GetUserProfile());
-
       xx.posts?.forEach((element) {
         DioHelper.GetShorPostUser(PostId: element).then((value){
           var post=json.decode(value.body);
           shortPostUserProfile.add(ShortProfileModel.fromJson(post));
-          emit(GetShortProfileUser());
+          emit(GetShortProfileUserPosts());
 
         }).catchError((onError){});
-
       });
 
+      xx.projects?.forEach((element) {
+        DioHelper.profileproject5max(projectId:element).then((value){
+          var projects=json.decode(value.body);
+          print(projects);
+          max5Projects.add(AllProjects.fromJson(projects));
+          emit(GetShortProfileUserprojects());
+
+        }).catchError((onError){});
+      });
     });
   }
 
@@ -1257,7 +1273,7 @@ List <dynamic>frontShortPost=[];
     DioHelper.DeletePost(postId: postId).then((value) {
       emit(DeletePostSuccess());
       getShortProfileFront(userId: userid);
-      getShortProfileUserPost(userId: userid);
+      getShortProfileUserPostandProjects(userId: userid);
     }).catchError((onError){});
 
   }
@@ -1340,6 +1356,7 @@ List <dynamic>frontShortPost=[];
   }
 
   List <dynamic>allFrontProjectProfile=[];
+
   void getUserAllProjectInProfileFront({userId}){
     allFrontProjectProfile=[];
     DioHelper.GetUserProjects(userId: userId).then((value) async {
@@ -1355,7 +1372,7 @@ List <dynamic>frontShortPost=[];
 
   }
 
-
+///profileproject5max
 
   void deleteProject({projectId,userid}){
     DioHelper.DeleteProject(projectId: projectId).then((value){

@@ -69,5 +69,8 @@ class ProjectDeletedSucess extends MainScreenState{}
 class ProjectView extends MainScreenState{}
 class ProjectLiked extends MainScreenState{}
 class ProjectUnLiked extends MainScreenState{}
+class GetShortProfileUserProjects extends MainScreenState{}
+class GetShortProfileUserprojects extends MainScreenState{}
+class GetShortProfileUserPosts extends MainScreenState{}
 
 

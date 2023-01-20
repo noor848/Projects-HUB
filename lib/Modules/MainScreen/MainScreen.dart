@@ -95,7 +95,7 @@ class MainScreen extends StatelessWidget {
           title: const Text('View Profile'),
           onTap: () {
             CubitMainScreen.get(context).getProfile(UserId: null);
-            CubitMainScreen.get(context).getShortProfileUserPost();
+            CubitMainScreen.get(context).getShortProfileUserPostandProjects();
             CubitMainScreen.get(context).getUserAllProjectInProfileFront();
             Navigator.push(
               context,

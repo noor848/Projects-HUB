@@ -234,7 +234,7 @@ class Profile extends StatelessWidget {
                                   width: 150,
                                   child: ListView.separated(
                                       itemBuilder: (context, index) =>
-                                          getUserProjects(CubitMainScreen.get(context).allFrontProjectProfile[index],context),
+                                          getUserProjects(CubitMainScreen.get(context).max5Projects[index],context),
                                       separatorBuilder: (context, index) =>
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -242,7 +242,7 @@ class Profile extends StatelessWidget {
                                             child: SizedBox(height: 1,
                                                 child: Container(
                                                   color: Colors.grey[300],)),
-                                          ), itemCount: CubitMainScreen.get(context).allFrontProjectProfile.length)
+                                          ), itemCount: CubitMainScreen.get(context).max5Projects.length)
                               ),
                             ),
                           )

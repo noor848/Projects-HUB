@@ -90,7 +90,7 @@ class Postview extends StatelessWidget {
                           children: [
                             Text("${"Nancy"} ${"Ahmad"}",style: Theme.of(context).textTheme.caption,),
                             const SizedBox(height:2,),
-                            Text("${"30 minutes Ago"}",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                            Text("${DateTime.now()}",style: TextStyle(fontSize: 10,color: Colors.grey),),
                             const SizedBox(height:2,),
                             Row(
                               children: [
@@ -199,7 +199,7 @@ class Postview extends StatelessWidget {
                           children: [
                             Text("${"Noor"} ${"Braik"}",style: Theme.of(context).textTheme.caption,),
                             const SizedBox(height:2,),
-                            Text("${"1 hour Ago"}",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                            Text("${DateTime.now()}",style: TextStyle(fontSize: 10,color: Colors.grey),),
                             const SizedBox(height:2,),
                             Row(
                               children: [

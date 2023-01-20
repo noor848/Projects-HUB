@@ -132,7 +132,7 @@ class CommentScreen extends StatelessWidget {
                              CubitMainScreen.get(context).checktheIamfollowing(UserId: CubitMainScreen
                                  .get(context)
                                  .CommentsData[index].user.UserId);
-                             CubitMainScreen.get(context).getShortProfileUserPost(userId: CubitMainScreen
+                             CubitMainScreen.get(context).getShortProfileUserPostandProjects(userId: CubitMainScreen
                                  .get(context)
                                  .CommentsData[index].user.UserId);
 
@@ -235,7 +235,7 @@ class CommentScreen extends StatelessWidget {
             fontSize: 16,
           );
 
-          CubitMainScreen.get(context).getShortProfileUserPost(
+          CubitMainScreen.get(context).getShortProfileUserPostandProjects(
             userId:authorId
           );
           CubitMainScreen.get(context).getShortProfileFront(userId: authorId);
@@ -251,7 +251,7 @@ class CommentScreen extends StatelessWidget {
             textColor: Colors.white,
             fontSize: 16,
           );
-          CubitMainScreen.get(context).getShortProfileUserPost(userId:authorId);
+          CubitMainScreen.get(context).getShortProfileUserPostandProjects(userId:authorId);
           CubitMainScreen.get(context).getShortProfileFront(userId: authorId);
         }
       },

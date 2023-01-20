@@ -207,11 +207,12 @@ class Network extends StatelessWidget {
 
     return Card(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Stack(
             children: [
               Align(
-                alignment: AlignmentDirectional.topStart,
                 child: Container(
                   height: 60,
                   width: double.infinity,

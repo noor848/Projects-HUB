@@ -334,13 +334,23 @@ class DioHelper {
   }
 
 
-  static Future<http.Response> GetUserProjects({userId})async{
+  static Future<http.Response> GetUserProjects({userId})async{ /////all projects
     var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/Projects/${userId ?? ""}");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
           'Authorization':'Bearer $UserToken',
         });
+    return response;
+  }
+  static Future<http.Response> profileproject5max({projectId})async{ /////all projects
+    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/$projectId/ShortProject");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    print(response.statusCode);
     return response;
   }
   static Future<http.Response> DeleteProject({projectId}) async {

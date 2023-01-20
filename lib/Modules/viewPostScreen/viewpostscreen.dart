@@ -31,9 +31,7 @@ class ViewPostScreen extends StatelessWidget {
           postViewData.title!=""?Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(onPressed: (){
-              CubitMainScreen.get(context).likeDisLike();
-              CubitMainScreen.get(context).getShortProfileUserPost(userId:postViewData.authorId );
-              CubitMainScreen.get(context).getShortProfileFront(userId: postViewData.authorId);
+              CubitMainScreen.get(context).likeDisLike(userId:postViewData.authorId );
               //CubitMainScreen.get(context).getShortProfileFront();
             }
             ,icon:postViewData.isLiked==false?const Icon(IconlyLight.heart,size:30):const Icon(IconlyBold.heart,size:30),color: Colors.pinkAccent,),
