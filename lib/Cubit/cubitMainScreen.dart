@@ -21,9 +21,11 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import '../Constants.dart';
+import '../Model/Network.dart';
 import '../Model/comment.dart';
 import '../Model/contactModel.dart';
 import '../Model/getAllUserProjects.dart';
+import '../Model/homeProjectView.dart';
 import '../Model/postView.dart';
 import '../Model/projectModel.dart';
 import '../Model/shortPost.dart';
@@ -304,6 +306,11 @@ class CubitMainScreen extends Cubit<MainScreenState> {
     pageIndex = index;
     if(index==2){
     getContactList();
+    }  if(index==0){
+      getPaginatedPost(pageNumber: 1);
+      getPaginatedProject(pageNumber: 1);
+    } if(index==3){
+      getPaginatedNetwork(pageNumber: 0);
     }
     emit(ChangeBottomNavigationBarIndexState());
   }
@@ -403,6 +410,7 @@ class CubitMainScreen extends Cubit<MainScreenState> {
       }
       setToken(token: value.toString());
       emit(LoginSuccess());
+      getPaginatedPost(pageNumber: 1);
      print(loggedInUserId);
       getProfile(UserId: null);
     }).catchError((onError) {
@@ -660,8 +668,11 @@ void DeleteContact({RcvId}){
       getContactProfile(RcvId: UserId);
       getShortProfileFront(userId:UserId);
       getUserAllProjectInProfileFront(userId:UserId);
-    getProfile();
+      getPaginatedNetwork(pageNumber:0);
+    /*  getPaginatedPost(pageNumber: 1);
+      getPaginatedProject(pageNumber: 1);*/
 
+      getProfile();
     }).catchError((onError) {});
   }
 
@@ -673,8 +684,10 @@ void DeleteContact({RcvId}){
      getProfile();
       getShortProfileFront(userId:UserId);
       getUserAllProjectInProfileFront(userId:UserId);
-
-
+      getPaginatedNetwork(pageNumber: 0);
+   /*   getPaginatedPost(pageNumber: 1);
+      getPaginatedProject(pageNumber: 1);
+*/
     }).catchError((onError) {});
   }
 bool checkTheIamfollowings=false;
@@ -1264,6 +1277,7 @@ List <dynamic>frontShortPost=[];
       });
 
       emit(GetShortFrontProfileUser());
+      getPaginatedPost(pageNumber:1);
 
     }).catchError((onError){});
 
@@ -1420,6 +1434,115 @@ List <dynamic>frontShortPost=[];
 
   }
 
+  List <NetworkModel>NetworkData=[];
+
+  int page=0;
+
+  getPaginatedNetwork({pageNumber}){
+
+      DioHelper.getNetworkPaginated(pagenumber: pageNumber).then((value) async {
+        NetworkData=[];
+        List listData= await json.decode(value.body);
+          listData.forEach((element) {
+            NetworkData.add(NetworkModel.fromJson(element));
+          });
+        emit(NetworkgetPaginatedDataSuccess());
+        page++;
+
+      }).catchError((onError){
+        print(onError);
+      });
+
+  }
+
+getPaginatedNetworkwithQuery({pageNumber,query}){
+    DioHelper.getNetworkPaginatedWithSearch(pagenumber: pageNumber,query:query).then((value) async {
+      NetworkData=[];
+      List listData= await json.decode(value.body);
+      listData.forEach((element) {
+        NetworkData.add(NetworkModel.fromJson(element));
+      });
+      emit(NetworkgetPaginatedDataWithQuerySuccess());
+
+    }).catchError((onError));
+  }
+
+  List <dynamic>PostData=[];
+
+  getPaginatedPost({pageNumber}){
+
+    DioHelper.getPostPaginated(pagenumber: pageNumber).then((value) async {
+      PostData=[];
+      List listData= await json.decode(value.body);
+      print(listData);
+        listData.forEach((element) {
+        PostData.add(ShortProfileModel.fromJson(element));
+        print(PostData[0].author.firstName);
+      });
+      emit(NetworkgetPaginatedDataSuccess());
+      getPaginatedProject(pageNumber: 1);
+
+    }).catchError((onError){
+      print(onError);
+    });
+
+  }
+
+  getPaginatedPostwithQuery({pageNumber,query}){
+    DioHelper.getPostPaginatedWithSearch(pagenumber: pageNumber,query: query).then((value) async {
+      PostData=[];
+      List listData= await json.decode(value.body);
+      print(listData);
+      listData.forEach((element) {
+        PostData.add(ShortProfileModel.fromJson(element));
+      });
+
+      emit(NetworkgetPaginatedDataSuccess());
+
+    }).catchError((onError){
+      print(onError);
+    });
+
+  }
+
+
+  List <dynamic>ProjectData=[];
+
+  getPaginatedProject({pageNumber}){
+
+    DioHelper.getProjectPaginated(pagenumber: pageNumber).then((value) async {
+      ProjectData=[];
+      List listData= await json.decode(value.body);
+      print(listData);
+      listData.forEach((element) {
+        ProjectData.add(ProjectM.fromJson(element));
+        print(ProjectData[0].author.firstName);
+      });
+      emit(PrjectgetPaginatedDataSuccess());
+
+    }).catchError((onError){
+      print(onError);
+    });
+
+  }
+
+  getPaginatedProjecttwithQuery({pageNumber,query}){
+    DioHelper.getProjectPaginatedWithSearch(pagenumber: pageNumber,query: query).then((value) async {
+      ProjectData=[];
+      List listData= await json.decode(value.body);
+      print(listData);
+      listData.forEach((element) {
+        ProjectData.add(ShortProfileModel.fromJson(element));
+      });
+      emit(ProjectgetPaginatedDataSuccess());
+
+    }).catchError((onError){
+      print(onError);
+    });
+
+  }
+int PP=0;
 
 
 }
+///getProjectPaginatedWithSearch

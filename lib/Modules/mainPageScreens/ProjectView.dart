@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,7 @@ import 'package:iconly/iconly.dart';
 
 import '../../Cubit/StateMainScreen.dart';
 import '../../Cubit/cubitMainScreen.dart';
+import '../ViewProjectScreen/viewProjectScreen.dart';
 
 class Projectview extends StatelessWidget {
 
@@ -19,8 +22,9 @@ class Projectview extends StatelessWidget {
               child: Container(
                   height: 50,
                   child: TextField(
-                    onChanged: (value){
-                      print(value);
+                    onSubmitted: (value){
+                      CubitMainScreen.get(context).PP=1;
+                      CubitMainScreen.get(context).getPaginatedProjecttwithQuery(pageNumber: 1,query: value);
                     },
                     style: Theme.of(context).textTheme.bodyText1,
                     decoration: InputDecoration(
@@ -35,10 +39,20 @@ class Projectview extends StatelessWidget {
                     ),
                   )
               )),
+          CubitMainScreen.get(context).ProjectData.length==0?
           Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.list,size: 150,color: Colors.red,),
+                Text("No Projects",style: TextStyle(fontFamily: 'SubHead',fontSize: 20),)
+              ],
+            ),
+          ):Expanded(
               child: ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
-                itemBuilder: (context, index)=>getProjects(context),
+                itemBuilder: (context, index)=>getProjects(context,CubitMainScreen.get(context).ProjectData[index]),
                 itemCount: 1,
               ))
         ],
@@ -48,15 +62,15 @@ class Projectview extends StatelessWidget {
 
 
 }
-  Widget getProjects(context){
+  Widget getProjects(context,list){
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3,horizontal: 8),
       child: Card(
         elevation: 5,
         child: InkWell(
           onTap: (){
-            ///CubitMainScreen.get(context).getViewPost();
-           /// Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ViewPostScreen(CubitMainScreen.get(context).viewDataPost)));
+            CubitMainScreen.get(context).getSpecificProjectView(projectId: list.id);
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ViewProjectScreen(CubitMainScreen.get(context).projectViewData)));
           },
           splashColor: Colors.red,
           child: Container(
@@ -71,40 +85,61 @@ class Projectview extends StatelessWidget {
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100)
                           ),
-                          child:  Image(image:NetworkImage("https://images.unsplash.com/photo-1664207251296-569bacae6f04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
+                          child:  Image(image:MemoryImage(base64Decode(list.author.profilePic)),
                             height: 30,
                             width: 30,
                             fit: BoxFit.cover,
                           ),
                         ),
-                        const SizedBox(width: 10,),
-                        Text("Noor Braik",style: Theme.of(context).textTheme.caption,),
-                        const SizedBox(width: 10,),
-                        const Text("OCT.30.2018",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                        SizedBox(width: 8,),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("${list.author.firstName} ${list.author.lastName}",style: Theme.of(context).textTheme.caption,),
+                            const SizedBox(height:2,),
+                            Text(" ${list.createdDate}",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                            const SizedBox(height:2,),
+                            Row(
+                              children: [
+                                Icon(IconlyBold.time_circle,size: 12,color: Colors.grey,),
+                                SizedBox(width: 2,),
+                                Text("${CubitMainScreen.get(context).PastTimeAgo(
+                                    list.createdDate)}",style: TextStyle(fontSize: 10,color: Colors.grey),),
+                              ],
+                            ),
+                          ],
+                        ),
                         Spacer(),
-                        TextButton(onPressed: (){}, child: Text("+ Follow"))
+                        TextButton(onPressed: (){
+                          CubitMainScreen.get(context).follwoUnFollow(UserId: list.author.userId);
+                          CubitMainScreen.get(context).getShortProfileFront(userId:list.author.userId);
+                          CubitMainScreen.get(context).getUserAllProjectInProfileFront(userId:list.author.userId);
+                          CubitMainScreen.get(context).getPaginatedPost(pageNumber: 1);
+                          CubitMainScreen.get(context).getPaginatedProject(pageNumber: 1);
+
+                          CubitMainScreen.get(context).PP=1;
+                        }, child: list.isAuthorFollowed==false?Text("+ Follow"):Text("Following"))
+
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(
+                      child: Row(
                         children: [
-                          Container(
-                            height: 200,
-                            child: Expanded(
-                              child: Image(image: NetworkImage("https://assets.entrepreneur.com/content/3x2/2000/1391122457-10-most-have-ingredients-successful-invention.jpg"),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height:5,),
-                          Text("The action of inventing something, typically a process or device"+
-                              "the invention of printing in the 15th century",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            style:Theme.of(context).textTheme.bodyText2,
-                          ),
-
+                          Expanded(
+                            child:
+                            Text(list.title,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              style:Theme.of(context).textTheme.bodyText2,
+                            ),),
+                          SizedBox(width:5,),
+                          Image(image: MemoryImage(base64Decode(list.coverPicture)),
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                          )
                         ],
                       ),
                     ),
@@ -113,16 +148,16 @@ class Projectview extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(right: 10),
+                            padding: const EdgeInsets.only(right:10 ),
                             child: IconButton(constraints: BoxConstraints(),
-                                padding: EdgeInsets.zero,onPressed: (){
-
-                                }, icon:Icon(
-                                    IconlyLight.star,color: Colors.yellow,size: 25,)),
+                                padding: EdgeInsets.zero,onPressed: (){}, icon:Icon(
+                                    IconlyLight.star,color: Colors.yellow)),
                           ),
-                          const Text("205",style: TextStyle(fontSize: 16),),
+                          Text("${list.usersWhoLiked}"),
+
                         ],
                       ),
                     )

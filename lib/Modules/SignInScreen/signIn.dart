@@ -33,6 +33,9 @@ class SignIn extends StatelessWidget {
             textColor: Colors.white,
             fontSize: 16,
           );
+          CubitMainScreen.get(context).getPaginatedProject(pageNumber: 1);
+          CubitMainScreen.get(context).getPaginatedPost(pageNumber: 1);
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) =>  MainScreen()),

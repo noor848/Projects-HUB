@@ -89,8 +89,6 @@ class MyApp extends StatelessWidget {
                   dialogTheme: DialogTheme(
                     backgroundColor: Colors.white,
                     elevation: 0.0,
-
-
                   ),
 
                   cardTheme:const CardTheme(

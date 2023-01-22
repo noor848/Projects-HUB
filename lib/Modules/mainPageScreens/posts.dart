@@ -19,6 +19,7 @@ class Posts extends StatelessWidget {
       return
         DefaultTabController(
           length:2,
+          initialIndex: CubitMainScreen.get(context).PP,
           child: Scaffold(
             appBar: AppBar(
               flexibleSpace: Column(

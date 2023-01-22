@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-
 import '../../Constants.dart';
-import '../../Model/UserProfileModel.dart';
 
 class DioHelper {
   static Future<String> LogIn({api, data, email, password, Token}) async {
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/login");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/login");
     var response = await http.Client().post(url, body:
     json.encode(
         {
@@ -24,7 +21,7 @@ class DioHelper {
     return response.body;
   }
   static Future<http.Response> SignUp({FirstName,LastName,email, password,image,Token}) async {
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/signup");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/signup");
     var response = await http.Client().post(url, body:
     json.encode(
         {
@@ -43,9 +40,8 @@ class DioHelper {
     print(response.statusCode);
     return response;
   }
-
   static Future<http.Response> GetUserProfile({path,data,idToken})async{
-  var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/${idToken ?? ""}");
+  var url = Uri.parse("$baseUrl/api/V1.0/user/${idToken ?? ""}");
   var response = await http.Client().get(url ,headers: {
     'Content-Type': 'application/json;charset=UTF-8',
     'Authorization':'Bearer $UserToken',
@@ -54,9 +50,8 @@ class DioHelper {
   ///print(await json.decode(json.encode(response.body))+"Hi");
   return response;
   }
-
   static Future<http.Response> PutUserImage({imagepath,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/ProfilePicture");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/ProfilePicture");
     var response = await http.Client().put(url,
         body: json.encode({
           "encodedProfilePicture":imagepath.toString()
@@ -69,7 +64,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> PutUserBio({bio,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Bio");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Bio");
     var response = await http.Client().put(url,
         body: json.encode({
           "bio":bio.toString()
@@ -82,7 +77,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> PutUserName({FirstName,lastName,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/username");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/username");
     var response = await http.Client().put(url,
         body: json.encode({
           "FirstName":FirstName,
@@ -95,7 +90,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> PutUserPassword({oldPassword,NewPassword,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Password");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Password");
     var response = await http.Client().put(url,
         body: json.encode({
           "OldPassword":oldPassword,
@@ -107,9 +102,8 @@ class DioHelper {
         });
     return response;
   }
-
   static Future<http.Response> GetUserContacts({path,data,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Contacts");
     var response = await http.Client().get(url ,headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       'Authorization':'Bearer $UserToken',
@@ -118,10 +112,8 @@ class DioHelper {
    // print(response.body);
     return response;
   }
-
-
   static Future<http.Response> DeleteContact({ContactId,Token}) async {
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts/");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Contacts/");
     var response = await http.Client().delete(url, body:
     json.encode(
         {
@@ -137,7 +129,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> GetContactProfile({path,data,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/shortProfile/$idToken");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/shortProfile/$idToken");
     var response = await http.Client().get(url ,headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       //'Charset': 'utf-8'
@@ -145,7 +137,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> AddContact({ContactId,idToken})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Contacts");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Contacts");
     var response = await http.Client().put(url,
         body: json.encode({
           "ContactId":ContactId,
@@ -158,7 +150,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> FollowUser({UserId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Follow/$UserId");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Follow/$UserId");
     var response = await http.Client().put(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -167,7 +159,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> UnFollowUser({UserId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Unfollow/$UserId");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Unfollow/$UserId");
     var response = await http.Client().put(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -176,7 +168,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> GetFollowers({UserId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Followers/${UserId==null?"":UserId}");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Followers/${UserId==null?"":UserId}");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -185,7 +177,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> GetFollowing({UserId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/user/Following/${UserId==null?"":UserId}");
+    var url = Uri.parse("$baseUrl/api/V1.0/user/Following/${UserId==null?"":UserId}");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -194,13 +186,12 @@ class DioHelper {
 
     return response;
   }
-
   static Future<http.Response>  CreatePost({title,coverPicture,chunkList})async{
     print(title);
     print(coverPicture);
     print(chunkList);
 
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post");
     var response = await http.Client().post(url, body:
     json.encode(
         {
@@ -216,7 +207,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> GetViewPost({PostId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/${PostId}");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/${PostId}");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -225,9 +216,8 @@ class DioHelper {
    /// print(response.body);
     return response;
   }
-
   static Future<http.Response> LikeviewPost({postId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/Like/$postId");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/Like/$postId");
     var response = await http.Client().put(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -236,7 +226,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> UnLikeviewPost({postId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/unLike/${postId}");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/unLike/${postId}");
     var response = await http.Client().put(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -244,9 +234,8 @@ class DioHelper {
         });
     return response;
   }
-
   static Future<http.Response> AddComment({postId,chuckType,body})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$postId/Comment");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/$postId/Comment");
     var response = await http.Client().put(url,
         body: json.encode({
           "chunkType": chuckType,
@@ -258,9 +247,8 @@ class DioHelper {
         });
     return response;
   }
-
   static Future<http.Response> DeleteComment({postId,commentNum})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$postId/Comment/$commentNum");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/$postId/Comment/$commentNum");
     var response = await http.Client().delete(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -268,9 +256,8 @@ class DioHelper {
         });
     return response;
   }
-
   static Future<http.Response> GetComments({PostId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$PostId/Comments");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/$PostId/Comments");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -278,9 +265,8 @@ class DioHelper {
         });
     return response;
   }
-
   static Future<http.Response> GetShorPostUser({PostId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$PostId/ShortPost");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/$PostId/ShortPost");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -289,7 +275,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> GetShorPostUserfrontPage({userId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/Post/$userId");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/Post/$userId");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -297,10 +283,8 @@ class DioHelper {
         });
     return response;
   }
-
-
   static Future<http.Response> DeletePost({postId}) async {
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Post/$postId");
+    var url = Uri.parse("$baseUrl/api/V1.0/Post/$postId");
     var response = await http.Client().delete(url,
       headers: {
       'Content-Type': 'application/json;charset=UTF-8',
@@ -311,12 +295,9 @@ class DioHelper {
     /// print(await json.decode(json.encode(response.body)));
     return response;
   }
-
-
-
   static Future<http.Response>  CreatePproject({title,coverPicture,abstract,projectFile})async{
 
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project");
+    var url = Uri.parse("$baseUrl/api/V1.0/Project");
     var response = await http.Client().post(url, body:
     json.encode(
         {
@@ -332,10 +313,8 @@ class DioHelper {
     print(response.statusCode);
     return response;
   }
-
-
   static Future<http.Response> GetUserProjects({userId})async{ /////all projects
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/Projects/${userId ?? ""}");
+    var url = Uri.parse("$baseUrl/api/V1.0/Project/Projects/${userId ?? ""}");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -344,7 +323,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> profileproject5max({projectId})async{ /////all projects
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/$projectId/ShortProject");
+    var url = Uri.parse("$baseUrl/api/V1.0/Project/$projectId/ShortProject");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -354,7 +333,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> DeleteProject({projectId}) async {
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/$projectId");
+    var url = Uri.parse("$baseUrl/api/V1.0/Project/$projectId");
     var response = await http.Client().delete(url,
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
@@ -365,9 +344,8 @@ class DioHelper {
     /// print(await json.decode(json.encode(response.body)));
     return response;
   }
-
   static Future<http.Response> GetSpecificProjectView({projectId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/$projectId");
+    var url = Uri.parse("$baseUrl/api/V1.0/Project/$projectId");
     var response = await http.Client().get(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -375,10 +353,8 @@ class DioHelper {
         });
     return response;
   }
-
-
   static Future<http.Response> LikeviewProject({projectId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/Like/$projectId");
+    var url = Uri.parse("$baseUrl/api/V1.0/Project/Like/$projectId");
     var response = await http.Client().put(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -387,7 +363,7 @@ class DioHelper {
     return response;
   }
   static Future<http.Response> UnLikeviewProject({projectId})async{
-    var url = Uri.parse("http://192.168.1.10:8001/api/V1.0/Project/unLike/$projectId");
+    var url = Uri.parse("$baseUrl/api/V1.0/Project/unLike/$projectId");
     var response = await http.Client().put(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
@@ -396,6 +372,64 @@ class DioHelper {
     return response;
   }
 
+  static Future<http.Response> getNetworkPaginated({pagenumber})async{
+    var url = Uri.parse("$baseUrl/api/V1.0/users/$pagenumber");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+  static Future<http.Response> getNetworkPaginatedWithSearch({pagenumber,query})async{
+    var url = Uri.parse("$baseUrl/api/V1.0/users/Search/$query/$pagenumber");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
+  static Future<http.Response> getPostPaginated({pagenumber})async{
+    var url = Uri.parse("$baseUrl/api/V1.0/Posts/1");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    print(response.statusCode);
+    return response;
+  }
+  static Future<http.Response> getPostPaginatedWithSearch({pagenumber,query})async{
+    var url = Uri.parse("$baseUrl/api/V1.0/Posts/Search/$query/$pagenumber");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
+  static Future<http.Response> getProjectPaginated({pagenumber})async{
+    var url = Uri.parse("$baseUrl/api/V1.0/Projects/$pagenumber");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
+
+  static Future<http.Response> getProjectPaginatedWithSearch({pagenumber,query})async{
+    var url = Uri.parse("$baseUrl/api/V1.0/Projects/Search/$query/$pagenumber");
+    var response = await http.Client().get(url,
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          'Authorization':'Bearer $UserToken',
+        });
+    return response;
+  }
 
 }
 

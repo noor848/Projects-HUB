@@ -1,4 +1,6 @@
 
+import '../Model/Network.dart';
+
 abstract class MainScreenState{}
 class MainScreenIntialState extends MainScreenState{}
 class ChangeHomePageChioce extends MainScreenState{}
@@ -72,5 +74,12 @@ class ProjectUnLiked extends MainScreenState{}
 class GetShortProfileUserProjects extends MainScreenState{}
 class GetShortProfileUserprojects extends MainScreenState{}
 class GetShortProfileUserPosts extends MainScreenState{}
+class NetworkgetPaginatedDataSuccess extends MainScreenState{}
+class NetworkgetPaginatedDataWithQuerySuccess extends MainScreenState{}
+class PrjectgetPaginatedDataSuccess extends MainScreenState{}
+class ProjectgetPaginatedDataSuccess extends MainScreenState{}
+class ChangePPValue extends MainScreenState{}
+
+
 
 

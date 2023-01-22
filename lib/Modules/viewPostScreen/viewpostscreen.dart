@@ -23,6 +23,7 @@ class ViewPostScreen extends StatelessWidget {
         actions: [
           postViewData.title!=""?IconButton(onPressed: (){
             CubitMainScreen.get(context).getListOfComments(postId:postViewData.id );
+            CubitMainScreen.get(context).getListOfComments(postId:postViewData.id );
 
             Navigator.push(
               context,

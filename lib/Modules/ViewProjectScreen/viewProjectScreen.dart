@@ -25,6 +25,7 @@ class ViewProjectScreen extends StatelessWidget {
           size: 30,)):
           IconButton(onPressed: (){
             CubitMainScreen.get(context).LikeProject(userId:projectData.author.userId,projectId: projectData.id );
+            CubitMainScreen.get(context).getPaginatedProject(pageNumber:1);
           },
               icon: Icon(IconlyBroken.star,color: Colors.yellow,
             size: 30,))
