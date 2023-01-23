@@ -36,10 +36,17 @@ class SignIn extends StatelessWidget {
           CubitMainScreen.get(context).getPaginatedProject(pageNumber: 1);
           CubitMainScreen.get(context).getPaginatedPost(pageNumber: 1);
 
-          Navigator.push(
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => MainScreen()),
+                (Route<dynamic> route) => false,
+          );
+
+        /*  Navigator.push(
             context,
             MaterialPageRoute(builder: (context) =>  MainScreen()),
-          );}
+          );*/}
         else{
           if(state is LoginFailed) {
             Fluttertoast.showToast(
@@ -130,22 +137,11 @@ class SignIn extends StatelessWidget {
                                 ),
                               ),
                             ),
-                         /*   Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Or", style:Theme.of(context).textTheme.headline5,),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SocialLoginButton(
-                                height: 50,
-                                buttonType: SocialLoginButtonType.google,
-                                onPressed: () {
-                                  GoogleSignInOutApi.login(context);
-                                },
 
-                              ),
-                            ),*/
+
+
                             TextButton(onPressed: (){
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) =>  SignUp()),
