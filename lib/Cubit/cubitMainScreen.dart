@@ -669,6 +669,7 @@ void DeleteContact({RcvId}){
       getShortProfileFront(userId:UserId);
       getUserAllProjectInProfileFront(userId:UserId);
       getPaginatedNetwork(pageNumber:0);
+      getFollowersrList();
     /*  getPaginatedPost(pageNumber: 1);
       getPaginatedProject(pageNumber: 1);*/
 
@@ -685,6 +686,7 @@ void DeleteContact({RcvId}){
       getShortProfileFront(userId:UserId);
       getUserAllProjectInProfileFront(userId:UserId);
       getPaginatedNetwork(pageNumber: 0);
+      getFollowersrList();
    /*   getPaginatedPost(pageNumber: 1);
       getPaginatedProject(pageNumber: 1);
 */
