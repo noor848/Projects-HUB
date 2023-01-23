@@ -36,7 +36,6 @@ class SignIn extends StatelessWidget {
           CubitMainScreen.get(context).getPaginatedProject(pageNumber: 1);
           CubitMainScreen.get(context).getPaginatedPost(pageNumber: 1);
 
-
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => MainScreen()),
@@ -138,10 +137,8 @@ class SignIn extends StatelessWidget {
                               ),
                             ),
 
-
-
                             TextButton(onPressed: (){
-
+                              CubitMainScreen.get(context).putDefulatImage();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) =>  SignUp()),
