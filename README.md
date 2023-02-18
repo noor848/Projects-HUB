@@ -1,4 +1,4 @@
-# graduationproject1
+# Projects Hub
 
 A new Flutter project.
 
